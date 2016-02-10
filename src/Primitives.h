@@ -77,6 +77,8 @@ public:
   Vector3  operator -  (const Vector3& b) const { return Vector3(x - b.x, y - b.y, z - b.z); }
   Vector3& operator -= (const Vector3& b) { x -= b.x; y -= b.y; z -= b.z; return *this; }
 
+  Vector3  operator -  () const { return Vector3(-x, -y, -z); }
+
   Vector3  operator *  (T s) const { return Vector3(x * s, y * s, z * s);  }
   Vector3& operator *= (T s) { x *= s; y *= s; z *= s; return *this; }
 
@@ -129,6 +131,7 @@ public:
   Vector4() : x(T(0)), y(T(0)), z(T(0)), w(T(0)) { }
   Vector4(T s) : x(s), y(s), z(s), w(s) { }
   Vector4(T x_, T y_, T z_, T w_) : x(x_), y(y_), z(z_), w(w_) { }
+  Vector4(const Vector3<T>& a, T w_) : x(a.x), y(a.y), z(a.z), w(w_) { }
   Vector4(const Vector4& b) : x(b.x), y(b.y), z(b.z), w(b.w)  { }
 
   ~Vector4() {}

@@ -1,6 +1,7 @@
 SRC = $(shell find . -name *.cpp)
 
 OBJ = $(SRC:%.cpp=%.o)
+OBJDIR = bin
 
 BIN = bin/raytracer
 

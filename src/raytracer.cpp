@@ -20,6 +20,7 @@
 #include "Camera.h"
 #include "Ray.h"
 #include "Surfaces.h"
+#include "Light.h"
 
 #ifdef _WIN32
 #define M_PI 3.14159265359
@@ -46,12 +47,12 @@ public:
   Vector3f Normal;
   float t, tMax;
   Surface* HitSurface;
-  Vector4f Color;
+  Vector3f Color;
 public:
   HitData() :
     tMax(100000.0f),
     HitSurface(nullptr),
-    Color(0.0f)
+    Color(0.0f, 0.0f, 0.0f)
   {}
 };
 
@@ -63,31 +64,39 @@ public:
     SceneInit();
   }
 
+  ~Scene()
+  {
+    std::cout << "Scene destructor called";
+  }
+
   void SceneInit()
   {
-    Sphere* sphere1 = new Sphere( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f);
-    Sphere* sphere2 = new Sphere( Vector3f(0.0f, 0.0f, -7.0f), 2.0f);
-    Sphere* sphere3 = new Sphere( Vector3f(4.0f, 0.0f, -7.0f), 1.0f);
+    Material* red = Material::CreateRedMat();
+    Material* green = Material::CreateGreenMat();
+    Material* blue = Material::CreateBlueMat();
+
+    Sphere* sphere1 = new Sphere( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
+    Sphere* sphere2 = new Sphere( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
+    Sphere* sphere3 = new Sphere( Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue);
 
     Surfaces.push_back(sphere1);
     Surfaces.push_back(sphere2);
     Surfaces.push_back(sphere3);
+
+    Light* light1 = new Light(Vector3f(-4, 4, 3));
+    Lights.push_back(light1);
   }
 
+  // Call at the end of main to delete all surfaces
   void Destroy()
   {
-    for (auto it = Surfaces.begin(); it != Surfaces.end(); ++it)
+    for (Surface* s : Surfaces)
     {
-      delete *it;
+      delete s;
     }
   }
 
-  void AddSurface(Surface* s)
-  {
-    Surfaces.push_back(s);
-  }
-
-  Vector4f Trace(const Ray& ray, float tMin, float tMax)
+  Vector3f Trace(const Ray& ray, float tMin, float tMax)
   {
     HitData Data;
 
@@ -97,23 +106,36 @@ public:
       //std::cout << "Tracing surface";
       if (s->Intersect(ray, Data.t, Data.tMax, Data.tPoint))
       {
-        std::cout << "Intersected!\n";
         Data.Point      = Data.tPoint;
         Data.t          = Data.tMax;
         Data.HitSurface = s;
-        Data.Color = Vector4f(1.0f);
+        Data.Normal = Data.HitSurface->GetNormal(Data.Point);
+      }
+    }
+
+    for (Light* light : Lights)
+    {
+      if (Data.HitSurface != nullptr)
+      {
+        Data.Color = Shade(ray, Data, light);
       }
     }
 
     return Data.Color;
   }
 
-  void Shade(const Ray& ray, const Vector3f& Point, const Vector3f& Normal)
+  Vector3f Shade(const Ray& ray, const HitData& Data, Light* light)
   {
+    Vector3f diff = Data.HitSurface->GetMaterial()->GetDiffuse();
+    float ndotl = Data.Normal * ray.Direction;
+    Vector3f out = diff * std::max(0.0f, ndotl);
+
+    return out;
   }
 
 public:
   std::vector<Surface*> Surfaces;
+  std::vector<Light*> Lights;
 };
 
 class RayTracer
@@ -141,14 +163,19 @@ public:
       for (int x = 0; x < ScreenWidth; ++x)
       {
         Ray ray = MainCamera.GetRay( x, y);
-        Vector4f color = scene->Trace(ray, 0, 10000.0f);
-        //std::cout << color << ' ';
+        Vector3f color = scene->Trace(ray, 0, 10000.0f);
         Pixel p = ColorToPixel(color);
         image.push_back(p);
       }
     }
 
     OutputPPM(image);
+  }
+
+  static Pixel ColorToPixel(const Vector3f& color)
+  {
+    Vector4f color4(color, 1.0f);
+    return ColorToPixel(color4);
   }
 
   static Pixel ColorToPixel(const Vector4f& color)
@@ -160,7 +187,7 @@ public:
     uint8_t uG = (uint8_t) (normalized.y * uA);
     uint8_t uB = (uint8_t) (normalized.z * uA);
 
-    Pixel pixel = (uA << 24) | (uR << 16) | (uG << 8) | uB;
+    Pixel pixel = MakePixel(uR, uG, uB, uA);
 
     return pixel;
   }
@@ -199,7 +226,7 @@ private:
 
 int main(int argc, char *argv[])
 {
-  RayTracer* ray = new RayTracer(512, 512);
+  RayTracer* ray = new RayTracer(1024, 1024);
 
   Scene scene;
 
