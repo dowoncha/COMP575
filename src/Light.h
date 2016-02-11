@@ -1,9 +1,16 @@
-#include "Surfaces.h"
+/******************************************************************************
+ *
+ *  filename: Light.h
+ *  author  : Do Won Cha
+ *
+ *****************************************************************************/
 
 #pragma once
 
 #ifndef _RAY_LIGHT_
 #define _RAY_LIGHT_
+
+#include "Surfaces.h"
 
 class Light : public Node
 {

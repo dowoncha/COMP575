@@ -28,20 +28,18 @@ bool Sphere::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) co
     {
       float q = std::sqrt(Radius2 - m2);
 
-      if (len2 > Radius2)
-        t = s - q;
-      else
-        t = s + q;
+      t = (len2 > Radius2) ? s - q : s + q;
 
       Point = ray.Evaluate(t);
-      return true;
-      }
+
+      return (t > 0.0f && tMax);
+    }
   }
 
   return false;
 }
 
-bool Sphere::Intersect(const Ray& ray) const
+bool Sphere::Intersect(const Ray& ray, float tMax, float& t) const
 {
   // Calculate ray-sphere intersection using geometric approach
   Vector3f len = Position - ray.Position;
@@ -54,19 +52,43 @@ bool Sphere::Intersect(const Ray& ray) const
 
     if (m2 < Radius2)
     {
-      return true;
+      float q = std::sqrt(Radius2 - m2);
+
+      t = (len2 > Radius2) ? s - q : s + q;
+
+      return (t > 0.0f && t < tMax);
     }
   }
 
   return false;
 }
 
+bool Sphere::Intersect(const Ray& ray, float tMax) const
+{
+  // Calculate ray-sphere intersection using geometric approach
+  Vector3f len = Position - ray.Position;
+  float s = len * ray.Direction;
+  float len2 = len.Length() * len.Length();
+
+  if (s > 0.0f)
+  {
+    float m2 = len2 - s * s;
+
+    if (m2 < Radius2)
+    {
+      float q = std::sqrt(Radius2 - m2);
+      float t = (len2 > Radius2) ? s - q : s + q;
+
+      return (t > 0.0f && t < tMax);
+    }
+  }
+
+  return false;
+}
 
 Vector3f Sphere::GetNormal(const Vector3f& Point) const
 {
-  Vector3f n = Point - Position;
-  n.Normalize();
-  return n;
+  return (Point - Position).Normalized();
 }
 
 Plane::Plane()
@@ -100,7 +122,23 @@ bool Plane::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) con
   return false;
 }
 
-bool Plane::Intersect(const Ray& ray) const
+bool Plane::Intersect(const Ray& ray, float tMax, float& t) const
+{
+  float denom = Normal * ray.Direction;
+
+  if (std::fabs(denom) > 1e-6)
+  {
+    t = (Normal * (Position - ray.Position)) / denom;
+    if (t > 0.0f)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool Plane::Intersect(const Ray& ray, float tMax) const
 {
   float denom = Normal * ray.Direction;
 

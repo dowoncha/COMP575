@@ -34,9 +34,14 @@ public:
     return new Material(Vector3f(0.0f, 0.0f, 0.2f), Vector3f(0.0f, 0.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 0.0f);
   }
 
-  Vector3f GetAmbient() { return Ambient; }
-  Vector3f GetDiffuse() { return Diffuse; }
-  Vector3f GetSpecular() { return Specular; }
+  static Material* CreateWhiteMat()
+  {
+    return new Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 8.0f);
+  }
+
+  Vector3f GetAmbient()     { return Ambient;   }
+  Vector3f GetDiffuse()     { return Diffuse;   }
+  Vector3f GetSpecular()    { return Specular;  }
   float    GetSpecularPow() { return SpecPower; }
 private:
   Vector3f Ambient;

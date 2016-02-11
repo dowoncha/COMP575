@@ -47,13 +47,13 @@ public:
   Vector3f Normal;
   float t, tMax;
   Surface* HitSurface;
-  Vector3f Color;
+  //Vector3f Color;
 public:
   HitData() :
     tMax(100000.0f),
-    HitSurface(nullptr),
-    Color(0.0f, 0.0f, 0.0f)
-  {}
+    HitSurface(nullptr)
+    //Color(0.0f, 0.0f, 0.0f)
+  { }
 };
 
 class Scene
@@ -66,7 +66,6 @@ public:
 
   ~Scene()
   {
-    std::cout << "Scene destructor called";
   }
 
   void SceneInit()
@@ -74,7 +73,7 @@ public:
     Material* red = Material::CreateRedMat();
     Material* green = Material::CreateGreenMat();
     Material* blue = Material::CreateBlueMat();
-    Material* planeMat = new Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 0);
+    Material* planeMat = Material::CreateWhiteMat();
 
     Sphere* sphere1 = new Sphere( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
     Sphere* sphere2 = new Sphere( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
@@ -121,7 +120,7 @@ public:
     if (Data.HitSurface != nullptr)
       return Shade(ray, Data);
     else
-      return Data.Color;
+      return Vector3f(0.0f);
   }
 
   Vector3f Shade(const Ray& ray, const HitData& Data)
@@ -129,8 +128,7 @@ public:
     Vector3f result = Data.HitSurface->GetMaterial()->GetAmbient();
     for (Light* light : Lights)
     {
-      Ray shadRay(Data.Point, light->GetPosition() - Data.Point);
-      if (ShadowTrace(Data, shadRay) == false)
+      if ( !ShadowTrace(Data, light) )
       {
         result += CalculateDiffuse(ray, Data, light) + CalculateSpecular(ray, Data, light);
       }
@@ -139,19 +137,25 @@ public:
     return result;
   }
 
-  bool ShadowTrace(const HitData& Data, const Ray& shadowRay)
+  // Check whether shadow ray is blocked by any surface
+  bool ShadowTrace(const HitData& Data, Light* light)
   {
-      for (Surface* surface : Surfaces)
+    // Calculate shadow ray from hit point to the light
+    Vector3f lightDirection = light->GetPosition() - Data.Point;
+    Ray shadowRay(Data.Point, lightDirection.Normalized());
+
+    // Check against all surface's except hit surface.
+    for (Surface* surface : Surfaces)
+    {
+      if (Data.HitSurface == surface) continue;
+
+      if (surface->Intersect(shadowRay, lightDirection.Length()))
       {
-        if (Data.HitSurface == surface) continue;// && Data.HitSurface != nullptr) continue;
-
-        if (surface->Intersect(shadowRay))
-        {
-          return true;
-        }
+        return true;
       }
+    }
 
-      return false;
+    return false;
   }
 
   Vector3f CalculateDiffuse(const Ray& ray, const HitData& Data, Light* light)
@@ -231,8 +235,20 @@ public:
     return ColorToPixel(color4);
   }
 
+  static Vector4f GammaEncode(const Vector4f& color)
+  {
+    Vector4f encoded(
+      std::pow(color.x, 2.2f),
+      std::pow(color.y, 2.2f),
+      std::pow(color.z, 2.2f),
+      std::pow(color.w, 2.2f));
+
+    return encoded;
+  }
+
   static Pixel ColorToPixel(const Vector4f& color)
   {
+    //Vector4f normalized = GammaEncode(color).Normalized();
     Vector4f normalized = color.Normalized();
 
     uint8_t uA = (uint8_t) (normalized.w * 255.9999f);
@@ -245,6 +261,7 @@ public:
     return pixel;
   }
 
+  //Also gamma encodes?
   std::vector<Pixel> ConvertColorToPixel(const std::vector<Vector4f>& colors)
   {
     std::vector<Pixel> p;
