@@ -106,6 +106,7 @@ public:
   {
     HitData Data;
 
+    // Intersect all surfaces using view ray
     for (Surface* s : Surfaces)
     {
       if (s->Intersect(ray, Data.t, Data.tMax, Data.tPoint))
@@ -114,26 +115,47 @@ public:
         Data.t          = Data.tMax;
         Data.HitSurface = s;
         Data.Normal     = Data.HitSurface->GetNormal(Data.Point);
-        Data.Color      = Data.HitSurface->GetMaterial()->GetDiffuse();
       }
     }
 
-    for (Light* light : Lights)
-    {
-      if (Data.HitSurface != nullptr)
-      {
-        Data.Normal = Data.HitSurface->GetNormal(Data.Point);
-        Data.Color = Shade(ray, Data, light);
-      }
-    }
-
-    return Data.Color;
+    if (Data.HitSurface != nullptr)
+      return Shade(ray, Data);
+    else
+      return Data.Color;
   }
 
-  Vector3f Shade(const Ray& ray, const HitData& Data, Light* light)
+  Vector3f Shade(const Ray& ray, const HitData& Data)
   {
-    Vector3f v = -ray.Direction;
+    Vector3f result = Data.HitSurface->GetMaterial()->GetAmbient();
+    for (Light* light : Lights)
+    {
+      Ray shadRay(Data.Point, light->GetPosition() - Data.Point);
+      if (ShadowTrace(Data, shadRay) == false)
+      {
+        result += CalculateDiffuse(ray, Data, light) + CalculateSpecular(ray, Data, light);
+      }
+    }
 
+    return result;
+  }
+
+  bool ShadowTrace(const HitData& Data, const Ray& shadowRay)
+  {
+      for (Surface* surface : Surfaces)
+      {
+        if (Data.HitSurface == surface) continue;// && Data.HitSurface != nullptr) continue;
+
+        if (surface->Intersect(shadowRay))
+        {
+          return true;
+        }
+      }
+
+      return false;
+  }
+
+  Vector3f CalculateDiffuse(const Ray& ray, const HitData& Data, Light* light)
+  {
     // Calculate vector from Hit point to the light and normalize it
     Vector3f lightdir = light->GetPosition() - Data.Point;
     lightdir.Normalize();
@@ -141,26 +163,27 @@ public:
     // Calculate dot product of hit normal and the light vector
     float ndotl = Data.Normal * lightdir;
 
-    if (ndotl < 0.0f)
-    {
-      std::cout << Data.Normal << ' ' << ndotl << ' ' << std::endl;
-    }
-
-    //std::cout << ndotl << ' ';
-
-    // Get diffuse of the hit surface
-    Vector3f diff = Data.HitSurface->GetMaterial()->GetDiffuse();
-    Vector3f spec = Data.HitSurface->GetMaterial()->GetSpecular();
-
     // Multiply the diffuse and the clamped cos of the angle
-    Vector3f Mdiff = diff * std::max(0.0f, ndotl);
-    Vector3f Mspec = spec * std::max(0.0f, ndotl);
-
-    Vector3f Ldiff = Mdiff / M_PI;
-
-    Vector3f half = (lightdir - ray.Direction).Normalized();
+    Vector3f Mdiff = Data.HitSurface->GetMaterial()->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
 
     return Mdiff;
+  }
+
+  Vector3f CalculateSpecular(const Ray& ray, const HitData& Data, Light* light)
+  {
+    // Calculate vector from Hit point to the light and normalize it
+    Vector3f lightdir = light->GetPosition() - Data.Point;
+    lightdir.Normalize();
+
+    // Subtract the ray direction instead of add to reverse direction
+    Vector3f half = (lightdir - ray.Direction).Normalized();
+    float ndoth = Data.Normal * half;
+
+    Material* mat = Data.HitSurface->GetMaterial();
+
+    Vector3f Ls = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
+
+    return Ls;
   }
 
 public:

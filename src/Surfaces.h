@@ -37,6 +37,7 @@ public:
   }
 
   virtual bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const = 0;
+  virtual bool Intersect(const Ray& ray) const = 0;
   virtual Vector3f GetNormal(const Vector3f& p) const = 0;
 
   Material* GetMaterial() { return Mat; }
@@ -53,6 +54,7 @@ public:
   ~Sphere() {}
 
   bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
+  bool Intersect(const Ray& ray) const override;
   Vector3f GetNormal(const Vector3f& p) const override;
 private:
   float Radius, Radius2;
@@ -66,6 +68,7 @@ public:
   ~Plane();
 
   bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
+  bool Intersect(const Ray& ray) const override;
   Vector3f GetNormal() const { return Normal; }
   Vector3f GetNormal(const Vector3f& p) const override;
 private:

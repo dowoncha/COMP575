@@ -26,7 +26,7 @@ public:
 
   static Material* CreateGreenMat()
   {
-    return new Material(Vector3f(0.0f, 0.5f, 0.0f), Vector3f(0.0f, 0.5f, 0.0f), Vector3f(0.5f, 0.5f, 0.5f), 32.0f);
+    return new Material(Vector3f(0.0f, 0.2f, 0.0f), Vector3f(0.0f, 0.5f, 0.0f), Vector3f(0.5f, 0.5f, 0.5f), 32.0f);
   }
 
   static Material* CreateBlueMat()
@@ -37,6 +37,7 @@ public:
   Vector3f GetAmbient() { return Ambient; }
   Vector3f GetDiffuse() { return Diffuse; }
   Vector3f GetSpecular() { return Specular; }
+  float    GetSpecularPow() { return SpecPower; }
 private:
   Vector3f Ambient;
   Vector3f Diffuse;
