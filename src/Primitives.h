@@ -83,6 +83,8 @@ public:
   Vector3  operator *  (T s) const { return Vector3(x * s, y * s, z * s);  }
   Vector3& operator *= (T s) { x *= s; y *= s; z *= s; return *this; }
 
+  Vector3  operator /  (T s) const { return Vector3(x / s, y / s, z / s); }
+
   // Vector3 multiply operation is the dot product
   T  operator *  (const Vector3& b) const { return DotProduct(b); }
 

@@ -16,5 +16,4 @@ $(BIN): $(OBJ)
 	$(GXX) -c $< -o $@
 
 clean:
-	rm a.out
-	rm */*.o
+	rm */*.o a.out test.ppm

@@ -68,7 +68,7 @@ bool Plane::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) con
 
   if (std::fabs(denom) > 1e-6)
   {
-    float t = (Normal * (ray.Position - Position)) / denom;
+    float t = (Normal * (Position - ray.Position)) / denom;
     if (t >= 0.0f)
     {
       Point = ray.Evaluate(t);

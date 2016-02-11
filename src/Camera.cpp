@@ -37,7 +37,8 @@ Ray Camera::GetRay(int x, int y)
 	float u = l + (r - l) * ((float)(x + 0.5f)) * invW;
 	float v = b + (t - b) * ((float)(y + 0.5f)) * invH;
 
-	Vector3f dist = ((Right * u) + (Up * v) - (Forward * d));
+  // FIX: Had to change up calculation to negative to set y to bottom?
+	Vector3f dist = ((Right * u) + (Up * -v) - (Forward * d));
   dist.Normalize();
 	return Ray(Position, dist);
 }
