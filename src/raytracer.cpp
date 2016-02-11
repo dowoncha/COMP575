@@ -74,16 +74,22 @@ public:
     Material* red = Material::CreateRedMat();
     Material* green = Material::CreateGreenMat();
     Material* blue = Material::CreateBlueMat();
+    Material* planeMat = new Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 0);
 
     Sphere* sphere1 = new Sphere( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
     Sphere* sphere2 = new Sphere( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
     Sphere* sphere3 = new Sphere( Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue);
+    Sphere* sphere4 = new Sphere( Vector3f(0.0f, 0.0f, -19.0f), 10.0f, blue);
 
+    Plane* plane = new Plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), planeMat);
+
+    Surfaces.push_back(plane);
+    //Surfaces.push_back(sphere4);
     Surfaces.push_back(sphere1);
     Surfaces.push_back(sphere2);
     Surfaces.push_back(sphere3);
 
-    Light* light1 = new Light(Vector3f(-4, 4, 3));
+    Light* light1 = new Light(Vector3f(-4.0f, 4.0f, -3.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
     Lights.push_back(light1);
   }
 
@@ -100,16 +106,15 @@ public:
   {
     HitData Data;
 
-    //for (auto it = Surfaces.begin(); it != Surfaces.end(); ++it)
     for (Surface* s : Surfaces)
     {
-      //std::cout << "Tracing surface";
       if (s->Intersect(ray, Data.t, Data.tMax, Data.tPoint))
       {
         Data.Point      = Data.tPoint;
         Data.t          = Data.tMax;
         Data.HitSurface = s;
-        Data.Normal = Data.HitSurface->GetNormal(Data.Point);
+        Data.Normal     = Data.HitSurface->GetNormal(Data.Point);
+        Data.Color      = Data.HitSurface->GetMaterial()->GetDiffuse();
       }
     }
 
@@ -117,6 +122,7 @@ public:
     {
       if (Data.HitSurface != nullptr)
       {
+        //Data.Normal = Data.HitSurface->GetNormal(Data.Point);
         Data.Color = Shade(ray, Data, light);
       }
     }
@@ -126,8 +132,19 @@ public:
 
   Vector3f Shade(const Ray& ray, const HitData& Data, Light* light)
   {
+    // Calculate vector from Hit point to the light and normalize it
+    Vector3f lightdir = light->GetPosition() - Data.Point;
+    lightdir.Normalize();
+
+    // Calculate dot product of hit normal and the light vector
+    float ndotl = Data.Normal * lightdir;
+
+    //std::cout << ndotl << std::endl;
+
+    // Get diffuse of the hit surface
     Vector3f diff = Data.HitSurface->GetMaterial()->GetDiffuse();
-    float ndotl = Data.Normal * ray.Direction;
+
+    // Multiply the diffuse and the clamped cos of the angle
     Vector3f out = diff * std::max(0.0f, ndotl);
 
     return out;
@@ -218,19 +235,17 @@ public:
 
 private:
   Camera MainCamera;
-  int ScreenWidth = 800;
-  int ScreenHeight = 600;
+  int ScreenWidth;
+  int ScreenHeight;
   float fov, angle;
   float AspectRatio;
 };
 
 int main(int argc, char *argv[])
 {
-  RayTracer* ray = new RayTracer(1024, 1024);
+  RayTracer* ray = new RayTracer(800, 800);
 
   Scene scene;
-
-  std::cout << scene.Surfaces.size();
 
   ray->Render(&scene);
 

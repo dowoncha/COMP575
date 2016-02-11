@@ -10,10 +10,11 @@ Light::~Light()
 
 }
 
-Light::Light(const Vector3f& pos) :
+Light::Light(const Vector3f& pos, const Vector3f& ambient, const Vector3f& diffuse) :
   Node(),
-  Ambient(1.0f),
-  Diffuse(1.0f)
+  Ambient(ambient),
+  Diffuse(diffuse),
+  Intensity(1.0f)
 {
   Position = pos;
 }

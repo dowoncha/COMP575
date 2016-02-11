@@ -17,8 +17,7 @@
 class Node
 {
 public:
-  Node() { std::cout<<"Node constructor called\n"; }
-  //Node(const Vector3f& pos) : Position(pos) { }
+  Node() { }
   virtual ~Node() { }
 
   const Vector3f& GetPosition() const        { return Position; }
@@ -30,15 +29,16 @@ protected:
 class Surface : public Node
 {
 public:
-  Surface() : Node() { std::cout << "Surface constructor called\n"; }
-  //Surface(const Vector3f& pos ) : Node(pos) { }
+  Surface() : Node() { }
+
   virtual ~Surface()
   {
-    delete Mat; 
+    delete Mat;
   }
 
   virtual bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const = 0;
-  virtual Vector3f GetNormal(const Vector3f& Point) const = 0;
+  virtual Vector3f GetNormal(const Vector3f& p) const = 0;
+
   Material* GetMaterial() { return Mat; }
 protected:
   Material* Mat;
@@ -53,7 +53,7 @@ public:
   ~Sphere() {}
 
   bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
-  Vector3f GetNormal(const Vector3f& Point) const override;
+  Vector3f GetNormal(const Vector3f& p) const override;
 private:
   float Radius, Radius2;
 };
@@ -62,11 +62,12 @@ class Plane : public Surface
 {
 public:
   Plane();
-  Plane(const Vector3f& point, const Vector3f& normal, Material* mat = nullptr);
+  Plane(const Vector3f& pos, const Vector3f& normal, Material* mat = nullptr);
   ~Plane();
 
   bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
-  Vector3f GetNormal(const Vector3f& Point) const override;
+  Vector3f GetNormal() const { return Normal; }
+  Vector3f GetNormal(const Vector3f& p) const override;
 private:
   Vector3f Normal;
 };

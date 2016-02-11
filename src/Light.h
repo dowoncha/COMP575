@@ -8,10 +8,11 @@
 class Light : public Node
 {
 public:
-  float Ambient, Diffuse;
+  Vector3f Ambient, Diffuse;
+  float Intensity;
 public:
   Light();
-  Light(const Vector3f& pos);
+  Light(const Vector3f& pos, const Vector3f& ambient, const Vector3f& diff);
   ~Light();
 };
 

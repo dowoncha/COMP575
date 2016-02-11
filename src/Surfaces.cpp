@@ -17,7 +17,7 @@ bool Sphere::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) co
 {
   // Calculate ray-sphere intersection using geometric approach
   Vector3f len = Position - ray.Position;
-  float s = len * ray.Direction.Normalized();
+  float s = len * ray.Direction;
   float len2 = len.Length() * len.Length();
 
   if (s > 0.0f)
@@ -28,8 +28,10 @@ bool Sphere::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) co
     {
       float q = std::sqrt(Radius2 - m2);
 
-      if (len2 > Radius2) t = s - q;
-      else t = s + q;
+      if (len2 > Radius2)
+        t = s - q;
+      else
+        t = s + q;
 
       Point = ray.Evaluate(t);
       return true;
@@ -41,7 +43,7 @@ bool Sphere::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) co
 
 Vector3f Sphere::GetNormal(const Vector3f& Point) const
 {
-  Vector3f n = Position - Point;
+  Vector3f n = Point - Position;
   n.Normalize();
   return n;
 }
@@ -50,11 +52,11 @@ Plane::Plane()
 {
 }
 
-Plane::Plane(const Vector3f& point, const Vector3f& normal, Material* mat) :
+Plane::Plane(const Vector3f& pos, const Vector3f& normal, Material* mat) :
   Surface(),
-  Normal(normal)
+  Normal(normal.Normalized())
   {
-    Position = point;
+    Position = pos;
     Mat = mat;
   }
 
@@ -62,15 +64,22 @@ Plane::~Plane() { }
 
 bool Plane::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const
 {
-  //float denom = Normal * ray.Normalize();
+  float denom = Normal * ray.Direction;
 
-  //if (denom < 1e-6) return false;
+  if (std::fabs(denom) > 1e-6)
+  {
+    float t = (Normal * (ray.Position - Position)) / denom;
+    if (t >= 0.0f)
+    {
+      Point = ray.Evaluate(t);
+      return true;
+    }
+  }
 
-  //t = ( a - p ) * n / (d * n);
-  return true;
+  return false;
 }
 
-Vector3f Plane::GetNormal(const Vector3f& Point) const
+Vector3f Plane::GetNormal(const Vector3f& p) const
 {
   return Normal;
 }
