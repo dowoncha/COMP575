@@ -25,21 +25,23 @@ void Scene::SceneInit()
     Material* blue = Material::CreateBlueMat();
     Material* planeMat = Material::CreateWhiteMat();
 
+    Material* pink = new Material(Vector3f(0.2f, 0.1f, 0.1f), Vector3f(1.0f, 0.3f, 0.3f), Vector3f(0.3f ,0.0f, 0.3f), 32);
+
     Sphere* sphere1 = new Sphere( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
     Sphere* sphere2 = new Sphere( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
     Sphere* sphere3 = new Sphere( Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue);
-    Sphere* sphere4 = new Sphere( Vector3f(0.0f, 0.0f, -19.0f), 10.0f, blue);
+    //Sphere* sphere4 = new Sphere( Vector3f(0.0f, 3.0f, -8.0f), 3.0f, pink);
 
     Plane* plane = new Plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), planeMat);
 
     Surfaces.push_back(plane);
-    //Surfaces.push_back(sphere4);
+    Surfaces.push_back(sphere4);
     Surfaces.push_back(sphere1);
     Surfaces.push_back(sphere2);
     Surfaces.push_back(sphere3);
 
     Light* light1 = new Light(Vector3f(-4.0f, 4.0f, -3.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
-    Light* light2 = new Light(Vector3f(0.0f, -5.0f, -4.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
+    //Light* light2 = new Light(Vector3f(0.0f, -5.0f, -4.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
 
     light1->SetIntensity(1.0f);
 

@@ -38,7 +38,21 @@ Ray Camera::GetRay(int x, int y) const
 	float v = b + (t - b) * ((float)(y + 0.5f)) * invH;
 
     // FIX: Had to change up calculation to negative to set y to bottom?
-	Vector3f dir = ((Right * u) + (Up * -v) - (Forward * d)).Normalized();
+	Vector3f dir = ((Right * u) - (Up * v) - (Forward * d)).Normalized();
+
+	return Ray(Position, dir);
+}
+
+Ray Camera::GetRay(float x, float y) const
+{
+    float invW = 1.0f / ScreenWidth;
+	float invH = 1.0f / ScreenHeight;
+
+	float u = l + (r - l) * (x + 0.5f) * invW;
+	float v = b + (t - b) * (y + 0.5f) * invH;
+
+    // FIX: Had to change up calculation to negative to set y to bottom?
+	Vector3f dir = ((Right * u) - (Up * v) - (Forward * d)).Normalized();
 
 	return Ray(Position, dir);
 }

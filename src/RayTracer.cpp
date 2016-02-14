@@ -29,6 +29,26 @@ void RayTracer::Render(Image& image) const
     {
         for (int x = 0; x < ScreenWidth; ++x)
         {
+            Vector3f result;
+            //anti-aliasing loop
+            float sample = 1.0f / 8.0f;
+            for (float ax = x; ax < x + 1.0f; ax += sample)
+            {
+                for (float ay = y; ay < y + 1.0f; ay += sample)
+                {
+                    Ray ray = MainCamera.GetRay(ax, ay);
+                    if (mScene.IntersectSurfaces(ray, 100000.0f, data))
+                    {
+                        //buffer.push_back(Vector3f(1.0f));
+                        result += Shade(ray, data);
+                    }
+                    else
+                        result += Vector3f(0.0f);
+                }
+            }
+            result = result / 64.f;
+            buffer.push_back(result);
+            /*
             Ray ray = MainCamera.GetRay(x, y);
             if (mScene.IntersectSurfaces(ray, 100000.0f, data))
             {
@@ -36,7 +56,7 @@ void RayTracer::Render(Image& image) const
                 buffer.push_back(Shade(ray, data));
             }
             else
-                buffer.push_back(Vector3f(0.0f));
+                buffer.push_back(Vector3f(0.0f));*/
         }
     }
 
@@ -90,11 +110,9 @@ Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* l
   Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
 
   //Mirror light calculations
-  /*
-  Vector3f rView = -ray.Direction;
-  Ray reflectionRay = data.Normal * 2 * ( data.Normal * rView ) - ray.Direction;
-  Vector3f Lmirror(0.0f);
-  */
+  //Vector3f rView = -ray.Direction;
+  //Ray reflectionRay(data.Point, data.Normal * 2 * ( data.Normal * rView ) - ray.Direction);
+  //bool res = mScene.IntersectSurfaces(reflectionRay, 10000.0f, );
 
   Vector3f Ltotal = Ldiff + Lspec; //+ Lmirror;
 

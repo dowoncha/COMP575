@@ -182,3 +182,61 @@
 2016-02-14 10:10:02,439 Starting rendering
 2016-02-14 10:10:02,818 Image buffer set, buffer size is: 480000
 2016-02-14 10:10:02,832 Outputting to ppm file: test1.ppm
+2016-02-14 10:14:41,403 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:14:41,406 Starting rendering
+2016-02-14 10:14:41,771 Image buffer set, buffer size is: 480000
+2016-02-14 10:14:41,784 Outputting to ppm file: test1.ppm
+2016-02-14 10:16:02,222 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:16:02,224 Starting rendering
+2016-02-14 10:16:02,597 Image buffer set, buffer size is: 480000
+2016-02-14 10:16:02,611 Outputting to ppm file: test1.ppm
+2016-02-14 10:32:47,600 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:40:34,789 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:40:49,448 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:40:49,450 Starting rendering
+2016-02-14 10:40:50,687 Image buffer set, buffer size is: 480000
+2016-02-14 10:40:50,701 Outputting to ppm file: test1.ppm
+2016-02-14 10:42:24,990 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:42:24,991 Starting rendering
+2016-02-14 10:42:47,344 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-14 10:42:47,344 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 10:42:48,588 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:42:48,591 Starting rendering
+2016-02-14 10:42:59,752 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-14 10:42:59,752 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 10:43:31,149 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:43:31,152 Starting rendering
+2016-02-14 10:43:33,971 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-14 10:43:33,971 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 10:43:37,169 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:43:37,172 Starting rendering
+2016-02-14 10:43:55,854 Image buffer set, buffer size is: 480000
+2016-02-14 10:43:55,868 Outputting to ppm file: test1.ppm
+2016-02-14 10:44:27,612 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:44:27,615 Starting rendering
+2016-02-14 10:44:52,212 Image buffer set, buffer size is: 480000
+2016-02-14 10:44:52,226 Outputting to ppm file: test1.ppm
+2016-02-14 10:45:30,442 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:45:30,444 Starting rendering
+2016-02-14 10:45:51,923 Image buffer set, buffer size is: 480000
+2016-02-14 10:45:51,937 Outputting to ppm file: test1.ppm
+2016-02-14 10:48:01,703 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:48:01,705 Starting rendering
+2016-02-14 10:48:21,310 Image buffer set, buffer size is: 480000
+2016-02-14 10:48:21,325 Outputting to ppm file: test1.ppm
+2016-02-14 10:49:00,457 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:49:00,460 Starting rendering
+2016-02-14 10:49:19,278 Image buffer set, buffer size is: 480000
+2016-02-14 10:49:19,294 Outputting to ppm file: test1.ppm
+2016-02-14 10:50:32,710 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:50:32,713 Starting rendering
+2016-02-14 10:50:35,070 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-14 10:50:35,070 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 10:50:37,100 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:50:37,102 Starting rendering
+2016-02-14 10:50:55,194 Image buffer set, buffer size is: 480000
+2016-02-14 10:50:55,210 Outputting to ppm file: test1.ppm
+2016-02-14 10:54:47,059 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:54:47,061 Starting rendering
+2016-02-14 10:55:09,595 Image buffer set, buffer size is: 480000
+2016-02-14 10:55:09,609 Outputting to ppm file: test1.ppm

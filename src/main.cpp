@@ -29,6 +29,28 @@ const char * elConf =
     "FILENAME = \"./logs/my.log\"\n"
     "To_Standard_Output = false";
 
+static int width = 800, height = 600;
+
+void display(void)
+{
+    /*
+    glDrawPixels(
+        width,
+        height,
+        GL_RGB,
+
+    );
+    */
+}
+
+void initialize()
+{
+    //glClearColor(0.0, 0.0, 0.0, 0.0);
+    //glColor3f(1.0, 1.0, 1.0);
+
+    //glMatrixMode(GL_PROJECTOIN);
+}
+
 int main(int argc, char *argv[])
 {
     // Configure logging system
@@ -36,8 +58,6 @@ int main(int argc, char *argv[])
     conf.setToDefault();
     conf.parseFromText(elConf);
     el::Loggers::reconfigureLogger("default", conf);
-
-    int width = 800, height = 600;
 
     // Check arguments
     for (int i = 1; i < argc; ++i)
@@ -58,7 +78,11 @@ int main(int argc, char *argv[])
     // Initialize glut and callbacks
     glutInit(&argc, argv);
     glutInitWindowSize(width, height);
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_STENCIL);
+    glutInitWindowPosition(0,0);
+    //glutCreateWindow("Ray Tracer v0.0.1");
+    //glutDisplayFunc(display);
+    //glutMainLoop();
 
     // Setup up logging when time
     //glutInitErrorFunc(LogError);
