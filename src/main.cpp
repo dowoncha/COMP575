@@ -56,9 +56,9 @@ int main(int argc, char *argv[])
     START_EASYLOGGINGPP(argc, argv);
 
     // Initialize glut and callbacks
-    glutInit(&argc, argv);
-    glutInitWindowSize(width, height);
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
+    //glutInit(&argc, argv);
+    //glutInitWindowSize(width, height);
+    //glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
 
     // Setup up logging when time
     //glutInitErrorFunc(LogError);

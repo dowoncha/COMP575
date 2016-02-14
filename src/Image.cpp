@@ -136,22 +136,14 @@ void Image::OutputPPM(std::string filename) const
         << Height   << '\n'
         << 255      << '\n';
 
-    int counter = 0;
-
     for (Vector3f color : ImageBuffer)
     {
         Vector3f encoded = GammaEncode(color);
         Pixel p = ColorToPixel(color);
 
-        //std::cout << GetPixelR(p) << ' ' << GetPixelG(p) << ' ' << GetPixelB(p);
-        //printf("%u %u %u\n", GetPixelR(p), GetPixelG(p), GetPixelB(p));
-
-        //std::cout << color;
-        //ofs << GetPixelR(p) << GetPixelG(p) << GetPixelB(p);
-
-        ofs << unsigned(GetPixelR(p))
-            << unsigned(GetPixelG(p))
-            << unsigned(GetPixelB(p));
+        ofs << GetPixelR(p)
+            << GetPixelG(p)
+            << GetPixelB(p);
     }
 
     ofs.close();

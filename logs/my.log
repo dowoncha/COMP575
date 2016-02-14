@@ -114,3 +114,19 @@
 2016-02-14 00:19:27,311 Starting rendering
 2016-02-14 00:19:27,634 Image buffer set, buffer size is: 480000
 2016-02-14 00:19:27,648 Outputting to ppm file: test1.ppm
+2016-02-14 09:45:33,708 Ray tracer started, Width: 800, Height: 600
+2016-02-14 09:45:33,708 Starting rendering
+2016-02-14 09:45:34,037 Image buffer set, buffer size is: 480000
+2016-02-14 09:45:34,050 Outputting to ppm file: test1.ppm
+2016-02-14 09:47:01,623 Ray tracer started, Width: 800, Height: 600
+2016-02-14 09:47:01,623 Starting rendering
+2016-02-14 09:47:01,947 Image buffer set, buffer size is: 480000
+2016-02-14 09:47:01,960 Outputting to ppm file: test1.ppm
+2016-02-14 09:47:34,200 Ray tracer started, Width: 800, Height: 600
+2016-02-14 09:47:34,201 Starting rendering
+2016-02-14 09:47:34,558 Image buffer set, buffer size is: 480000
+2016-02-14 09:47:34,571 Outputting to ppm file: test1.ppm
+2016-02-14 09:48:00,733 Ray tracer started, Width: 800, Height: 600
+2016-02-14 09:48:00,733 Starting rendering
+2016-02-14 09:48:01,065 Image buffer set, buffer size is: 480000
+2016-02-14 09:48:01,078 Outputting to ppm file: test1.ppm
