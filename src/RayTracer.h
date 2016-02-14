@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <fstream>
 #include <vector>
+#include <random>
 
 #include "Scene.h"
 #include "Primitives.h"
@@ -34,10 +35,16 @@ public:
 
     void Render(Image& image) const;
 
+    Vector3f Trace(const Ray& ray, int depth) const;
+
     Vector3f Shade(const Ray& ray, const HitData& Data) const;
 
     // Check whether shadow ray is blocked by any surface
     bool ShadowTrace(const HitData& Data) const;
+
+    Vector3f CalculateDiffuse(const HitData& data, Light* light) const;
+
+    Vector3f CalculateSpecular(const Ray& ray, const HitData& data, Light* light) const;
 
     Vector3f CalculateLight(const Ray& ray, const HitData& Data, Light* light) const;
 
@@ -47,8 +54,14 @@ public:
         RandomSampling
     };
 
-    void UniformSampler();
+    void SetSampleRate(int s);
+    
+    // Uses evenly spaced ray's in the pixel. Uses sample * sample.
+    Vector3f UniformSampler(int x, int y) const;
 
+    // Uses a random number generator in the [0,1] space to perturb original ray
+    // sample x sample rays.
+    Vector3f RandomSampler(int x, int y) const;
 private:
     // Main scene to draw
     const Scene& mScene;
@@ -61,6 +74,8 @@ private:
     // These should be camera variables. Will use eventually
     float fov, angle;
     float AspectRatio;
+
+    int SampleRate;
 };
 
 #endif /* end of include guard: _RAY_TRACER_ */

@@ -16,8 +16,14 @@ public:
 
   void SetScreenSize(int width, int height);
 
+  // Have 2 just in case, both work exactly the same way, maybe i should make these templates.
+  //template<typename T>
+  //Ray GetRay(T x, T y) const;
+
   Ray GetRay(int x, int y) const;
+
   Ray GetRay(float x, float y) const;
+  
 public:
   Vector3f Position;
   Vector3f Target;

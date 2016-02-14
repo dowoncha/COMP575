@@ -26,8 +26,8 @@ INITIALIZE_EASYLOGGINGPP
 const char * elConf =
     "* Global:\n"
     "FORMAT = \"\%datetime \%msg\"\n"
-    "FILENAME = \"./logs/my.log\"\n"
-    "To_Standard_Output = false";
+    "FILENAME = \"./logs/my.log\"\n";
+    //"To_Standard_Output = false";
 
 static int width = 800, height = 600;
 
@@ -87,15 +87,44 @@ int main(int argc, char *argv[])
     // Setup up logging when time
     //glutInitErrorFunc(LogError);
 
-    // Create necessary scene, image, and ray tracer objects
     Scene scene;
-    Image image(width, height);
 
+    // Create necessary scene, image, and ray tracer objects
+    Material* white = Material::CreateWhiteMat();
+    Material* red = Material::CreateRedMat();
+    Material* green = Material::CreateGreenMat();
+    Material* blue = Material::CreateBlueMat();
+
+    Sphere sphere1( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
+    Sphere sphere2( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
+    Sphere sphere3( Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue);
+
+    Plane plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), white);
+
+    Light light1(Vector3f(-4.0f, 4.0f, -3.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
+    light1.SetIntensity(1.0f);
+
+    scene.AddLight(&light1);
+    scene.AddSurface(&plane);
+    scene.AddSurface(&sphere1);
+    scene.AddSurface(&sphere2);
+    scene.AddSurface(&sphere3);
+
+    Image image(width, height);
     RayTracer rTracer(scene, width, height);
 
-    // Render and output the resulting image
+    // render image with no anti-aliasing
     rTracer.Render(image);
-    image.OutputPPM("test1.ppm");
+    image.OutputPPM("no-aa.ppm");
+
+    LOG(INFO) << "Finished outputting to: no-aa.ppm";
+
+    // Render with 8x8 sample rate
+    rTracer.SetSampleRate(8);
+    rTracer.Render(image);
+    image.OutputPPM("8x8aa.ppm");
+
+    LOG(INFO) << "Finished outputting to: 8x8aa.ppm";
 
     exit(EXIT_SUCCESS);
 }

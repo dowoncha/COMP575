@@ -244,3 +244,111 @@
 2016-02-14 10:59:43,220 Starting rendering
 2016-02-14 11:00:01,296 Image buffer set, buffer size is: 480000
 2016-02-14 11:00:01,311 Outputting to ppm file: test1.ppm
+2016-02-14 14:35:37,904 Ray tracer started, Width: 800, Height: 600
+2016-02-14 14:35:37,907 Starting rendering
+2016-02-14 14:35:43,740 CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-02-14 14:35:43,740 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 14:35:50,742 Ray tracer started, Width: 800, Height: 600
+2016-02-14 14:35:50,744 Starting rendering
+2016-02-14 14:35:56,293 CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-02-14 14:35:56,293 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 14:36:02,221 Ray tracer started, Width: 800, Height: 600
+2016-02-14 14:36:02,223 Starting rendering
+2016-02-14 14:36:48,373 Ray tracer started, Width: 800, Height: 600
+2016-02-14 14:36:48,375 Starting rendering
+2016-02-14 14:37:08,627 Image buffer set, buffer size is: 480000
+2016-02-14 14:37:08,643 Outputting to ppm file: test1.ppm
+2016-02-14 14:43:22,293 Ray tracer started, Width: 800, Height: 600
+2016-02-14 14:43:22,294 Starting rendering
+2016-02-14 14:43:43,048 Image buffer set, buffer size is: 480000
+2016-02-14 14:43:43,062 Outputting to ppm file: test1.ppm
+2016-02-14 15:07:02,132 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:07:02,133 Starting rendering
+2016-02-14 15:07:04,230 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-14 15:07:04,230 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 15:07:05,808 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:07:05,810 Starting rendering
+2016-02-14 15:07:24,056 Image buffer set, buffer size is: 480000
+2016-02-14 15:07:24,070 Outputting to ppm file: test1.ppm
+2016-02-14 15:09:27,593 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:09:27,596 Starting rendering
+2016-02-14 15:10:13,106 Image buffer set, buffer size is: 480000
+2016-02-14 15:10:13,139 Outputting to ppm file: test1.ppm
+2016-02-14 15:10:46,095 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:10:46,097 Starting rendering
+2016-02-14 15:11:29,756 Image buffer set, buffer size is: 480000
+2016-02-14 15:11:29,769 Outputting to ppm file: test1.ppm
+2016-02-14 15:13:53,673 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:13:53,675 Starting rendering
+2016-02-14 15:14:37,593 Image buffer set, buffer size is: 480000
+2016-02-14 15:14:37,609 Outputting to ppm file: test1.ppm
+2016-02-14 15:15:13,247 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:15:13,249 Starting rendering
+2016-02-14 15:15:37,122 Image buffer set, buffer size is: 480000
+2016-02-14 15:15:37,149 Outputting to ppm file: test1.ppm
+2016-02-14 15:16:34,429 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:16:34,432 Starting rendering
+2016-02-14 15:16:53,954 Image buffer set, buffer size is: 480000
+2016-02-14 15:16:53,972 Outputting to ppm file: test1.ppm
+2016-02-14 15:17:32,687 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:17:32,687 Starting rendering
+2016-02-14 15:18:13,143 Image buffer set, buffer size is: 480000
+2016-02-14 15:18:13,159 Outputting to ppm file: test1.ppm
+2016-02-14 15:18:47,705 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:18:47,708 Starting rendering
+2016-02-14 15:19:39,687 Image buffer set, buffer size is: 480000
+2016-02-14 15:19:39,701 Outputting to ppm file: test1.ppm
+2016-02-14 15:23:42,390 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:23:42,393 Starting rendering
+2016-02-14 15:24:02,908 Image buffer set, buffer size is: 480000
+2016-02-14 15:24:02,926 Outputting to ppm file: test1.ppm
+2016-02-14 15:25:59,037 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:25:59,039 Starting rendering
+2016-02-14 15:26:18,498 Image buffer set, buffer size is: 480000
+2016-02-14 15:26:18,511 Outputting to ppm file: test1.ppm
+2016-02-14 15:37:39,853 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:37:39,854 Starting rendering
+2016-02-14 15:38:00,603 Image buffer set, buffer size is: 480000
+2016-02-14 15:38:00,617 Outputting to ppm file: test1.ppm
+2016-02-14 15:51:44,368 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:51:44,371 Starting rendering
+2016-02-14 15:55:43,389 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-14 15:55:43,389 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-14 15:56:11,502 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:56:11,504 Starting rendering
+2016-02-14 15:56:16,775 Image buffer set, buffer size is: 480000
+2016-02-14 15:56:16,812 Outputting to ppm file: test1.ppm
+2016-02-14 15:56:51,535 Ray tracer started, Width: 800, Height: 600
+2016-02-14 15:56:51,537 Starting rendering
+2016-02-14 15:57:21,493 Image buffer set, buffer size is: 480000
+2016-02-14 15:57:21,508 Outputting to ppm file: test1.ppm
+2016-02-14 15:58:11,125 Ray tracer started, Width: 1024, Height: 1024
+2016-02-14 15:58:11,127 Starting rendering
+2016-02-14 15:59:16,019 Image buffer set, buffer size is: 1048576
+2016-02-14 15:59:16,053 Outputting to ppm file: test1.ppm
+2016-02-14 16:05:33,871 Ray tracer started, Width: 800, Height: 600
+2016-02-14 16:05:33,872 Starting rendering
+2016-02-14 16:06:03,482 Image buffer set, buffer size is: 480000
+2016-02-14 16:06:03,500 Outputting to ppm file: test1.ppm
+2016-02-14 16:14:35,746 Ray tracer started, Width: 800, Height: 600
+2016-02-14 16:14:35,748 Starting rendering
+2016-02-14 16:14:36,330 Image buffer set, buffer size is: 480000
+2016-02-14 16:14:36,344 Outputting to ppm file: test1.ppm
+2016-02-14 16:15:23,672 Ray tracer started, Width: 800, Height: 600
+2016-02-14 16:15:23,675 Starting rendering
+2016-02-14 16:15:55,278 Image buffer set, buffer size is: 480000
+2016-02-14 16:15:55,364 Outputting to ppm file: test1.ppm
+2016-02-14 16:43:42,227 Ray tracer started, Width: 800, Height: 600
+2016-02-14 16:43:42,229 Starting rendering
+2016-02-14 16:43:42,812 Image buffer set, buffer size is: 480000
+2016-02-14 16:43:42,828 Outputting to ppm file: no-aa.ppm
+2016-02-14 16:43:42,988 Outputting to ppm file: 8x8aa.ppm
+2016-02-14 16:45:09,541 Ray tracer started, Width: 800, Height: 600
+2016-02-14 16:45:09,543 Starting rendering
+2016-02-14 16:45:10,122 Image buffer set, buffer size is: 480000
+2016-02-14 16:45:10,137 Outputting to ppm file: no-aa.ppm
+2016-02-14 16:45:10,297 Finished outputting to: no-aa.ppm
+2016-02-14 16:45:10,297 Starting rendering
+2016-02-14 16:45:39,195 Image buffer set, buffer size is: 480000
+2016-02-14 16:45:39,200 Outputting to ppm file: 8x8aa.ppm
+2016-02-14 16:45:39,359 Finished outputting to: 8x8aa.ppm

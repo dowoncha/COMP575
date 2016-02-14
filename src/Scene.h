@@ -40,10 +40,13 @@ public:
     Scene();
     ~Scene();
 
-    void SceneInit();
-
+    void AddSurface(Surface* s);
+    void AddLight(Light* l);
+    
     bool IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const;
     bool IntersectSurfaces(const Ray& ray, float tMax, Surface* ignore) const;
+
+    bool IntersectReflection(const Ray& ray, float tMax, Material* HitMaterial) const;
 public:
     std::list<Surface*> Surfaces;
     std::list<Light*> Lights;

@@ -6,7 +6,8 @@ RayTracer::RayTracer(const Scene& scene, int sWidth, int sHeight) :
   mScene(scene),
   fov(30.0f),
   AspectRatio((float)(ScreenWidth/ScreenHeight)),
-  MainCamera()
+  MainCamera(),
+  SampleRate(1)
 {
    angle = std::tan(M_PI * 0.5f * fov / 180.0f);
    MainCamera.SetScreenSize(ScreenWidth, ScreenHeight);
@@ -29,38 +30,35 @@ void RayTracer::Render(Image& image) const
     {
         for (int x = 0; x < ScreenWidth; ++x)
         {
-            Vector3f result;
-            //anti-aliasing loop
-            float sample = 1.0f / 8.0f;
-            for (float ax = x; ax < x + 1.0f; ax += sample)
-            {
-                for (float ay = y; ay < y + 1.0f; ay += sample)
-                {
-                    Ray ray = MainCamera.GetRay(ax, ay);
-                    if (mScene.IntersectSurfaces(ray, 100000.0f, data))
-                    {
-                        //buffer.push_back(Vector3f(1.0f));
-                        result += Shade(ray, data);
-                    }
-                    else
-                        result += Vector3f(0.0f);
-                }
-            }
-            result = result / 64.f;
+            Vector3f result = RandomSampler(x, y);
             buffer.push_back(result);
-            /*
-            Ray ray = MainCamera.GetRay(x, y);
-            if (mScene.IntersectSurfaces(ray, 100000.0f, data))
-            {
-                //buffer.push_back(Vector3f(1.0f));
-                buffer.push_back(Shade(ray, data));
-            }
-            else
-                buffer.push_back(Vector3f(0.0f));*/
         }
     }
 
     image.SetBuffer(buffer);
+}
+
+Vector3f RayTracer::Trace(const Ray& ray, int depth) const
+{
+    static int dMax = 3;
+    if (depth > dMax) return Vector3f(0.0f);        //If max depth has been reached return 0
+
+    HitData data;
+    bool result = mScene.IntersectSurfaces(ray, 1000.0f, data);
+    if (data.HitSurface == nullptr) return Vector3f(0.0f);
+
+    Vector3f out = Shade(ray, data);
+
+    if (data.HitSurface->GetMaterial()->GetReflection() > 0.0f)
+    {
+        Vector3f incident = -ray.Direction;
+        Vector3f Direction = incident - data.Normal * 2 * ( data.Normal * incident );
+        Ray reflectionRay(data.Point, Direction.Normalized());
+
+        //out += Trace(reflectionRay, depth + 1);
+    }
+
+    return out;
 }
 
 Vector3f RayTracer::Shade(const Ray& ray, const HitData& data) const
@@ -71,56 +69,103 @@ Vector3f RayTracer::Shade(const Ray& ray, const HitData& data) const
     for (Light* light : mScene.Lights)
     {
         // Trace for shadows here
-        Vector3f lightDirection = light->GetPosition() - data.Point;
-        Vector3f shadowDir = lightDirection.Normalized();
+        Vector3f shadowDir = light->GetPosition() - data.Point;
+        float len = shadowDir.Length();
+        shadowDir.Normalize();
         Ray shadowRay(data.Point + shadowDir, shadowDir);
 
-        // If no surface was hit
-        if ( !mScene.IntersectSurfaces(shadowRay, lightDirection.Length(), nullptr))
+        // Check for shadows
+        if ( !mScene.IntersectSurfaces(shadowRay, len, data.HitSurface))
         {
-            result += CalculateLight(ray, data, light);
-            //cif (result.x == 1.0f && result.y == 1.0f && result.z == 1.0f)
-            //std::cout << "Final color: \n" << result << std::endl;
+            result += CalculateDiffuse(data, light) + CalculateSpecular(ray, data, light);
         }
     }
-
-    //std::cout << "Final color: \n" << result << std::endl;
-    //if (result.x > 0 && result.y > 0 && result.z > 0)
 
     return result;
 }
 
-Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* light) const
+Vector3f RayTracer::CalculateDiffuse(const HitData& data, Light* light) const
 {
-  // Find the direction vector from hit point to the light, don't forget to normalize
-  Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
+    // Diffuse light calculations
+    // Find the direction vector from hit point to the light, don't forget to normalize
+    // Calculate dot product of hit normal and the light vector
+    // Multiply the diffuse and the clamped cos of the angle
+    Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
+    float ndotl = data.Normal * lightdir;
+    Vector3f Ldiff = data.HitSurface->GetMaterial()->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
 
-  Material* mat = data.HitSurface->GetMaterial();
-
-  // Diffuse light calculations
-  // Calculate dot product of hit normal and the light vector
-  // Multiply the diffuse and the clamped cos of the angle
-  float ndotl = data.Normal * lightdir;
-  Vector3f Ldiff = mat->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
-
-  // Specular Light calculations
-  // Subtract the ray direction instead of add to reverse direction
-  Vector3f half = (lightdir - ray.Direction).Normalized();
-  float ndoth = data.Normal * half;
-  Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
-
-  //Mirror light calculations
-  //Vector3f rView = -ray.Direction;
-  //Ray reflectionRay(data.Point, data.Normal * 2 * ( data.Normal * rView ) - ray.Direction);
-  //bool res = mScene.IntersectSurfaces(reflectionRay, 10000.0f, );
-
-  Vector3f Ltotal = Ldiff + Lspec; //+ Lmirror;
-
-  //std::cout << Ltotal;
-
-  return Ltotal;
+    return Ldiff;
 }
 
-void RayTracer::UniformSampler()
+Vector3f RayTracer::CalculateSpecular(const Ray& ray, const HitData& data, Light* light) const
 {
+    // Specular Light calculations
+    // Subtract the ray direction instead of add to reverse direction
+    Vector3f lightdir = light->GetPosition() - data.Point;
+    Vector3f half = (lightdir - ray.Direction).Normalized();
+    float ndoth = data.Normal * half;
+    Material* mat = data.HitSurface->GetMaterial();
+
+    Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
+
+    return Lspec;
+}
+
+// Calculate both spec and diffuse in one function
+Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* light) const
+{
+    Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
+    Material* mat = data.HitSurface->GetMaterial();
+
+    float ndotl = data.Normal * lightdir;
+    Vector3f Ldiff = mat->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
+
+    Vector3f half = (lightdir - ray.Direction).Normalized();
+    float ndoth = data.Normal * half;
+    Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
+
+    Vector3f Ltotal = Ldiff + Lspec;
+
+    return Ltotal;
+}
+
+void RayTracer::SetSampleRate(int s)
+{
+    SampleRate = s;
+}
+
+Vector3f RayTracer::UniformSampler(int x, int y) const
+{
+    Vector3f result;
+    float coef = 1.0f / SampleRate;
+    for (float ax = x; ax < x + 1.0f; ax += coef)
+    {
+        for (float ay = y; ay < y + 1.0f; ay += coef)
+        {
+            Ray ray = MainCamera.GetRay(ax, ay);
+            result += Trace(ray, 0);
+        }
+    }
+    return result * coef * coef;
+}
+
+Vector3f RayTracer::RandomSampler(int x, int y) const
+{
+    std::default_random_engine generator;
+    std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+    Vector3f result;
+    int s2 = SampleRate * SampleRate;
+    for (int i = 0; i < s2; ++i)
+    {
+        float ax = x + distribution(generator);
+        float ay = y + distribution(generator);
+
+        Ray ray = MainCamera.GetRay(ax, ay);
+        result += Trace(ray, 0);
+    }
+
+    result = result / s2;
+
+    return result;
 }

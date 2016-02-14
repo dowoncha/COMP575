@@ -2,7 +2,6 @@
 
 Scene::Scene()
 {
-    SceneInit();
 }
 
 Scene::~Scene()
@@ -18,52 +17,26 @@ Scene::~Scene()
     }
 }
 
-void Scene::SceneInit()
+void Scene::AddSurface(Surface* s)
 {
-    Material* red = Material::CreateRedMat();
-    Material* green = Material::CreateGreenMat();
-    Material* blue = Material::CreateBlueMat();
-    Material* planeMat = Material::CreateWhiteMat();
+    Surfaces.push_back(s);
+}
 
-    Material* pink = new Material(Vector3f(0.2f, 0.1f, 0.1f), Vector3f(1.0f, 0.3f, 0.3f), Vector3f(0.3f ,0.0f, 0.3f), 32);
-
-    Sphere* sphere1 = new Sphere( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
-    Sphere* sphere2 = new Sphere( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
-    Sphere* sphere3 = new Sphere( Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue);
-    //Sphere* sphere4 = new Sphere( Vector3f(0.0f, 3.0f, -8.0f), 3.0f, pink);
-
-    Plane* plane = new Plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), planeMat);
-
-    Surfaces.push_back(plane);
-    //Surfaces.push_back(sphere4);
-    Surfaces.push_back(sphere1);
-    Surfaces.push_back(sphere2);
-    Surfaces.push_back(sphere3);
-
-    Light* light1 = new Light(Vector3f(-4.0f, 4.0f, -3.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
-    //Light* light2 = new Light(Vector3f(0.0f, -5.0f, -4.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
-
-    light1->SetIntensity(1.0f);
-
-    Lights.push_back(light1);
-    //Lights.push_back(light2);
-
-    // sort by z value dont sort for now
-    /*
-    Surfaces.sort([] (const Surface* a, const Surface* b) -> bool {
-        return a->GetPosition().z < b->GetPosition().z;
-    });
-    */
+void Scene::AddLight(Light* l)
+{
+    Lights.push_back(l);
 }
 
 bool Scene::IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const
 {
     bool surfacehit = false;
     // Intersect all surfaces using view ray
+    float tMin = tMax;
     for (Surface* s : Surfaces)
     {
         if (s->Intersect(ray, data.t, data.tMax, data.tPoint))
         {
+            //if (data.tMax < )
             data.Point      = data.tPoint;
             data.t          = data.tMax;
             data.HitSurface = s;
@@ -84,6 +57,20 @@ bool Scene::IntersectSurfaces(const Ray& ray, float tMax, Surface *ignore) const
 
         if (s->Intersect(ray, tMax))
         {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Scene::IntersectReflection(const Ray& ray, float tMax, Material* HitMaterial) const
+{
+    for (Surface* s : Surfaces)
+    {
+        if (s->Intersect(ray, tMax))
+        {
+            HitMaterial = s->GetMaterial();
             return true;
         }
     }
