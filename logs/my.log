@@ -240,3 +240,7 @@
 2016-02-14 10:54:47,061 Starting rendering
 2016-02-14 10:55:09,595 Image buffer set, buffer size is: 480000
 2016-02-14 10:55:09,609 Outputting to ppm file: test1.ppm
+2016-02-14 10:59:43,218 Ray tracer started, Width: 800, Height: 600
+2016-02-14 10:59:43,220 Starting rendering
+2016-02-14 11:00:01,296 Image buffer set, buffer size is: 480000
+2016-02-14 11:00:01,311 Outputting to ppm file: test1.ppm

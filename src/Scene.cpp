@@ -35,7 +35,7 @@ void Scene::SceneInit()
     Plane* plane = new Plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), planeMat);
 
     Surfaces.push_back(plane);
-    Surfaces.push_back(sphere4);
+    //Surfaces.push_back(sphere4);
     Surfaces.push_back(sphere1);
     Surfaces.push_back(sphere2);
     Surfaces.push_back(sphere3);

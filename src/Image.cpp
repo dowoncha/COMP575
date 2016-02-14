@@ -24,7 +24,6 @@ void Image::SetBuffer(const std::vector<Vector3f>& image)
 Vector3f Image::GammaEncode(const Vector3f& color)
 {
     // For assignment, comment after turning in for sRGB encode function.
-    /*
     float gamma = 1.0f / 2.2f;
 
     Vector3f out(
@@ -32,17 +31,16 @@ Vector3f Image::GammaEncode(const Vector3f& color)
         std::pow(color.y, gamma),
         std::pow(color.z, gamma)
     );
-    */
 
-
+    /*
     float gamma = 1.0f / 2.4f;
 
     Vector3f out;
-    
+
     out.x = (color.x <= 0.0031308f ) ? 12.92 * color.x : 1.055 * std::pow(color.x, gamma) - 0.055;
     out.y = (color.y <= 0.0031308f ) ? 12.92 * color.y : 1.055 * std::pow(color.y, gamma) - 0.055;
     out.z = (color.z <= 0.0031308f ) ? 12.92 * color.z : 1.055 * std::pow(color.z, gamma) - 0.055;
-
+    */
 
     return out;
 }
