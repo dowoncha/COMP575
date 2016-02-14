@@ -16,7 +16,7 @@ public:
 
   void SetScreenSize(int width, int height);
 
-  Ray GetRay(int x, int y);
+  Ray GetRay(int x, int y) const;
 public:
   Vector3f Position;
   Vector3f Target;

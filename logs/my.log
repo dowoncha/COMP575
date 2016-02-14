@@ -1,0 +1,116 @@
+2016-02-13 23:16:01,353 Ray tracer started.
+2016-02-13 23:16:01,354 Starting rendering
+2016-02-13 23:16:01,834 Non-black pixels: 240000
+2016-02-13 23:16:36,952 Ray tracer started.
+2016-02-13 23:16:36,954 Starting rendering
+2016-02-13 23:16:37,327 Outputting to ppm file: test1.ppm
+2016-02-13 23:16:37,516 Non-black pixels: 240000
+2016-02-13 23:24:21,319 Ray tracer started.
+2016-02-13 23:24:21,320 Starting rendering
+2016-02-13 23:24:21,620 Outputting to ppm file: test1.ppm
+2016-02-13 23:24:21,804 Non-black pixels: 240000
+2016-02-13 23:28:12,389 Ray tracer started.
+2016-02-13 23:28:12,392 Starting rendering
+2016-02-13 23:28:12,799 Outputting to ppm file: test1.ppm
+2016-02-13 23:28:12,990 Non-black pixels: 240000
+2016-02-13 23:29:45,286 Ray tracer started.
+2016-02-13 23:29:45,289 Starting rendering
+2016-02-13 23:29:45,559 Outputting to ppm file: test1.ppm
+2016-02-13 23:29:45,743 Non-black pixels: 240000
+2016-02-13 23:30:33,079 Ray tracer started.
+2016-02-13 23:30:33,081 Starting rendering
+2016-02-13 23:30:35,465 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-13 23:30:35,465 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
+2016-02-13 23:30:57,916 Ray tracer started.
+2016-02-13 23:30:57,918 Starting rendering
+2016-02-13 23:30:58,162 Outputting to ppm file: test1.ppm
+2016-02-13 23:30:58,351 Non-black pixels: 240000
+2016-02-13 23:32:15,322 Ray tracer started.
+2016-02-13 23:32:15,325 Starting rendering
+2016-02-13 23:32:15,573 Outputting to ppm file: test1.ppm
+2016-02-13 23:32:15,839 Non-black pixels: 240000
+2016-02-13 23:57:17,727 Ray tracer started.
+2016-02-13 23:57:17,730 Starting rendering
+2016-02-13 23:57:17,986 Image buffer set
+2016-02-13 23:57:18,017 Buffer size is not equal to image width and height. Still outputting.
+2016-02-13 23:57:18,017 Outputting to ppm file: test1.ppm
+2016-02-13 23:57:46,900 Ray tracer started.
+2016-02-13 23:57:46,902 Starting rendering
+2016-02-13 23:57:47,109 Image buffer set
+2016-02-13 23:57:47,135 Buffer size is not equal to image width and height. Still outputting.
+2016-02-13 23:57:47,135 Outputting to ppm file: test1.ppm
+2016-02-13 23:58:18,900 Ray tracer started.
+2016-02-13 23:58:18,904 Starting rendering
+2016-02-13 23:58:19,184 Image buffer set
+2016-02-13 23:58:19,210 Buffer size is not equal to image width and height. Still outputting.
+2016-02-13 23:58:19,210 Outputting to ppm file: test1.ppm
+2016-02-13 23:59:25,947 Ray tracer started.
+2016-02-13 23:59:25,949 Starting rendering
+2016-02-13 23:59:26,263 Image buffer set
+2016-02-13 23:59:26,289 Buffer size is not equal to image width and height. Still outputting.
+2016-02-13 23:59:26,289 Outputting to ppm file: test1.ppm
+2016-02-13 23:59:50,438 Ray tracer started.
+2016-02-13 23:59:50,440 Starting rendering
+2016-02-13 23:59:50,587 Image buffer set
+2016-02-13 23:59:50,596 Buffer size is not equal to image width and height. Still outputting.
+2016-02-13 23:59:50,596 Outputting to ppm file: test1.ppm
+2016-02-14 00:00:29,617 Ray tracer started.
+2016-02-14 00:00:29,619 Starting rendering
+2016-02-14 00:00:29,913 Image buffer set
+2016-02-14 00:00:29,939 Buffer size is not equal to image width and height. Still outputting.
+2016-02-14 00:00:29,939 Outputting to ppm file: test1.ppm
+2016-02-14 00:00:45,087 Width set to: 400
+2016-02-14 00:00:45,087 Height set to: 400
+2016-02-14 00:00:45,087 Ray tracer started.
+2016-02-14 00:00:45,090 Starting rendering
+2016-02-14 00:00:45,247 Image buffer set
+2016-02-14 00:00:45,256 Buffer size is not equal to image width and height. Still outputting.
+2016-02-14 00:00:45,256 Outputting to ppm file: test1.ppm
+2016-02-14 00:04:49,558 Ray tracer started.
+2016-02-14 00:04:49,560 Starting rendering
+2016-02-14 00:04:49,999 Image buffer set
+2016-02-14 00:04:50,025 Buffer size is not equal to image width and height. Still outputting.
+2016-02-14 00:04:50,025 Outputting to ppm file: test1.ppm
+2016-02-14 00:09:35,292 Ray tracer started.
+2016-02-14 00:09:35,294 Starting rendering
+2016-02-14 00:09:35,554 Image buffer set
+2016-02-14 00:09:35,580 Buffer size is not equal to image width and height. Still outputting.
+2016-02-14 00:09:35,580 Outputting to ppm file: test1.ppm
+2016-02-14 00:12:02,733 Ray tracer started.
+2016-02-14 00:12:02,736 Starting rendering
+2016-02-14 00:12:02,999 Image buffer set
+2016-02-14 00:12:03,026 Buffer size is not equal to image width and height. Still outputting
+2016-02-14 00:12:03,026 Buffer size: 960000, Width: 800, Height: 600
+2016-02-14 00:12:03,026 Outputting to ppm file: test1.ppm
+2016-02-14 00:13:10,657 Ray tracer started.
+2016-02-14 00:13:10,660 Starting rendering
+2016-02-14 00:13:10,913 Image buffer set
+2016-02-14 00:13:10,939 Buffer size is not equal to image width and height. Still outputting
+2016-02-14 00:13:10,939 Buffer size: 960000, Width: 800, Height: 600
+2016-02-14 00:13:10,939 Outputting to ppm file: test1.ppm
+2016-02-14 00:13:39,843 Ray tracer started.
+2016-02-14 00:13:39,845 Starting rendering
+2016-02-14 00:13:40,108 Image buffer set, buffer size is: 960000
+2016-02-14 00:13:40,135 Buffer size is not equal to image width and height. Still outputting
+2016-02-14 00:13:40,135 Buffer size: 960000, Width: 800, Height: 600
+2016-02-14 00:13:40,135 Outputting to ppm file: test1.ppm
+2016-02-14 00:13:59,495 Ray tracer started.
+2016-02-14 00:13:59,497 Starting rendering
+2016-02-14 00:13:59,741 Image buffer set, buffer size is: 480000
+2016-02-14 00:13:59,755 Outputting to ppm file: test1.ppm
+2016-02-14 00:14:44,962 Ray tracer started.
+2016-02-14 00:14:44,964 Starting rendering
+2016-02-14 00:14:45,218 Image buffer set, buffer size is: 480000
+2016-02-14 00:14:45,231 Outputting to ppm file: test1.ppm
+2016-02-14 00:15:42,041 Ray tracer started.
+2016-02-14 00:15:42,044 Starting rendering
+2016-02-14 00:15:42,374 Image buffer set, buffer size is: 480000
+2016-02-14 00:15:42,388 Outputting to ppm file: test1.ppm
+2016-02-14 00:17:05,058 Ray tracer started.
+2016-02-14 00:17:05,061 Starting rendering
+2016-02-14 00:17:05,441 Image buffer set, buffer size is: 480000
+2016-02-14 00:17:05,455 Outputting to ppm file: test1.ppm
+2016-02-14 00:19:27,308 Ray tracer started.
+2016-02-14 00:19:27,311 Starting rendering
+2016-02-14 00:19:27,634 Image buffer set, buffer size is: 480000
+2016-02-14 00:19:27,648 Outputting to ppm file: test1.ppm

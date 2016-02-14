@@ -1,7 +1,9 @@
 /*********************************************************************************
- * filename : Primitives.h
- * author   : Do Won Cha
- * content  : Contains primitives to use for math
+ *
+ *  filename : Primitives.h
+ *  author   : Do Won Cha
+ *  content  : Contains primitives to use for math
+ *
 ****************************************************************************************/
 
 #pragma once
@@ -95,7 +97,7 @@ public:
 
   friend std::ostream& operator << (std::ostream& s, const Vector3& a)
   {
-	  return s << a.x << ' ' << a.y << ' ' << a.z << std::endl;
+	  return s << a.x << ' ' << a.y << ' ' << a.z;
   }
 
   void Normalize()
@@ -172,7 +174,7 @@ public:
 
   friend std::ostream& operator << (std::ostream& s, const Vector4& a)
   {
-	  return s << a.x << ' ' << a.y << ' ' << a.z << ' ' << a.w << std::endl;
+	  return s << a.x << ' ' << a.y << ' ' << a.z << ' ' << a.w;
   }
 };
 

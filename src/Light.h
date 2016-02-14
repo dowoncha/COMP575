@@ -10,7 +10,7 @@
 #ifndef _RAY_LIGHT_
 #define _RAY_LIGHT_
 
-#include "Surfaces.h"
+#include "Surface.h"
 
 class Light : public Node
 {
@@ -21,6 +21,8 @@ public:
   Light();
   Light(const Vector3f& pos, const Vector3f& ambient, const Vector3f& diff);
   ~Light();
+
+  void SetIntensity(float i);
 };
 
 #endif //_RAY_LIGHT guard

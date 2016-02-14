@@ -7,7 +7,6 @@ Light::Light() :
 
 Light::~Light()
 {
-
 }
 
 Light::Light(const Vector3f& pos, const Vector3f& ambient, const Vector3f& diffuse) :
@@ -17,4 +16,9 @@ Light::Light(const Vector3f& pos, const Vector3f& ambient, const Vector3f& diffu
   Intensity(1.0f)
 {
   Position = pos;
+}
+
+void Light::SetIntensity(float i)
+{
+  Intensity = i;
 }

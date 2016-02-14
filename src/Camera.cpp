@@ -29,7 +29,7 @@ Camera::Camera(const Vector3f& position,
   l(-0.1f), r(0.1f), t(0.1f), b(-0.1f), d(0.1f)
   { }
 
-Ray Camera::GetRay(int x, int y)
+Ray Camera::GetRay(int x, int y) const
 {
 	float invW = 1.0f / ScreenWidth;
 	float invH = 1.0f / ScreenHeight;
@@ -37,10 +37,10 @@ Ray Camera::GetRay(int x, int y)
 	float u = l + (r - l) * ((float)(x + 0.5f)) * invW;
 	float v = b + (t - b) * ((float)(y + 0.5f)) * invH;
 
-  // FIX: Had to change up calculation to negative to set y to bottom?
-	Vector3f dist = ((Right * u) + (Up * -v) - (Forward * d));
-  dist.Normalize();
-	return Ray(Position, dist);
+    // FIX: Had to change up calculation to negative to set y to bottom?
+	Vector3f dir = ((Right * u) + (Up * -v) - (Forward * d)).Normalized();
+
+	return Ray(Position, dir);
 }
 
 void Camera::SetScreenSize(int width, int height)
