@@ -46,10 +46,12 @@ void Scene::SceneInit()
     Lights.push_back(light1);
     //Lights.push_back(light2);
 
-    // sort by z value
+    // sort by z value dont sort for now
+    /*
     Surfaces.sort([] (const Surface* a, const Surface* b) -> bool {
         return a->GetPosition().z < b->GetPosition().z;
     });
+    */
 }
 
 bool Scene::IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const

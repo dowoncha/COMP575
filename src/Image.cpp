@@ -92,6 +92,7 @@ Pixel Image::ColorToPixel(const Vector3f& color)
 {
     //std::cout << normalized;
     Vector3f pinned = PinToUnit(color);
+    //Vector3f pinned = color.Normalized();
 
     uint8_t uR = (uint8_t) (pinned.x * 255.9999f);
     uint8_t uG = (uint8_t) (pinned.y * 255.9999f);

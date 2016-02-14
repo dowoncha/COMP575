@@ -30,7 +30,6 @@ void RayTracer::Render(Image& image) const
         for (int x = 0; x < ScreenWidth; ++x)
         {
             Ray ray = MainCamera.GetRay(x, y);
-            Vector3f color;
             if (mScene.IntersectSurfaces(ray, 100000.0f, data))
             {
                 //buffer.push_back(Vector3f(1.0f));
@@ -53,21 +52,27 @@ Vector3f RayTracer::Shade(const Ray& ray, const HitData& data) const
     {
         // Trace for shadows here
         Vector3f lightDirection = light->GetPosition() - data.Point;
-        Ray shadowRay(data.Point, lightDirection.Normalized());
+        Vector3f shadowDir = lightDirection.Normalized();
+        Ray shadowRay(data.Point + shadowDir, shadowDir);
 
         // If no surface was hit
-        if ( !mScene.IntersectSurfaces(shadowRay, lightDirection.Length(), data.HitSurface))
+        if ( !mScene.IntersectSurfaces(shadowRay, lightDirection.Length(), nullptr))
         {
             result += CalculateLight(ray, data, light);
+            //cif (result.x == 1.0f && result.y == 1.0f && result.z == 1.0f)
+            //std::cout << "Final color: \n" << result << std::endl;
         }
     }
+
+    //std::cout << "Final color: \n" << result << std::endl;
+    //if (result.x > 0 && result.y > 0 && result.z > 0)
 
     return result;
 }
 
 Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* light) const
 {
-  // Find the direction vector from hit point to the light.
+  // Find the direction vector from hit point to the light, don't forget to normalize
   Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
 
   Material* mat = data.HitSurface->GetMaterial();
@@ -76,7 +81,7 @@ Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* l
   // Calculate dot product of hit normal and the light vector
   // Multiply the diffuse and the clamped cos of the angle
   float ndotl = data.Normal * lightdir;
-  Vector3f Ldiff = mat->GetDiffuse() / M_PI * light->Intensity * std::max(0.0f, ndotl);
+  Vector3f Ldiff = mat->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
 
   // Specular Light calculations
   // Subtract the ray direction instead of add to reverse direction
@@ -95,7 +100,7 @@ Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* l
 
   //std::cout << Ltotal;
 
-  return Vector3f(1.0f);
+  return Ltotal;
 }
 
 void RayTracer::UniformSampler()
