@@ -1,6 +1,6 @@
 /**
  *
- * 	filename   : Image.cpp
+ * 	filename   : Image.h
  *  author     : Do Won Cha
  *  content    : Container class to output a buffer to image.
  *

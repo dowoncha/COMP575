@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
     LOG(INFO) << "Ray tracer started, Width: " << width << ", Height: " << height;
     START_EASYLOGGINGPP(argc, argv);
 
+    // DO THIS WHEN THERE IS TIME
     // Initialize glut and callbacks
     glutInit(&argc, argv);
     glutInitWindowSize(width, height);
@@ -117,14 +118,14 @@ int main(int argc, char *argv[])
     rTracer.Render(image);
     image.OutputPPM("no-aa.ppm");
 
-    LOG(INFO) << "Finished outputting to: no-aa.ppm";
-
-    // Render with 8x8 sample rate
+    // Render with 8x8 sample rate uniform samling
     rTracer.SetSampleRate(8);
     rTracer.Render(image);
-    image.OutputPPM("8x8aa.ppm");
+    image.OutputPPM("8x8uniformsampling.ppm");
 
-    LOG(INFO) << "Finished outputting to: 8x8aa.ppm";
+    // Render 8x8 anti-aliase random sampling.
+    rTracer.SamplingType = RayTracer::PostProcess::UniformSampling;
+    image.OutputPPM("8x8randomsampling.ppm");
 
     exit(EXIT_SUCCESS);
 }

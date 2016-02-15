@@ -47,23 +47,11 @@ Ray Camera::GetRay(T x, T y) const
 }
 */
 
+
+// default offset is to the center of the pixel
 Ray Camera::GetRay(int x, int y) const
 {
 	float invW = 1.0f / ScreenWidth;
-	float invH = 1.0f / ScreenHeight;
-
-	float u = l + (r - l) * ((float)(x + 0.5f)) * invW;
-	float v = b + (t - b) * ((float)(y + 0.5f)) * invH;
-
-    // FIX: Had to change up calculation to negative to set y to bottom?
-	Vector3f dir = ((Right * u) - (Up * v) - (Forward * d)).Normalized();
-
-	return Ray(Position, dir);
-}
-
-Ray Camera::GetRay(float x, float y) const
-{
-    float invW = 1.0f / ScreenWidth;
 	float invH = 1.0f / ScreenHeight;
 
 	float u = l + (r - l) * (x + 0.5f) * invW;
@@ -71,6 +59,22 @@ Ray Camera::GetRay(float x, float y) const
 
     // FIX: Had to change up calculation to negative to set y to bottom?
 	Vector3f dir = ((Right * u) - (Up * v) - (Forward * d)).Normalized();
+
+	return Ray(Position, dir);
+}
+
+Ray Camera::GetRay(int x, int y, float offsetx, float offsety) const
+{
+    offsetx = Utility::clamp(0.0f, offsetx, 1.0f);
+    offsety = Utility::clamp(0.0f, offsety, 1.0f);
+
+    float invW = 1.0f / ScreenWidth;
+	float invH = 1.0f / ScreenHeight;
+
+	float u = l + (r - l) * (x + offsetx) * invW;
+	float v = b + (t - b) * (y + offsety) * invH;
+
+    Vector3f dir = ((Right * u) - (Up * v) - (Forward * d)).Normalized();
 
 	return Ray(Position, dir);
 }

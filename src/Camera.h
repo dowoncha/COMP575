@@ -1,5 +1,16 @@
+/**
+ *
+ * 	filename   : Camera.h
+ *  author     : Do Won Cha
+ *  content    : Container class to output a buffer to image.
+ *
+ */
+
+#include <cassert>
+
 #include "Primitives.h"
 #include "Ray.h"
+#include "Utility.h"
 
 class Camera
 {
@@ -22,8 +33,10 @@ public:
 
   Ray GetRay(int x, int y) const;
 
-  Ray GetRay(float x, float y) const;
-  
+  Ray GetRay(int x, int y, float offsetx, float offsety) const;
+
+  //Ray GetRay(float x, float y) const;
+
 public:
   Vector3f Position;
   Vector3f Target;

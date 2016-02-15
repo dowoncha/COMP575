@@ -150,4 +150,6 @@ void Image::OutputPPM(std::string filename) const
     }
 
     ofs.close();
+
+    LOG(INFO) << "Finished outputting to " << filename << ", closing file.";
 }

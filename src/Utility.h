@@ -5,8 +5,13 @@
  *  content     : functions that are used throughout
  */
 
+#pragma once
+#ifndef _RAY_UTIL_
+#define _RAY_UTIL_
+
 namespace Utility
 {
+
 template<typename T>
 inline T clamp(T min, T value, T max)
 {
@@ -35,3 +40,5 @@ inline uint8_t floatToByte(float i)
 }
 
 }   // end of namespace Util
+
+#endif // end of header guard _RAY_UTIL_

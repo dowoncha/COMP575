@@ -52,10 +52,12 @@ public:
     {
         UniformSampling,
         RandomSampling
-    };
+    } SamplingType;
 
     void SetSampleRate(int s);
-    
+
+    Vector3f Sampler(int x, int y) const;
+
     // Uses evenly spaced ray's in the pixel. Uses sample * sample.
     Vector3f UniformSampler(int x, int y) const;
 

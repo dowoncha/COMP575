@@ -11,6 +11,7 @@ RayTracer::RayTracer(const Scene& scene, int sWidth, int sHeight) :
 {
    angle = std::tan(M_PI * 0.5f * fov / 180.0f);
    MainCamera.SetScreenSize(ScreenWidth, ScreenHeight);
+   SamplingType = PostProcess::UniformSampling;
 }
 
 RayTracer::~RayTracer() { }
@@ -30,7 +31,7 @@ void RayTracer::Render(Image& image) const
     {
         for (int x = 0; x < ScreenWidth; ++x)
         {
-            Vector3f result = RandomSampler(x, y);
+            Vector3f result = Sampler(x, y);
             buffer.push_back(result);
         }
     }
@@ -134,15 +135,28 @@ void RayTracer::SetSampleRate(int s)
     SampleRate = s;
 }
 
+Vector3f RayTracer::Sampler(int x, int y) const
+{
+    switch(SamplingType)
+    {
+        case UniformSampling:
+            return UniformSampler(x, y);
+        case RandomSampling:
+            return RandomSampler(x, y);
+        default:
+            return Vector3f(0.0f);
+    }
+}
+
 Vector3f RayTracer::UniformSampler(int x, int y) const
 {
     Vector3f result;
     float coef = 1.0f / SampleRate;
-    for (float ax = x; ax < x + 1.0f; ax += coef)
+    for (float offsetx = 0.0f; offsetx < 1.0f; offsetx += coef)
     {
-        for (float ay = y; ay < y + 1.0f; ay += coef)
+        for (float offsety = 0.0f; offsety < 1.0f; offsety += coef)
         {
-            Ray ray = MainCamera.GetRay(ax, ay);
+            Ray ray = MainCamera.GetRay(x, y, offsetx, offsety);
             result += Trace(ray, 0);
         }
     }
@@ -158,10 +172,10 @@ Vector3f RayTracer::RandomSampler(int x, int y) const
     int s2 = SampleRate * SampleRate;
     for (int i = 0; i < s2; ++i)
     {
-        float ax = x + distribution(generator);
-        float ay = y + distribution(generator);
+        float offsetx = distribution(generator);
+        float offsety = distribution(generator);
 
-        Ray ray = MainCamera.GetRay(ax, ay);
+        Ray ray = MainCamera.GetRay(x, y, offsetx, offsety);
         result += Trace(ray, 0);
     }
 

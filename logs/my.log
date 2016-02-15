@@ -352,3 +352,33 @@
 2016-02-14 16:45:39,195 Image buffer set, buffer size is: 480000
 2016-02-14 16:45:39,200 Outputting to ppm file: 8x8aa.ppm
 2016-02-14 16:45:39,359 Finished outputting to: 8x8aa.ppm
+2016-02-15 11:08:53,812 Ray tracer started, Width: 800, Height: 600
+2016-02-15 11:08:53,815 Starting rendering
+2016-02-15 11:08:54,435 Image buffer set, buffer size is: 480000
+2016-02-15 11:08:54,462 Outputting to ppm file: no-aa.ppm
+2016-02-15 11:08:54,625 Finished outputting to: no-aa.ppm
+2016-02-15 11:08:54,625 Starting rendering
+2016-02-15 11:09:24,517 Image buffer set, buffer size is: 480000
+2016-02-15 11:09:24,522 Outputting to ppm file: 8x8aa.ppm
+2016-02-15 11:09:24,688 Finished outputting to: 8x8aa.ppm
+2016-02-15 11:14:23,403 Ray tracer started, Width: 800, Height: 600
+2016-02-15 11:14:23,405 Starting rendering
+2016-02-15 11:14:23,817 Image buffer set, buffer size is: 480000
+2016-02-15 11:14:23,833 Outputting to ppm file: no-aa.ppm
+2016-02-15 11:14:24,033 Finished outputting to: no-aa.ppm
+2016-02-15 11:14:24,033 Starting rendering
+2016-02-15 11:14:45,200 Image buffer set, buffer size is: 480000
+2016-02-15 11:14:45,205 Outputting to ppm file: 8x8uniformsampling.ppm
+2016-02-15 11:14:45,369 Outputting to ppm file: 8x8randomsampling.ppm
+2016-02-15 11:14:45,569 Finished outputting to: 8x8aa.ppm
+2016-02-15 11:19:42,672 Ray tracer started, Width: 800, Height: 600
+2016-02-15 11:19:42,674 Starting rendering
+2016-02-15 11:19:43,106 Image buffer set, buffer size is: 480000
+2016-02-15 11:19:43,121 Outputting to ppm file: no-aa.ppm
+2016-02-15 11:19:43,280 Finished outputting to no-aa.ppm, closing file.
+2016-02-15 11:19:43,280 Starting rendering
+2016-02-15 11:20:03,963 Image buffer set, buffer size is: 480000
+2016-02-15 11:20:03,968 Outputting to ppm file: 8x8uniformsampling.ppm
+2016-02-15 11:20:04,127 Finished outputting to 8x8uniformsampling.ppm, closing file.
+2016-02-15 11:20:04,127 Outputting to ppm file: 8x8randomsampling.ppm
+2016-02-15 11:20:04,287 Finished outputting to 8x8randomsampling.ppm, closing file.
