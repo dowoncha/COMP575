@@ -382,3 +382,15 @@
 2016-02-15 11:20:04,127 Finished outputting to 8x8uniformsampling.ppm, closing file.
 2016-02-15 11:20:04,127 Outputting to ppm file: 8x8randomsampling.ppm
 2016-02-15 11:20:04,287 Finished outputting to 8x8randomsampling.ppm, closing file.
+2016-02-16 12:12:32,856 Ray tracer started, Width: 800, Height: 600
+2016-02-16 12:12:56,311 Ray tracer started, Width: 800, Height: 600
+2016-02-16 12:12:56,314 Starting rendering
+2016-02-16 12:12:56,737 Image buffer set, buffer size is: 480000
+2016-02-16 12:12:56,752 Outputting to ppm file: no-aa.ppm
+2016-02-16 12:12:56,910 Finished outputting to no-aa.ppm, closing file.
+2016-02-16 12:12:56,910 Starting rendering
+2016-02-16 12:13:18,194 Image buffer set, buffer size is: 480000
+2016-02-16 12:13:18,199 Outputting to ppm file: 8x8uniformsampling.ppm
+2016-02-16 12:13:18,358 Finished outputting to 8x8uniformsampling.ppm, closing file.
+2016-02-16 12:13:18,358 Outputting to ppm file: 8x8randomsampling.ppm
+2016-02-16 12:13:18,519 Finished outputting to 8x8randomsampling.ppm, closing file.

@@ -1,16 +1,11 @@
 #include "Surface.h"
 
-Sphere::Sphere()
-{
-}
-
-Sphere::Sphere(const Vector3f& center, float radius, Material* mat) :
-  Surface(),
+Sphere::Sphere(const Vector3f& center, float radius, const Material& mat) :
+  Surface(mat),
   Radius(radius),
   Radius2(radius * radius)
 {
   Position = center;
-  Mat = mat;
 }
 
 bool Sphere::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const
@@ -91,16 +86,11 @@ Vector3f Sphere::GetNormal(const Vector3f& Point) const
   return (Point - Position).Normalized();
 }
 
-Plane::Plane()
-{
-}
-
-Plane::Plane(const Vector3f& pos, const Vector3f& normal, Material* mat) :
-  Surface(),
+Plane::Plane(const Vector3f& pos, const Vector3f& normal, const Material& mat) :
+  Surface(mat),
   Normal(normal.Normalized())
   {
     Position = pos;
-    Mat = mat;
   }
 
 Plane::~Plane() { }

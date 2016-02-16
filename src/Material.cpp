@@ -23,22 +23,22 @@ Reflection(reflection)
 }
 
 // Factory functions for creating specific color materials
-Material* Material::CreateRedMat()
+Material Material::CreateRedMat()
 {
-  return new Material(Vector3f(0.2f, 0.0f, 0.0f), Vector3f(1.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f), 0);
+  return Material(Vector3f(0.2f, 0.0f, 0.0f), Vector3f(1.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f), 0);
 }
 
-Material* Material::CreateGreenMat()
+Material Material::CreateGreenMat()
 {
-  return new Material(Vector3f(0.0f, 0.2f, 0.0f), Vector3f(0.0f, 0.5f, 0.0f), Vector3f(0.5f, 0.5f, 0.5f), 32.0f, 0.8f);
+  return Material(Vector3f(0.0f, 0.2f, 0.0f), Vector3f(0.0f, 0.5f, 0.0f), Vector3f(0.5f, 0.5f, 0.5f), 32.0f, 0.8f);
 }
 
-Material* Material::CreateBlueMat()
+Material Material::CreateBlueMat()
 {
-  return new Material(Vector3f(0.0f, 0.0f, 0.2f), Vector3f(0.0f, 0.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 0.0f);
+  return Material(Vector3f(0.0f, 0.0f, 0.2f), Vector3f(0.0f, 0.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 0.0f);
 }
 
-Material* Material::CreateWhiteMat()
+Material Material::CreateWhiteMat()
 {
-  return new Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 8.0f, 1.0f);
+  return Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 8.0f, 1.0f);
 }

@@ -29,12 +29,10 @@ protected:
 class Surface : public Node
 {
 public:
-  Surface() : Node() { }
+  //Surface() : Node() { }
+  Surface(const Material& mat) : Node(), Mat(mat) { }
 
-  virtual ~Surface()
-  {
-    delete Mat;
-  }
+  virtual ~Surface() { }
 
   virtual bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const = 0;
   virtual bool Intersect(const Ray& ray, float tMax, float& t) const = 0;
@@ -42,16 +40,16 @@ public:
 
   virtual Vector3f GetNormal(const Vector3f& p) const = 0;
 
-  Material* GetMaterial() { return Mat; }
+  Material GetMaterial() { return Mat; }
 protected:
-  Material* Mat;
+  const Material& Mat;
 };
 
 class Sphere : public Surface
 {
 public:
-  Sphere();
-  Sphere(const Vector3f& center, float radius, Material* mat = nullptr);
+  //Sphere();
+  Sphere(const Vector3f& center, float radius, const Material& mat);
 
   ~Sphere() {}
 
@@ -66,8 +64,8 @@ private:
 class Plane : public Surface
 {
 public:
-  Plane();
-  Plane(const Vector3f& pos, const Vector3f& normal, Material* mat = nullptr);
+  //Plane();
+  Plane(const Vector3f& pos, const Vector3f& normal, const Material& mat);
   ~Plane();
 
   bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;

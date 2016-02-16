@@ -20,10 +20,10 @@ public:
   Material(const Vector3f& ambient, const Vector3f& diff, const Vector3f& spec, float specPower, float Reflection);
 
   // Factory functions for creating specific color materials
-  static Material* CreateRedMat();
-  static Material* CreateGreenMat();
-  static Material* CreateBlueMat();
-  static Material* CreateWhiteMat();
+  static Material CreateRedMat();
+  static Material CreateGreenMat();
+  static Material CreateBlueMat();
+  static Material CreateWhiteMat();
 
   Vector3f GetAmbient()     { return Ambient;   }
   Vector3f GetDiffuse()     { return Diffuse;   }

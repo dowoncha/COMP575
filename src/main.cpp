@@ -38,7 +38,7 @@ void display(void)
         width,
         height,
         GL_RGB,
-
+        GL_UNSIGNED_INT
     );
     */
 }
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     // Initialize glut and callbacks
     glutInit(&argc, argv);
     glutInitWindowSize(width, height);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_STENCIL);
+    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
     glutInitWindowPosition(0,0);
     //glutCreateWindow("Ray Tracer v0.0.1");
     //glutDisplayFunc(display);
@@ -91,10 +91,10 @@ int main(int argc, char *argv[])
     Scene scene;
 
     // Create necessary scene, image, and ray tracer objects
-    Material* white = Material::CreateWhiteMat();
-    Material* red = Material::CreateRedMat();
-    Material* green = Material::CreateGreenMat();
-    Material* blue = Material::CreateBlueMat();
+    Material white = Material::CreateWhiteMat();
+    Material red = Material::CreateRedMat();
+    Material green = Material::CreateGreenMat();
+    Material blue = Material::CreateBlueMat();
 
     Sphere sphere1( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
     Sphere sphere2( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
