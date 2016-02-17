@@ -17,6 +17,28 @@ RayTracer::RayTracer(const Scene& scene, int sWidth, int sHeight) :
 
 RayTracer::~RayTracer() { }
 
+void RayTracer::BWRender(Image& image) const
+{
+    LOG(INFO) << "No color render";
+
+    // Buffer to hold color values, reserve size of the window.
+    std::vector<Vector3f> buffer;
+
+    HitData data;
+    // Most expensive thing ive ever seen.
+    for (int y = 0; y < ScreenHeight; ++y)
+    {
+        for (int x = 0; x < ScreenWidth; ++x)
+        {
+            Ray ray = MainCamera.GetRay(x, y);
+            Vector3f result = BWTrace(ray);
+            buffer.push_back(result);
+        }
+    }
+
+    image.SetBuffer(buffer);
+}
+
 void RayTracer::Render(Image& image) const
 {
     LOG(INFO) << "Starting rendering";
@@ -38,6 +60,15 @@ void RayTracer::Render(Image& image) const
     }
 
     image.SetBuffer(buffer);
+}
+
+Vector3f RayTracer::BWTrace(const Ray& ray) const
+{
+    HitData data;
+    bool result = mScene.IntersectSurfaces(ray, 1000.0f, data);
+    if (data.HitSurface == nullptr) return Vector3f(0.0f);
+
+    return Vector3f(1.0f);
 }
 
 Vector3f RayTracer::Trace(const Ray& ray, int depth) const

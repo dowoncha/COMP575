@@ -67,13 +67,17 @@ int main(int argc, char *argv[])
     light1.SetIntensity(1.0f);
 
     scene.AddLight(&light1);
-    scene.AddSurface(&plane);
     scene.AddSurface(&sphere1);
-    scene.AddSurface(&sphere2);
-    scene.AddSurface(&sphere3);
 
     Image image(width, height);
-    RayTracer rTracer(scene, width, hweight);
+    RayTracer rTracer(scene, width, height);
+
+    rTracer.BWRender(image);
+    image.OutputPPM("bw.ppm");
+
+    scene.Surfaces.push_front(&plane);
+    scene.AddSurface(&sphere2);
+    scene.AddSurface(&sphere3);
 
     // render image with no anti-aliasing
     rTracer.Render(image);
@@ -86,6 +90,7 @@ int main(int argc, char *argv[])
 
     // Render 8x8 anti-aliase random sampling.
     rTracer.SamplingType = RayTracer::PostProcess::RandomSampling;
+    rTracer.Render(image);
     image.OutputPPM("8x8randomsampling.ppm");
 
     exit(EXIT_SUCCESS);

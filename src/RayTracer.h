@@ -33,6 +33,11 @@ public:
 
     ~RayTracer();
 
+    // These are for rendering the black and white trace images.
+    // Might be useful for debugging, mostly for assignment though.
+    void BWRender(Image& image) const;
+    Vector3f BWTrace(const Ray& ray) const;
+
     // Call this and pass an image object to it, to write result to the image buffer
     void Render(Image& image) const;
 
