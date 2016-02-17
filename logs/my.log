@@ -394,3 +394,7 @@
 2016-02-16 12:13:18,358 Finished outputting to 8x8uniformsampling.ppm, closing file.
 2016-02-16 12:13:18,358 Outputting to ppm file: 8x8randomsampling.ppm
 2016-02-16 12:13:18,519 Finished outputting to 8x8randomsampling.ppm, closing file.
+2016-02-16 13:10:36,253 Ray tracer started, Width: 800, Height: 600
+2016-02-16 13:10:36,327 Ray tracer render function for GL
+2016-02-16 13:10:37,193 CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-02-16 13:10:37,193 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]

@@ -5,6 +5,14 @@ Image::Image()
 }
 
 Image::Image(int width, int height) :
+    filename("default.ppm"),
+    Width(width),
+    Height(height)
+{
+}
+
+Image::Image(std::string file, int width, int height) :
+    filename(file),
     Width(width),
     Height(height)
 {
@@ -17,8 +25,13 @@ Image::~Image()
 void Image::SetBuffer(const std::vector<Vector3f>& image)
 {
     LOG(INFO) << "Image buffer set, buffer size is: " << image.size();
-
     ImageBuffer = image;
+}
+
+void Image::SetFilename(std::string name)
+{
+    LOG(INFO) << "Image name set to: " << name;
+    filename = name;
 }
 
 Vector3f Image::GammaEncode(const Vector3f& color)
@@ -115,7 +128,7 @@ Pixel Image::ColorToPixel(const Vector4f& color)
     return MakePixel(uR, uG, uB, uA);
 }
 
-void Image::OutputPPM(std::string filename) const
+void Image::OutputPPM() const
 {
     if (ImageBuffer.empty())
     {
@@ -131,7 +144,7 @@ void Image::OutputPPM(std::string filename) const
     LOG(INFO) << "Outputting to ppm file: " << filename;
 
     // Open stream and write ppm headers, color bit's set to 255 per channel
-    std::ofstream ofs(filename, std::ios::out | std::ios::binary);
+    std::ofstream ofs(filename, std::ios::out);// | std::ios::binary);
 
     // write headers
     ofs << "P6"     << '\n'
@@ -152,4 +165,44 @@ void Image::OutputPPM(std::string filename) const
     ofs.close();
 
     LOG(INFO) << "Finished outputting to " << filename << ", closing file.";
+}
+
+void Image::OutputPPM(std::string file) const
+{
+    if (ImageBuffer.empty())
+    {
+        LOG(ERROR) << "Image Buffer empty, please call SetBuffer before outputting";
+        return;
+    }
+    if (ImageBuffer.size() != Width * Height)
+    {
+        LOG(WARNING) << "Buffer size is not equal to image width and height. Still outputting";
+        LOG(WARNING) << "Buffer size: " << ImageBuffer.size() << ", Width: " << Width << ", Height: " << Height;
+        return;
+    }
+
+    LOG(INFO) << "Outputting to ppm file: " << file;
+
+    // Open stream and write ppm headers, color bit's set to 255 per channel
+    std::ofstream ofs(file, std::ios::out); //| std::ios::binary);
+
+    // write headers
+    ofs << "P6"     << '\n'
+        << Width    << ' '
+        << Height   << '\n'
+        << 255      << '\n';
+
+    for (Vector3f color : ImageBuffer)
+    {
+        Vector3f encoded = GammaEncode(color);
+        Pixel p = ColorToPixel(color);
+
+        ofs << GetPixelR(p)
+            << GetPixelG(p)
+            << GetPixelB(p);
+    }
+
+    ofs.close();
+
+    LOG(INFO) << "Finished outputting to " << file << ", closing file.";
 }

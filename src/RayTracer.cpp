@@ -7,7 +7,8 @@ RayTracer::RayTracer(const Scene& scene, int sWidth, int sHeight) :
   fov(30.0f),
   AspectRatio((float)(ScreenWidth/ScreenHeight)),
   MainCamera(),
-  SampleRate(1)
+  SampleRate(1),
+  MaxTraceDepth(2)
 {
    angle = std::tan(M_PI * 0.5f * fov / 180.0f);
    MainCamera.SetScreenSize(ScreenWidth, ScreenHeight);
@@ -16,22 +17,28 @@ RayTracer::RayTracer(const Scene& scene, int sWidth, int sHeight) :
 
 RayTracer::~RayTracer() { }
 
+void RayTracer::Resize(int w, int h)
+{
+    LOG(INFO) << "Resize called with width: " << w << ", height: " << h;
+    ScreenWidth = w;
+    ScreenHeight = h;
+    MainCamera.SetScreenSize(w, h);
+}
+
 void RayTracer::Render(Image& image) const
 {
-    LOG(INFO) << "Starting rendering";
+    LOG(INFO) << "Starting rendering to image";
 
     // Buffer to hold color values, reserve size of the window.
     std::vector<Vector3f> buffer;
 
-    std::cout << buffer.size();
-
-    HitData data;
     // Most expensive thing ive ever seen.
     for (int y = 0; y < ScreenHeight; ++y)
     {
         for (int x = 0; x < ScreenWidth; ++x)
         {
-            Vector3f result = Sampler(x, y);
+            Ray ray = MainCamera.GetRay(x, y);
+            Vector3f result = Trace(ray, 0); //Sampler(x, y);
             buffer.push_back(result);
         }
     }
@@ -39,24 +46,51 @@ void RayTracer::Render(Image& image) const
     image.SetBuffer(buffer);
 }
 
+std::vector<Pixel> RayTracer::Render() const
+{
+    LOG(INFO) << "Ray tracer render function for GL";
+
+    // generate buffer for window size
+    std::vector<Pixel> buffer;
+
+    for (int y = 0; y < ScreenHeight; ++y)
+    {
+        for (int x = 0; x < ScreenWidth; ++x )
+        {
+            Vector3f result = Sampler(x, y);
+            Pixel p = MakePixel(result.x, result.y, result.z, 255);
+            buffer.push_back(p);
+        }
+    }
+
+    return buffer;
+}
+
 Vector3f RayTracer::Trace(const Ray& ray, int depth) const
 {
-    static int dMax = 3;
-    if (depth > dMax) return Vector3f(0.0f);        //If max depth has been reached return 0
+    if (depth > MaxTraceDepth)
+        return Vector3f(0.0f);        //If max depth has been reached return 0
 
     HitData data;
-    bool result = mScene.IntersectSurfaces(ray, 1000.0f, data);
-    if (data.HitSurface == nullptr) return Vector3f(0.0f);
+    bool result = mScene.IntersectSurfaces(ray, 10000.0f, data);
 
-    Vector3f out = Shade(ray, data);
+    if (data.HitSurface == nullptr)
+        return Vector3f(0.0f);
 
-    if (data.HitSurface->GetMaterial()->GetReflection() > 0.0f)
+    // Calculate diffuse and specular here
+    Vector3f out = data.HitSurface->GetMaterial().GetDiffuse(); //Shade(ray, data);
+
+    // If the surface material has a reflection value
+    float reflectionCoef = data.HitSurface->GetMaterial().GetReflection();
+
+    if (reflectionCoef > 0.0f)
     {
+        // Calculate the reflection ray
         Vector3f incident = -ray.Direction;
         Vector3f Direction = incident - data.Normal * 2 * ( data.Normal * incident );
         Ray reflectionRay(data.Point, Direction.Normalized());
 
-        //out += Trace(reflectionRay, depth + 1);
+        //out += Trace(reflectionRay, depth + 1) * reflectionCoef;
     }
 
     return out;
@@ -65,7 +99,7 @@ Vector3f RayTracer::Trace(const Ray& ray, int depth) const
 Vector3f RayTracer::Shade(const Ray& ray, const HitData& data) const
 {
     // Initial color is ambient of the hit material
-    Vector3f result = data.HitSurface->GetMaterial()->GetAmbient();
+    Vector3f result = data.HitSurface->GetMaterial().GetAmbient();
 
     for (Light* light : mScene.Lights)
     {
@@ -93,7 +127,7 @@ Vector3f RayTracer::CalculateDiffuse(const HitData& data, Light* light) const
     // Multiply the diffuse and the clamped cos of the angle
     Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
     float ndotl = data.Normal * lightdir;
-    Vector3f Ldiff = data.HitSurface->GetMaterial()->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
+    Vector3f Ldiff = data.HitSurface->GetMaterial().GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
 
     return Ldiff;
 }
@@ -105,9 +139,12 @@ Vector3f RayTracer::CalculateSpecular(const Ray& ray, const HitData& data, Light
     Vector3f lightdir = light->GetPosition() - data.Point;
     Vector3f half = (lightdir - ray.Direction).Normalized();
     float ndoth = data.Normal * half;
-    Material* mat = data.HitSurface->GetMaterial();
 
-    Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
+    // I might be cheating here using auto, but not sure if i can get a reference
+    // rather than the entire object.
+    auto mat = data.HitSurface->GetMaterial();
+
+    Vector3f Lspec = mat.GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat.GetSpecularPow());
 
     return Lspec;
 }
@@ -116,14 +153,14 @@ Vector3f RayTracer::CalculateSpecular(const Ray& ray, const HitData& data, Light
 Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* light) const
 {
     Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
-    Material* mat = data.HitSurface->GetMaterial();
+    auto mat = data.HitSurface->GetMaterial();
 
     float ndotl = data.Normal * lightdir;
-    Vector3f Ldiff = mat->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
+    Vector3f Ldiff = mat.GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
 
     Vector3f half = (lightdir - ray.Direction).Normalized();
     float ndoth = data.Normal * half;
-    Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
+    Vector3f Lspec = mat.GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat.GetSpecularPow());
 
     Vector3f Ltotal = Ldiff + Lspec;
 
@@ -144,6 +181,7 @@ Vector3f RayTracer::Sampler(int x, int y) const
         case RandomSampling:
             return RandomSampler(x, y);
         default:
+            LOG(WARNING) << "Sampler not set, default 0 vector returned";
             return Vector3f(0.0f);
     }
 }

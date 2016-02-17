@@ -23,7 +23,7 @@ public:
   Camera(const Vector3f& position,
          const Vector3f& target,
          const Vector3f& up);
-  ~Camera() {}
+  ~Camera();
 
   void SetScreenSize(int width, int height);
 
@@ -32,11 +32,7 @@ public:
   //Ray GetRay(T x, T y) const;
 
   Ray GetRay(int x, int y) const;
-
   Ray GetRay(int x, int y, float offsetx, float offsety) const;
-
-  //Ray GetRay(float x, float y) const;
-
 public:
   Vector3f Position;
   Vector3f Target;

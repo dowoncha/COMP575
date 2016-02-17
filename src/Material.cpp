@@ -9,7 +9,7 @@ Material::Material(const Vector3f& ambient, const Vector3f& diff, const Vector3f
   Diffuse(diff),
   Specular(spec),
   SpecPower(specPower),
-  Reflection(0.0f)
+  Reflection(0.01f)
 {
 }
 
@@ -40,5 +40,5 @@ Material Material::CreateBlueMat()
 
 Material Material::CreateWhiteMat()
 {
-  return Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 8.0f, 1.0f);
+  return Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 8.0f, 0.8f);
 }

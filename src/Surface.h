@@ -40,7 +40,7 @@ public:
 
   virtual Vector3f GetNormal(const Vector3f& p) const = 0;
 
-  Material GetMaterial() { return Mat; }
+  Material GetMaterial() const { return Mat; };
 protected:
   const Material& Mat;
 };

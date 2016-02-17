@@ -25,7 +25,6 @@
 #include "Image.h"
 #include "easylogging++.h"
 
-
 class RayTracer
 {
 public:
@@ -33,7 +32,11 @@ public:
 
     ~RayTracer();
 
+    void Resize(int w, int h);
+
     void Render(Image& image) const;
+
+    std::vector<Pixel> Render() const;
 
     Vector3f Trace(const Ray& ray, int depth) const;
 
@@ -78,6 +81,7 @@ private:
     float AspectRatio;
 
     int SampleRate;
+    int MaxTraceDepth;
 };
 
 #endif /* end of include guard: _RAY_TRACER_ */

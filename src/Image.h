@@ -59,10 +59,12 @@ public:
 
     Image();
     Image(int width, int height);
+    Image(std::string filename, int width, int height);
 
     ~Image();
 
     void SetBuffer(const std::vector<Vector3f>& image);
+    void SetFilename(std::string name);
 
     static Vector3f GammaEncode (const Vector3f& color);
     static Vector4f GammaEncode (const Vector4f& color);
@@ -73,10 +75,12 @@ public:
     static Pixel ColorToPixel(const Vector3f& color);
     static Pixel ColorToPixel(const Vector4f& color);
 
+    void OutputPPM() const;
     void OutputPPM(std::string filename) const;
 private:
     std::vector<Vector3f> ImageBuffer;
     int Width, Height;
+    std::string filename;
 };
 
 #endif /* end of include guard: _RAY_IMAGE_ */

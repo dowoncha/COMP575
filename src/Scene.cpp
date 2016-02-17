@@ -31,12 +31,11 @@ bool Scene::IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const
 {
     bool surfacehit = false;
     // Intersect all surfaces using view ray
-    float tMin = tMax;
+    // float tMin = tMax;
     for (Surface* s : Surfaces)
     {
         if (s->Intersect(ray, data.t, data.tMax, data.tPoint))
         {
-            //if (data.tMax < )
             data.Point      = data.tPoint;
             data.t          = data.tMax;
             data.HitSurface = s;
@@ -48,7 +47,7 @@ bool Scene::IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const
     return surfacehit;
 }
 
-bool Scene::IntersectSurfaces(const Ray& ray, float tMax, Surface *ignore) const
+bool Scene::IntersectSurfaces(const Ray& ray, float tMax, const Surface *ignore) const
 {
     // Intersect all surfaces using view ray
     for (Surface* s : Surfaces)
@@ -57,20 +56,6 @@ bool Scene::IntersectSurfaces(const Ray& ray, float tMax, Surface *ignore) const
 
         if (s->Intersect(ray, tMax))
         {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool Scene::IntersectReflection(const Ray& ray, float tMax, Material* HitMaterial) const
-{
-    for (Surface* s : Surfaces)
-    {
-        if (s->Intersect(ray, tMax))
-        {
-            HitMaterial = s->GetMaterial();
             return true;
         }
     }

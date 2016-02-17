@@ -42,11 +42,9 @@ public:
 
     void AddSurface(Surface* s);
     void AddLight(Light* l);
-    
-    bool IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const;
-    bool IntersectSurfaces(const Ray& ray, float tMax, Surface* ignore) const;
 
-    bool IntersectReflection(const Ray& ray, float tMax, Material* HitMaterial) const;
+    bool IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const;
+    bool IntersectSurfaces(const Ray& ray, float tMax, const Surface* ignore) const;
 public:
     std::list<Surface*> Surfaces;
     std::list<Light*> Lights;

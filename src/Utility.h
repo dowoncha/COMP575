@@ -9,6 +9,8 @@
 #ifndef _RAY_UTIL_
 #define _RAY_UTIL_
 
+#include <cstdint>
+
 namespace Utility
 {
 
