@@ -10,6 +10,8 @@
 #ifndef _RAY_TRACER_
 #define _RAY_TRACER_
 
+#define NOMINMAX
+
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>

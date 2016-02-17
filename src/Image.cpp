@@ -144,7 +144,7 @@ void Image::OutputPPM() const
     LOG(INFO) << "Outputting to ppm file: " << filename;
 
     // Open stream and write ppm headers, color bit's set to 255 per channel
-    std::ofstream ofs(filename, std::ios::out);// | std::ios::binary);
+    std::ofstream ofs(filename, std::ios::out | std::ios::binary);
 
     // write headers
     ofs << "P6"     << '\n'
@@ -184,7 +184,7 @@ void Image::OutputPPM(std::string file) const
     LOG(INFO) << "Outputting to ppm file: " << file;
 
     // Open stream and write ppm headers, color bit's set to 255 per channel
-    std::ofstream ofs(file, std::ios::out); //| std::ios::binary);
+    std::ofstream ofs(file, std::ios::out | std::ios::binary);
 
     // write headers
     ofs << "P6"     << '\n'

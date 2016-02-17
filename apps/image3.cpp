@@ -6,11 +6,6 @@
  *
  *********************************************************************************/
 
-#ifdef _WIN32
-    #define M_PI 3.14159265359
-#elif __unix__ || __APPLE__
-#endif
-
 #include <iostream>
 #include <cstring>
 
@@ -86,17 +81,16 @@ int main(int argc, char *argv[])
     // render image with no anti-aliasing
     rTracer.Render(image);
     image.OutputPPM("no-aa.ppm");
-    //
 
     // Render with 8x8 sample rate uniform samling
-    //rTracer.SetSampleRate(8);
-    //rTracer.Render(image);
-    //image.OutputPPM("8x8uniformsampling.ppm");
+    rTracer.SetSampleRate(4);
+    rTracer.Render(image);
+    image.OutputPPM("8x8uniformsampling.ppm");
 
     // Render 8x8 anti-aliase random sampling.
-    //rTracer.SamplingType = RayTracer::PostProcess::UniformSampling;
-    //rTracer.Render(image);
-    //image.OutputPPM("8x8randomsampling.ppm");
+    rTracer.SamplingType = RayTracer::PostProcess::RandomSampling;
+    rTracer.Render(image);
+    image.OutputPPM("8x8randomsampling.ppm");
 
     exit(EXIT_SUCCESS);
 }

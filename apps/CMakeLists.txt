@@ -8,3 +8,5 @@ target_link_libraries(image3 project_SRCS)
 
 target_compile_features( image3 PRIVATE cxx_range_for)
 #target_compile_features( gltracer PRIVATE cxx_range_for)
+
+#add_definitions(-DNOMINMAX)

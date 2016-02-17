@@ -9,7 +9,7 @@ Material::Material(const Vector3f& ambient, const Vector3f& diff, const Vector3f
   Diffuse(diff),
   Specular(spec),
   SpecPower(specPower),
-  Reflection(0.01f)
+  Reflection(0.0f)
 {
 }
 

@@ -31,7 +31,7 @@ public:
   Vector2(T x_, T y_) : x(x_), y(y_) { }
   Vector2(const Vector2& b) : x(b.x), y(b.y) { }
 
-  ~Vector2();
+  ~Vector2() { }
 
   Vector2  operator +  (const Vector2& b) { return Vector2(x + b.x, y + b.y); }
   Vector2& operator += (const Vector2& b) { x += b.x; y += b.y; return *this; }

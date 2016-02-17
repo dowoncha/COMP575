@@ -8,7 +8,7 @@ RayTracer::RayTracer(const Scene& scene, int sWidth, int sHeight) :
   AspectRatio((float)(ScreenWidth/ScreenHeight)),
   MainCamera(),
   SampleRate(1),
-  MaxTraceDepth(2)
+  MaxTraceDepth(3)
 {
    angle = std::tan(M_PI * 0.5f * fov / 180.0f);
    MainCamera.SetScreenSize(ScreenWidth, ScreenHeight);
@@ -38,7 +38,7 @@ void RayTracer::Render(Image& image) const
         for (int x = 0; x < ScreenWidth; ++x)
         {
             Ray ray = MainCamera.GetRay(x, y);
-            Vector3f result = Trace(ray, 0); //Sampler(x, y);
+			Vector3f result = Sampler(x, y);
             buffer.push_back(result);
         }
     }
@@ -58,7 +58,7 @@ std::vector<Pixel> RayTracer::Render() const
         for (int x = 0; x < ScreenWidth; ++x )
         {
             Vector3f result = Sampler(x, y);
-            Pixel p = MakePixel(result.x, result.y, result.z, 255);
+			Pixel p = Image::ColorToPixel(result);
             buffer.push_back(p);
         }
     }
@@ -78,7 +78,7 @@ Vector3f RayTracer::Trace(const Ray& ray, int depth) const
         return Vector3f(0.0f);
 
     // Calculate diffuse and specular here
-    Vector3f out = data.HitSurface->GetMaterial().GetDiffuse(); //Shade(ray, data);
+    Vector3f out = Shade(ray, data);
 
     // If the surface material has a reflection value
     float reflectionCoef = data.HitSurface->GetMaterial().GetReflection();
@@ -90,7 +90,7 @@ Vector3f RayTracer::Trace(const Ray& ray, int depth) const
         Vector3f Direction = incident - data.Normal * 2 * ( data.Normal * incident );
         Ray reflectionRay(data.Point, Direction.Normalized());
 
-        //out += Trace(reflectionRay, depth + 1) * reflectionCoef;
+        out += Trace(reflectionRay, depth + 1) * reflectionCoef;
     }
 
     return out;
@@ -217,7 +217,7 @@ Vector3f RayTracer::RandomSampler(int x, int y) const
         result += Trace(ray, 0);
     }
 
-    result = result / s2;
+    result = (result / (float)s2);
 
     return result;
 }
