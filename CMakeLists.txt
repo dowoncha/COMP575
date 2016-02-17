@@ -13,6 +13,11 @@ endif(NOT OPENGL_FOUND)
 set(GL_LIBRARY GL GLU X11)
 
 include_directories(src)
+include_directories(lib/freeglut/include)
+include_directories(lib/gl3w/include)
+
+add_subdirectory(lib/freeglut)
+add_subdirectory(lib/gl3w)
 
 add_subdirectory(src)
 add_subdirectory(apps)
