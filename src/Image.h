@@ -62,17 +62,23 @@ public:
 
     ~Image();
 
+    // After rendering use this in render function to passed image parameter.
     void SetBuffer(const std::vector<Vector3f>& image);
 
+    // Gamma encode function for a color
+    // Currently uses 1/2.2 for gamma but there is a commented out sRGB function
     static Vector3f GammaEncode (const Vector3f& color);
     static Vector4f GammaEncode (const Vector4f& color);
 
+    // Color "normalize", for osme reason acts differently
     static Vector3f PinToUnit(const Vector3f& a);
     static Vector4f PinToUnit(const Vector4f& a);
 
+    // Convert a vector color into its pixel component uint32_t
     static Pixel ColorToPixel(const Vector3f& color);
     static Pixel ColorToPixel(const Vector4f& color);
 
+    // Output the current buffer into a ppm with filename
     void OutputPPM(std::string filename) const;
 private:
     std::vector<Vector3f> ImageBuffer;

@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     image.OutputPPM("8x8uniformsampling.ppm");
 
     // Render 8x8 anti-aliase random sampling.
-    rTracer.SamplingType = RayTracer::PostProcess::UniformSampling;
+    rTracer.SamplingType = RayTracer::PostProcess::RandomSampling;
     image.OutputPPM("8x8randomsampling.ppm");
 
     exit(EXIT_SUCCESS);

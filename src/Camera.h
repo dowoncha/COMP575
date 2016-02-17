@@ -31,6 +31,7 @@ public:
   //template<typename T>
   //Ray GetRay(T x, T y) const;
 
+  // Make a ray from the x, y coordinate passed
   Ray GetRay(int x, int y) const;
 
   Ray GetRay(int x, int y, float offsetx, float offsety) const;

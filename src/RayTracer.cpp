@@ -7,7 +7,8 @@ RayTracer::RayTracer(const Scene& scene, int sWidth, int sHeight) :
   fov(30.0f),
   AspectRatio((float)(ScreenWidth/ScreenHeight)),
   MainCamera(),
-  SampleRate(1)
+  SampleRate(1),
+  MaxTraceDepth(3)
 {
    angle = std::tan(M_PI * 0.5f * fov / 180.0f);
    MainCamera.SetScreenSize(ScreenWidth, ScreenHeight);
@@ -41,8 +42,7 @@ void RayTracer::Render(Image& image) const
 
 Vector3f RayTracer::Trace(const Ray& ray, int depth) const
 {
-    static int dMax = 3;
-    if (depth > dMax) return Vector3f(0.0f);        //If max depth has been reached return 0
+    if (depth > MaxTraceDepth) return Vector3f(0.0f);        //If max depth has been reached return 0
 
     HitData data;
     bool result = mScene.IntersectSurfaces(ray, 1000.0f, data);

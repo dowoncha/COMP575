@@ -33,21 +33,24 @@ public:
 
     ~RayTracer();
 
+    // Call this and pass an image object to it, to write result to the image buffer
     void Render(Image& image) const;
 
+    // Pass a ray to trace through the scene and get a resulting color
     Vector3f Trace(const Ray& ray, int depth) const;
 
+    // Determine the diffuse and specular color
     Vector3f Shade(const Ray& ray, const HitData& Data) const;
 
-    // Check whether shadow ray is blocked by any surface
-    bool ShadowTrace(const HitData& Data) const;
-
+    // Pretty obvious
     Vector3f CalculateDiffuse(const HitData& data, Light* light) const;
-
     Vector3f CalculateSpecular(const Ray& ray, const HitData& data, Light* light) const;
 
+    // DEPRECATED:
+    // Basically does diffuse and specular in one function
     Vector3f CalculateLight(const Ray& ray, const HitData& Data, Light* light) const;
 
+    // Types for which sampling to use
     enum PostProcess
     {
         UniformSampling,
@@ -56,6 +59,7 @@ public:
 
     void SetSampleRate(int s);
 
+    // Switch function for type of sampler to use depending on the SamplingType
     Vector3f Sampler(int x, int y) const;
 
     // Uses evenly spaced ray's in the pixel. Uses sample * sample.
@@ -78,6 +82,7 @@ private:
     float AspectRatio;
 
     int SampleRate;
+    int MaxTraceDepth;
 };
 
 #endif /* end of include guard: _RAY_TRACER_ */
