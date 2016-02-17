@@ -11,6 +11,11 @@
 #ifndef _RAY_PRIM_
 #define _RAY_PRIM_
 
+#ifdef _WIN32
+    #define M_PI 3.14159265359
+#elif __unix__ || __APPLE__
+#endif
+
 #include <cmath>
 #include <iostream>
 

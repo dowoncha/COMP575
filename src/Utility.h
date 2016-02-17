@@ -15,12 +15,14 @@ namespace Utility
 template<typename T>
 inline T clamp(T min, T value, T max)
 {
-    return std::max(min, std::min(value, max));
+    // WinDef.h has max as a macro, stupid but parantheses are necessary
+    return (std::max)(min, (std::min)(value, max));
 }
 
 static inline float PinToUnit(float x)
 {
-    return std::max(0.0f, std::min(1.0f, x));
+    // WinDef.h has max as a macro, stupid but parantheses are necessary
+    return (std::max)(0.0f, (std::min)(1.0f, x));
 }
 
 inline float floor_clamp(float value)

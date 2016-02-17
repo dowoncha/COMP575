@@ -6,11 +6,6 @@
  *
  *********************************************************************************/
 
-#ifdef _WIN32
-    #define M_PI 3.14159265359
-#elif __unix__ || __APPLE__
-#endif
-
 #include <iostream>
 #include <cstring>
 
@@ -78,7 +73,7 @@ int main(int argc, char *argv[])
     scene.AddSurface(&sphere3);
 
     Image image(width, height);
-    RayTracer rTracer(scene, width, height);
+    RayTracer rTracer(scene, width, hweight);
 
     // render image with no anti-aliasing
     rTracer.Render(image);

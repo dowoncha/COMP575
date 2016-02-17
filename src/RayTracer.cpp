@@ -58,6 +58,7 @@ Vector3f RayTracer::Trace(const Ray& ray, int depth) const
         Vector3f Direction = incident - data.Normal * 2 * ( data.Normal * incident );
         Ray reflectionRay(data.Point, Direction.Normalized());
 
+        // Reflection is currently disabled.
         //out += Trace(reflectionRay, depth + 1) * reflec;
     }
 
