@@ -50,13 +50,15 @@ Vector3f RayTracer::Trace(const Ray& ray, int depth) const
 
     Vector3f out = Shade(ray, data);
 
-    if (data.HitSurface->GetMaterial()->GetReflection() > 0.0f)
+    float reflec = data.HitSurface->GetMaterial().GetReflection();
+
+    if (reflec > 0.0f)
     {
         Vector3f incident = -ray.Direction;
         Vector3f Direction = incident - data.Normal * 2 * ( data.Normal * incident );
         Ray reflectionRay(data.Point, Direction.Normalized());
 
-        //out += Trace(reflectionRay, depth + 1);
+        //out += Trace(reflectionRay, depth + 1) * reflec;
     }
 
     return out;
@@ -65,7 +67,7 @@ Vector3f RayTracer::Trace(const Ray& ray, int depth) const
 Vector3f RayTracer::Shade(const Ray& ray, const HitData& data) const
 {
     // Initial color is ambient of the hit material
-    Vector3f result = data.HitSurface->GetMaterial()->GetAmbient();
+    Vector3f result = data.HitSurface->GetMaterial().GetAmbient();
 
     for (Light* light : mScene.Lights)
     {
@@ -93,7 +95,7 @@ Vector3f RayTracer::CalculateDiffuse(const HitData& data, Light* light) const
     // Multiply the diffuse and the clamped cos of the angle
     Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
     float ndotl = data.Normal * lightdir;
-    Vector3f Ldiff = data.HitSurface->GetMaterial()->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
+    Vector3f Ldiff = data.HitSurface->GetMaterial().GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
 
     return Ldiff;
 }
@@ -105,9 +107,9 @@ Vector3f RayTracer::CalculateSpecular(const Ray& ray, const HitData& data, Light
     Vector3f lightdir = light->GetPosition() - data.Point;
     Vector3f half = (lightdir - ray.Direction).Normalized();
     float ndoth = data.Normal * half;
-    Material* mat = data.HitSurface->GetMaterial();
+    Material mat = data.HitSurface->GetMaterial();
 
-    Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
+    Vector3f Lspec = mat.GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat.GetSpecularPow());
 
     return Lspec;
 }
@@ -116,14 +118,14 @@ Vector3f RayTracer::CalculateSpecular(const Ray& ray, const HitData& data, Light
 Vector3f RayTracer::CalculateLight(const Ray& ray, const HitData& data, Light* light) const
 {
     Vector3f lightdir = (light->GetPosition() - data.Point).Normalized();
-    Material* mat = data.HitSurface->GetMaterial();
+    Material mat = data.HitSurface->GetMaterial();
 
     float ndotl = data.Normal * lightdir;
-    Vector3f Ldiff = mat->GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
+    Vector3f Ldiff = mat.GetDiffuse() * light->Intensity * std::max(0.0f, ndotl);
 
     Vector3f half = (lightdir - ray.Direction).Normalized();
     float ndoth = data.Normal * half;
-    Vector3f Lspec = mat->GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat->GetSpecularPow());
+    Vector3f Lspec = mat.GetSpecular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat.GetSpecularPow());
 
     Vector3f Ltotal = Ldiff + Lspec;
 

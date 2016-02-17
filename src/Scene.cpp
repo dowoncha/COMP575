@@ -63,17 +63,3 @@ bool Scene::IntersectSurfaces(const Ray& ray, float tMax, Surface *ignore) const
 
     return false;
 }
-
-bool Scene::IntersectReflection(const Ray& ray, float tMax, Material* HitMaterial) const
-{
-    for (Surface* s : Surfaces)
-    {
-        if (s->Intersect(ray, tMax))
-        {
-            HitMaterial = s->GetMaterial();
-            return true;
-        }
-    }
-
-    return false;
-}

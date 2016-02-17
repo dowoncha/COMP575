@@ -11,7 +11,6 @@
 #elif __unix__ || __APPLE__
 #endif
 
-#include <GL/freeglut.h>
 #include <iostream>
 #include <cstring>
 
@@ -30,26 +29,6 @@ const char * elConf =
     //"To_Standard_Output = false";
 
 static int width = 800, height = 600;
-
-void display(void)
-{
-    /*
-    glDrawPixels(
-        width,
-        height,
-        GL_RGB,
-        GL_UNSIGNED_INT
-    );
-    */
-}
-
-void initialize()
-{
-    //glClearColor(0.0, 0.0, 0.0, 0.0);
-    //glColor3f(1.0, 1.0, 1.0);
-
-    //glMatrixMode(GL_PROJECTOIN);
-}
 
 int main(int argc, char *argv[])
 {
@@ -74,19 +53,6 @@ int main(int argc, char *argv[])
 
     LOG(INFO) << "Ray tracer started, Width: " << width << ", Height: " << height;
     START_EASYLOGGINGPP(argc, argv);
-
-    // DO THIS WHEN THERE IS TIME
-    // Initialize glut and callbacks
-    glutInit(&argc, argv);
-    glutInitWindowSize(width, height);
-    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
-    glutInitWindowPosition(0,0);
-    //glutCreateWindow("Ray Tracer v0.0.1");
-    //glutDisplayFunc(display);
-    //glutMainLoop();
-
-    // Setup up logging when time
-    //glutInitErrorFunc(LogError);
 
     Scene scene;
 

@@ -394,3 +394,44 @@
 2016-02-16 12:13:18,358 Finished outputting to 8x8uniformsampling.ppm, closing file.
 2016-02-16 12:13:18,358 Outputting to ppm file: 8x8randomsampling.ppm
 2016-02-16 12:13:18,519 Finished outputting to 8x8randomsampling.ppm, closing file.
+2016-02-16 21:27:36,618 Ray tracer started, Width: 800, Height: 600
+2016-02-16 21:27:36,620 Starting rendering
+2016-02-16 21:27:37,014 Image buffer set, buffer size is: 480000
+2016-02-16 21:27:37,027 Outputting to ppm file: no-aa.ppm
+2016-02-16 21:27:37,188 Finished outputting to no-aa.ppm, closing file.
+2016-02-16 21:27:37,188 Starting rendering
+2016-02-16 21:28:00,323 Image buffer set, buffer size is: 480000
+2016-02-16 21:28:00,328 Outputting to ppm file: 8x8uniformsampling.ppm
+2016-02-16 21:28:00,504 Finished outputting to 8x8uniformsampling.ppm, closing file.
+2016-02-16 21:28:00,504 Outputting to ppm file: 8x8randomsampling.ppm
+2016-02-16 21:28:00,674 Finished outputting to 8x8randomsampling.ppm, closing file.
+2016-02-16 21:28:16,231 Ray tracer started, Width: 800, Height: 600
+2016-02-16 21:28:16,231 Starting rendering
+2016-02-16 21:28:16,656 Image buffer set, buffer size is: 480000
+2016-02-16 21:28:16,670 Outputting to ppm file: no-aa.ppm
+2016-02-16 21:28:16,831 Finished outputting to no-aa.ppm, closing file.
+2016-02-16 21:28:16,831 Starting rendering
+2016-02-16 21:28:39,830 Image buffer set, buffer size is: 480000
+2016-02-16 21:28:39,834 Outputting to ppm file: 8x8uniformsampling.ppm
+2016-02-16 21:28:39,991 Finished outputting to 8x8uniformsampling.ppm, closing file.
+2016-02-16 21:28:39,991 Outputting to ppm file: 8x8randomsampling.ppm
+2016-02-16 21:28:40,149 Finished outputting to 8x8randomsampling.ppm, closing file.
+2016-02-16 21:29:19,304 Ray tracer started, Width: 800, Height: 600
+2016-02-16 21:29:19,304 Starting rendering
+2016-02-16 21:29:20,362 Image buffer set, buffer size is: 480000
+2016-02-16 21:29:20,376 Outputting to ppm file: no-aa.ppm
+2016-02-16 21:29:20,537 Finished outputting to no-aa.ppm, closing file.
+2016-02-16 21:29:20,537 Starting rendering
+2016-02-16 21:30:28,295 Image buffer set, buffer size is: 480000
+2016-02-16 21:30:28,302 Outputting to ppm file: 8x8uniformsampling.ppm
+2016-02-16 21:30:28,508 Finished outputting to 8x8uniformsampling.ppm, closing file.
+2016-02-16 21:30:28,508 Outputting to ppm file: 8x8randomsampling.ppm
+2016-02-16 21:30:28,691 Finished outputting to 8x8randomsampling.ppm, closing file.
+2016-02-16 21:31:16,184 Ray tracer started, Width: 800, Height: 600
+2016-02-16 21:31:16,184 Starting rendering
+2016-02-16 21:31:16,585 Image buffer set, buffer size is: 480000
+2016-02-16 21:31:16,598 Outputting to ppm file: no-aa.ppm
+2016-02-16 21:31:16,759 Finished outputting to no-aa.ppm, closing file.
+2016-02-16 21:31:16,759 Starting rendering
+2016-02-16 21:31:18,122 CRASH HANDLED; Application has crashed due to [SIGINT] signal
+2016-02-16 21:31:18,122 Aborting application. Reason: Fatal log at [src/easylogging++.h:5583]
