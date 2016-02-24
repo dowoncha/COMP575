@@ -13,7 +13,8 @@
 #include <list>
 #include <algorithm>
 
-#include "Primitives.h"
+#include <glm/vec3.hpp>
+
 #include "Surface.h"
 #include "Light.h"
 
@@ -23,8 +24,8 @@
 class HitData
 {
 public:
-    Vector3f Point, tPoint;
-    Vector3f Normal;
+    glm::vec3 Point, tPoint;
+    glm::vec3 Normal;
     float t, tMax;
     Surface* HitSurface;
 public:
@@ -42,11 +43,9 @@ public:
 
     void AddSurface(Surface* s);
     void AddLight(Light* l);
-    
-    bool IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const;
-    bool IntersectSurfaces(const Ray& ray, float tMax, Surface* ignore) const;
 
-    bool IntersectReflection(const Ray& ray, float tMax, Material* HitMaterial) const;
+    bool IntersectSurfaces(const Ray& ray, float tMax, HitData& data) const;
+    bool IntersectSurfaces(const Ray& ray, float tMax, const Surface* ignore) const;
 public:
     std::list<Surface*> Surfaces;
     std::list<Light*> Lights;

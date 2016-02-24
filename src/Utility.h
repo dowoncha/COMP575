@@ -9,18 +9,29 @@
 #ifndef _RAY_UTIL_
 #define _RAY_UTIL_
 
+#ifdef _WIN32
+#define M_PI 3.14159265359
+//#define NOMINMAX
+#elif __unix__ || __APPLE__
+#endif
+
+//#include <cstdint>
+#include <algorithm>
+
 namespace Utility
 {
 
 template<typename T>
 inline T clamp(T min, T value, T max)
 {
-    return std::max(min, std::min(value, max));
+	// stupid windows requires me to do this because of the min macro defined in windef.
+	// I don't use windef anywhere though...
+    return (std::max)(min, (std::min)(value, max));
 }
 
 static inline float PinToUnit(float x)
 {
-    return std::max(0.0f, std::min(1.0f, x));
+    return (std::max)(0.0f, (std::min)(1.0f, x));
 }
 
 inline float floor_clamp(float value)

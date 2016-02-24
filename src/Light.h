@@ -15,11 +15,15 @@
 class Light : public Node
 {
 public:
-  Vector3f Ambient, Diffuse;
+  glm::vec3 Ambient, Diffuse;
   float Intensity;
+
 public:
   Light();
-  Light(const Vector3f& pos, const Vector3f& ambient, const Vector3f& diff);
+  Light(const glm::vec3& pos,
+        const glm::vec3& ambient,
+        const glm::vec3 & diff);
+
   ~Light();
 
   void SetIntensity(float i);

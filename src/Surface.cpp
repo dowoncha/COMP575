@@ -1,6 +1,10 @@
 #include "Surface.h"
 
-Sphere::Sphere(const Vector3f& center, float radius, const Material& mat) :
+Surface::Surface(const Material& mat) :
+  Node(), mMaterial(mat)
+{ }
+
+Sphere::Sphere(const glm::vec3& center, float radius, const Material& mat) :
   Surface(mat),
   Radius(radius),
   Radius2(radius * radius)
@@ -8,12 +12,16 @@ Sphere::Sphere(const Vector3f& center, float radius, const Material& mat) :
   Position = center;
 }
 
-bool Sphere::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const
+Sphere::~Sphere()
+{
+}
+
+bool Sphere::Intersect(const Ray& ray, float tMax, float& t, glm::vec3& Point) const
 {
   // Calculate ray-sphere intersection using geometric approach
-  Vector3f len = Position - ray.Position;
-  float s = len * ray.Direction;
-  float len2 = len.Length() * len.Length();
+  glm::vec3 len = Position - ray.Position;
+  float s = glm::dot(len, ray.Direction);
+  float len2 = glm::length(len) * glm::length(len);
 
   if (s > 0.0f)
   {
@@ -37,9 +45,9 @@ bool Sphere::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) co
 bool Sphere::Intersect(const Ray& ray, float tMax, float& t) const
 {
   // Calculate ray-sphere intersection using geometric approach
-  Vector3f len = Position - ray.Position;
-  float s = len * ray.Direction;
-  float len2 = len.Length() * len.Length();
+  glm::vec3 len = Position - ray.Position;
+  float s = glm::dot(len, ray.Direction);
+  float len2 = glm::length(len) * glm::length(len);
 
   if (s > 0.0f)
   {
@@ -61,9 +69,9 @@ bool Sphere::Intersect(const Ray& ray, float tMax, float& t) const
 bool Sphere::Intersect(const Ray& ray, float tMax) const
 {
   // Calculate ray-sphere intersection using geometric approach
-  Vector3f len = Position - ray.Position;
-  float s = len * ray.Direction;
-  float len2 = len.Length() * len.Length();
+  glm::vec3 len = Position - ray.Position;
+  float s = glm::dot(len, ray.Direction);
+  float len2 = glm::length(len) * glm::length(len);
 
   if (s > 0.0f)
   {
@@ -81,27 +89,28 @@ bool Sphere::Intersect(const Ray& ray, float tMax) const
   return false;
 }
 
-Vector3f Sphere::GetNormal(const Vector3f& Point) const
+glm::vec3 Sphere::GetNormal(const glm::vec3& Point) const
 {
-  return (Point - Position).Normalized();
+  return glm::normalize(Point - Position);
 }
 
-Plane::Plane(const Vector3f& pos, const Vector3f& normal, const Material& mat) :
+Plane::Plane(const glm::vec3& pos, const glm::vec3& normal, const Material& mat) :
   Surface(mat),
-  Normal(normal.Normalized())
-  {
-    Position = pos;
-  }
-
-Plane::~Plane() { }
-
-bool Plane::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const
+  Normal(glm::normalize(normal))
 {
-  float denom = Normal * ray.Direction;
+  Position = pos;
+}
+
+Plane::~Plane()
+{ }
+
+bool Plane::Intersect(const Ray& ray, float tMax, float& t, glm::vec3& Point) const
+{
+  float denom = glm::dot(Normal, ray.Direction);
 
   if (std::fabs(denom) > 1e-6)
   {
-    t = (Normal * (Position - ray.Position)) / denom;
+    t = glm::dot(Normal, Position - ray.Position) / denom;
     if (t >= 0.0f)
     {
       Point = ray.Evaluate(t);
@@ -114,11 +123,11 @@ bool Plane::Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) con
 
 bool Plane::Intersect(const Ray& ray, float tMax, float& t) const
 {
-  float denom = Normal * ray.Direction;
+  float denom = glm::dot(Normal, ray.Direction);
 
   if (std::fabs(denom) > 1e-6)
   {
-    t = (Normal * (Position - ray.Position)) / denom;
+    t = glm::dot(Normal, (Position - ray.Position)) / denom;
     if (t > 0.0f)
     {
       return true;
@@ -130,11 +139,11 @@ bool Plane::Intersect(const Ray& ray, float tMax, float& t) const
 
 bool Plane::Intersect(const Ray& ray, float tMax) const
 {
-  float denom = Normal * ray.Direction;
+  float denom = glm::dot(Normal, ray.Direction);
 
   if (std::fabs(denom) > 1e-6)
   {
-    float t = (Normal * (Position - ray.Position)) / denom;
+    float t = glm::dot(Normal, (Position - ray.Position)) / denom;
     if (t >= 0.0f)
     {
       return true;
@@ -144,7 +153,12 @@ bool Plane::Intersect(const Ray& ray, float tMax) const
   return false;
 }
 
-Vector3f Plane::GetNormal(const Vector3f& p) const
+glm::vec3 Plane::GetNormal() const
+{
+  return Normal;
+}
+
+glm::vec3 Plane::GetNormal(const glm::vec3& p) const
 {
   return Normal;
 }
