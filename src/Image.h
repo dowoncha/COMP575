@@ -77,8 +77,7 @@ public:
     static Pixel ColorToPixel(const glm::vec3& color);
     static Pixel ColorToPixel(const glm::vec4& color);
 
-    void OutputPPM() const;
-    void OutputPPM(std::string filename) const;
+    void OutputPPM(std::string filename="default.ppm") const;
 private:
     std::vector<glm::vec3> ImageBuffer;
     int Width, Height;

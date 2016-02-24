@@ -34,6 +34,7 @@ public:
 
   void SetScreenSize(int width, int height);
 
+  // Make a ray from the x, y coordinate passed
   Ray GetRay(int x, int y) const;
   Ray GetRay(int x, int y, float offsetx, float offsety) const;
 public:

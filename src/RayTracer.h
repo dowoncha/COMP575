@@ -53,6 +53,12 @@ public:
 
     glm::vec3 CalculateSpecular(const Ray& ray, const HitData& data, Light* light) const;
 
+    // These are for rendering the black and white trace images.
+    // Might be useful for debugging, mostly for assignment though.
+    void BWRender(Image& image) const;
+    glm::vec3 BWTrace(const Ray& ray) const;
+
+    // Types for which sampling to use
     enum PostProcess
     {
         UniformSampling,

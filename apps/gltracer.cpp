@@ -13,7 +13,7 @@
 
 // Need to make this cross platfrom later on
 #include <GL/gl3w.h>
-#include <GL/freeglut.h>
+//#include <GL/freeglut.h>
 #include <iostream>
 #include <cstring>
 
@@ -32,9 +32,6 @@ const char * elConf =
     //"To_Standard_Output = false";
 
 static int width = 800, height = 600;
-
-static Scene scene;
-static RayTracer tracer(scene, width, height);
 
 void RenderScene(void)
 {
@@ -103,33 +100,6 @@ int main(int argc, char *argv[])
 
     LOG(INFO) << "OpenGL " << glGetString(GL_VERSION)
               << ", GLSL " << glGetString(GL_SHADING_LANGUAGE_VERSION);
-
-    // Create necessary scene, image, and ray tracer objects
-    Material white = Material::CreateWhiteMat();
-    Material red = Material::CreateRedMat();
-    Material green = Material::CreateGreenMat();
-    Material blue = Material::CreateBlueMat();
-
-    Sphere sphere1( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
-    Sphere sphere2( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
-    Sphere sphere3( Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue);
-
-    Plane plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), white);
-
-    Light light1(Vector3f(-4.0f, 4.0f, -3.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
-    light1.SetIntensity(1.0f);
-
-    // Add scene objects
-    scene.AddLight(&light1);
-    scene.AddSurface(&plane);
-    scene.AddSurface(&sphere1);
-    scene.AddSurface(&sphere2);
-    scene.AddSurface(&sphere3);
-
-    // Setup up logging when time
-    //glutInitErrorFunc(LogError);
-
-    glutMainLoop();
 
     exit(EXIT_SUCCESS);
 }

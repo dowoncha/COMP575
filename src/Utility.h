@@ -24,13 +24,15 @@ namespace Utility
 template<typename T>
 inline T clamp(T min, T value, T max)
 {
-	// stupid windows requires me to do this because of the min macro defined in windef.
-	// I don't use windef anywhere though...
+  	// stupid windows requires me to do this because of the min macro defined in windef.
+	  // I don't use windef anywhere though...
+    // WinDef.h has max as a macro, stupid but parantheses are necessary
     return (std::max)(min, (std::min)(value, max));
 }
 
 static inline float PinToUnit(float x)
 {
+    // WinDef.h has max as a macro, stupid but parantheses are necessary
     return (std::max)(0.0f, (std::min)(1.0f, x));
 }
 
