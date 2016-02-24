@@ -44,13 +44,6 @@ void RenderScene(void)
 
     // I can pass a vector here because the spec guarantees contiguous
     // space and pointer to the vector points to the memory.
-    glDrawPixels(
-        width,
-        height,
-        GL_RGB,
-        GL_UNSIGNED_INT,
-        &buffer[0]
-    );
 }
 
 void ResizeWindow(int w, int h)
@@ -97,9 +90,9 @@ int main(int argc, char *argv[])
     // Define callbacks here
     glutDisplayFunc(RenderScene);
     glutReshapeFunc(ResizeWindow);
-    glutIdleFunc(renderScene);
+    glutIdleFunc(RenderScene);
 
-    if (gl3wInit()) {
+    if (!gl3wInit()) {
         LOG(ERROR) << "Failed to initialize OpenGL";
         exit(EXIT_FAILURE);
     }

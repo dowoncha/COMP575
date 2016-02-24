@@ -16,8 +16,10 @@
 #include <vector>
 #include <cassert>
 
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+
 #include "easylogging++.h"
-#include "Primitives.h"
 #include "Utility.h"
 
 /**
@@ -63,22 +65,22 @@ public:
 
     ~Image();
 
-    void SetBuffer(const std::vector<Vector3f>& image);
-    void SetFilename(std::string name);
+    void SetBuffer(std::vector<glm::vec3> const & image);
+    void SetFilename(std::string name = "default.ppm");
 
-    static Vector3f GammaEncode (const Vector3f& color);
-    static Vector4f GammaEncode (const Vector4f& color);
+    static glm::vec3 GammaEncode (const glm::vec3& color);
+    static glm::vec4 GammaEncode (const glm::vec4& color);
 
-    static Vector3f PinToUnit(const Vector3f& a);
-    static Vector4f PinToUnit(const Vector4f& a);
+    static glm::vec3 PinToUnit(const glm::vec3& a);
+    static glm::vec4 PinToUnit(const glm::vec4& a);
 
-    static Pixel ColorToPixel(const Vector3f& color);
-    static Pixel ColorToPixel(const Vector4f& color);
+    static Pixel ColorToPixel(const glm::vec3& color);
+    static Pixel ColorToPixel(const glm::vec4& color);
 
     void OutputPPM() const;
     void OutputPPM(std::string filename) const;
 private:
-    std::vector<Vector3f> ImageBuffer;
+    std::vector<glm::vec3> ImageBuffer;
     int Width, Height;
     std::string filename;
 };

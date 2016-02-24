@@ -8,12 +8,11 @@
 
 #include <iostream>
 #include <cstring>
+#include <glm/vec3.hpp>
 
 #include "easylogging++.h"
 #include "RayTracer.h"
 #include "Scene.h"
-#include "Image.h"
-#include "Primitives.h"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -23,7 +22,7 @@ const char * elConf =
     "FILENAME = \"./logs/my.log\"\n";
     //"To_Standard_Output = false";
 
-static int width = 800, height = 800;
+static int width = 512, height = 512;
 
 int main(int argc, char *argv[])
 {
@@ -56,14 +55,14 @@ int main(int argc, char *argv[])
     Material blue = Material::CreateBlueMat();
 
     // Create surfaces
-    Sphere sphere1( Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green);
-    Sphere sphere2( Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red);
-    Sphere sphere3( Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue);
+    Sphere sphere1( glm::vec3(0.0f, 0.0f, -7.0f), 2.0f, green);
+    Sphere sphere2( glm::vec3(-4.0f, 0.0f, -7.0f), 1.0f, red);
+    Sphere sphere3( glm::vec3(4.0f, 0.0f, -7.0f), 1.0f, blue);
 
-    Plane plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), white);
+    Plane plane(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), white);
 
     // Create lights
-    Light light1(Vector3f(-4.0f, 4.0f, -3.0f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 1.0f, 1.0f));
+    Light light1(glm::vec3(-4.0f, 4.0f, -3.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     light1.SetIntensity(1.0f);
 
     Scene scene;

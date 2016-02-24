@@ -2,7 +2,6 @@ set(HEADER_FILES Camera.h
                  Image.h
                  Light.h
                  Material.h
-                 Primitives.h
                  Ray.h
                  RayTracer.h
                  Scene.h

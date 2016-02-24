@@ -13,7 +13,8 @@
 #include <list>
 #include <algorithm>
 
-#include "Primitives.h"
+#include <glm/vec3.hpp>
+
 #include "Surface.h"
 #include "Light.h"
 
@@ -23,8 +24,8 @@
 class HitData
 {
 public:
-    Vector3f Point, tPoint;
-    Vector3f Normal;
+    glm::vec3 Point, tPoint;
+    glm::vec3 Normal;
     float t, tMax;
     Surface* HitSurface;
 public:

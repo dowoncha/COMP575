@@ -1,26 +1,41 @@
-#pragma once
+/******************************************************************************
+ *
+ *  filename: Ray.h
+ *  author  : Do Won Cha
+ *  content :
+ *
+ *****************************************************************************/
 
-#include "Primitives.h"
+#pragma once
+#ifndef _RAY_RAY_
+#define _RAY_RAY_
+
+#include <glm/vec3.hpp>
+//#include <glm/gtx/string_cast.hpp>
 
 class Ray
 {
 public:
   Ray() { }
-  Ray(const Vector3f& position,
-      const Vector3f& direction) :
+  Ray(const glm::vec3& position,
+      const glm::vec3& direction) :
   Position(position),
   Direction(direction)
   { }
 
   ~Ray() {}
 
-  Vector3f Evaluate(float t) const { return Position + Direction * t; }
+  glm::vec3 Evaluate(float t) const { return Position + Direction * t; }
 
-  friend std::ostream& operator << (std::ostream& s, const Ray& ray)
+  /*
+  friend std::ostream& operator << (std::ostream& s, Ray const & ray)
   {
-	  return s << ray.Position << ' ' << ray.Direction;
+	  return s << glm::to_string(ray.Position) << ' ' << glm::to_string(ray.Direction);
   }
+  */
 public:
-  Vector3f Position;
-  Vector3f Direction;
+  glm::vec3 Position;
+  glm::vec3 Direction;
 };
+
+#endif // _RAY_RAY_

@@ -1,14 +1,20 @@
-/**
+/******************************************************************************
  *
  * 	filename   : Camera.h
  *  author     : Do Won Cha
  *  content    : Container class to output a buffer to image.
  *
- */
+ ******************************************************************************/
+
+#pragma once
+#ifndef _RAY_CAMERA_
+#define _RAY_CAMERA_
 
 #include <cassert>
 
-#include "Primitives.h"
+#include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
+
 #include "Ray.h"
 #include "Utility.h"
 
@@ -17,28 +23,27 @@ class Camera
 public:
   Camera();
 
-  Camera(const Vector3f& position,
-         const Vector3f& target);
+  Camera(glm::vec3 const & position,
+         glm::vec3 const & target);
 
-  Camera(const Vector3f& position,
-         const Vector3f& target,
-         const Vector3f& up);
+  Camera(glm::vec3 const & position,
+         glm::vec3 const & target,
+         glm::vec3 const & up);
+
   ~Camera();
 
   void SetScreenSize(int width, int height);
 
-  // Have 2 just in case, both work exactly the same way, maybe i should make these templates.
-  //template<typename T>
-  //Ray GetRay(T x, T y) const;
-
   Ray GetRay(int x, int y) const;
   Ray GetRay(int x, int y, float offsetx, float offsety) const;
 public:
-  Vector3f Position;
-  Vector3f Target;
-  Vector3f Forward;
-  Vector3f Up;
-  Vector3f Right;
+  glm::vec3 Position;
+  glm::vec3 Target;
+  glm::vec3 Forward;
+  glm::vec3 Up;
+  glm::vec3 Right;
   float l, r, t, b, d;
   int ScreenWidth, ScreenHeight;
 };
+
+#endif // _RAY_CAMERA_
