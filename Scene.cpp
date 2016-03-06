@@ -10,7 +10,7 @@ Scene::Scene() :
 
 Scene::~Scene()
 {
-
+    delete[] gIndexBuffer;
 }
 
 void Scene::LoadSphere()
@@ -141,5 +141,14 @@ void Scene::SetupProjTransform(float l, float r, float b, float t, float n, floa
 
 void Scene::SetupViewportTransform(int nx, int ny)
 {
+}
 
+void Scene::SetupMVP()
+{
+    MVP = ViewTransform * ProjTransform * EyeTransform * ModelTransform;
+}
+
+glm::mat4x4 Scene::GetMVP()
+{
+    return MVP;
 }

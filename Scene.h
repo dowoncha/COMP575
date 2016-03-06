@@ -20,6 +20,7 @@ public:
     glm::mat4x4 EyeTransform;
     glm::mat4x4 ViewTransform;
     glm::mat4x4 ProjTransform;
+    glm::mat4x4 MVP;
 
     int ScreenWidth, ScreenHeight;
     int gNumVertices;        // # of vertices
@@ -27,8 +28,10 @@ public:
     int* gIndexBuffer;
 
     Scene();
+
     ~Scene();
 
+    // Generate a sphere and load it into NumVertices, NumTriangles, IndexBuffer
     void LoadSphere();
 
     void SetupModelTransform(float scale, const glm::vec3& center);
@@ -38,6 +41,10 @@ public:
     void SetupProjTransform(float l, float r, float b, float t, float n, float f);
 
     void SetupViewportTransform(int nx, int ny);
+
+    void SetupMVP();
+
+    glm::mat4x4 GetMVP();
 };
 
 #endif // _RAST_SCENE_
