@@ -1,0 +1,8 @@
+/home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock/gtest/CMakeFiles/gtest.dir
+/home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock/CMakeFiles/gmock.dir
+/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/rasterizer.dir
+/home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock/gtest/CMakeFiles/gtest_main.dir
+/home/dowoncha/Documents/comp575_pa2/build/lib/freeglut/CMakeFiles/freeglut_static.dir
+/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/PA2_SRC.dir
+/home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock/CMakeFiles/gmock_main.dir
+/home/dowoncha/Documents/comp575_pa2/build/lib/freeglut/CMakeFiles/freeglut.dir

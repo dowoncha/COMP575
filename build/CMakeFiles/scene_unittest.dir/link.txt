@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/scene_unittest.dir/tests/scene_unittest.cpp.o  -o scene_unittest -rdynamic tools/googletest/googlemock/gtest/libgtest_main.a libPA2_SRC.a tools/googletest/googlemock/gtest/libgtest.a -lpthread 
