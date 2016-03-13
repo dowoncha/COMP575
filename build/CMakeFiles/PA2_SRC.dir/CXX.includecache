@@ -551,14 +551,16 @@ Scene.h
 /home/dowoncha/Documents/comp575_pa2/src/Scene.h
 
 /home/dowoncha/Documents/comp575_pa2/src/Scene.h
+vector
+-
+cmath
+-
+cstdio
+-
 glm/vec3.hpp
 -
 glm/mat4x4.hpp
 -
 glm/gtc/matrix_transform.hpp
--
-cmath
--
-cstdio
 -
 

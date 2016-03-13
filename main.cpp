@@ -18,22 +18,25 @@ int main(int argc, char* argv[])
 {
     // parse arguments here
 
+    // Initialize the Scene
     Scene scene;
 
+    scene.SetScreen(512, 512);
     scene.LoadSphere();
     scene.SetupModelTransform(2, glm::vec3(0.0f, 0.0f, -7.0f) );
+    scene.SetupEyeTransform(
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f)
+    );
 
-    //scene.SetupEyeTransform();
-    //scene.SetupProjTransform(-0.1f, 0.1f, -0.1f, -0.1f, -1000f);
-    //scene.SetupViewportTransform(SCREEN_WIDTH, SCREEN_HEIGHT);
-    //scene.SetupCompTransform
-    //scene.ApplyAllTransform
+    scene.SetupProjTransform(-0.1f, 0.1f, -0.1f, -0.1f, -1000.0f);
+    scene.SetupViewportTransform(SCREEN_WIDTH, SCREEN_HEIGHT);
+    scene.SetupMVP();
+    scene.ApplyAllTransforms();
 
-
-
-// Rasterizer r_a(scene);
-    // r_a.rasterize();
-
+    // Rasterize
+    Rasterizer rasterize;
     // Render Output code, GL CODE
-    // Renderer render(r_a.FrameBuffer, 512, 512);
 }
