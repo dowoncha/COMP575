@@ -53,15 +53,15 @@ tools/googletest/googlemock/CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.
 tools/googletest/googlemock/CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.o: ../tools/googletest/googletest/src/gtest-all.cc
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object tools/googletest/googlemock/CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.o"
-	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.o -c /home/dowoncha/Documents/comp575_pa2/tools/googletest/googletest/src/gtest-all.cc
+	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/clang   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.o -c /home/dowoncha/Documents/comp575_pa2/tools/googletest/googletest/src/gtest-all.cc
 
 tools/googletest/googlemock/CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.i"
-	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/tools/googletest/googletest/src/gtest-all.cc > CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.i
+	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/tools/googletest/googletest/src/gtest-all.cc > CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.i
 
 tools/googletest/googlemock/CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.s"
-	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/tools/googletest/googletest/src/gtest-all.cc -o CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.s
+	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/tools/googletest/googletest/src/gtest-all.cc -o CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.s
 
 tools/googletest/googlemock/CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.o.requires:
 .PHONY : tools/googletest/googlemock/CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.o.requires
@@ -76,15 +76,15 @@ tools/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: tools/googl
 tools/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: ../tools/googletest/googlemock/src/gmock-all.cc
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object tools/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
-	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /home/dowoncha/Documents/comp575_pa2/tools/googletest/googlemock/src/gmock-all.cc
+	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/clang   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /home/dowoncha/Documents/comp575_pa2/tools/googletest/googlemock/src/gmock-all.cc
 
 tools/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gmock.dir/src/gmock-all.cc.i"
-	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/tools/googletest/googlemock/src/gmock-all.cc > CMakeFiles/gmock.dir/src/gmock-all.cc.i
+	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/tools/googletest/googlemock/src/gmock-all.cc > CMakeFiles/gmock.dir/src/gmock-all.cc.i
 
 tools/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gmock.dir/src/gmock-all.cc.s"
-	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/tools/googletest/googlemock/src/gmock-all.cc -o CMakeFiles/gmock.dir/src/gmock-all.cc.s
+	cd /home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock && /usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/tools/googletest/googlemock/src/gmock-all.cc -o CMakeFiles/gmock.dir/src/gmock-all.cc.s
 
 tools/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o.requires:
 .PHONY : tools/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o.requires

@@ -169,6 +169,162 @@ rasterizer/fast:
 .PHONY : rasterizer/fast
 
 #=============================================================================
+# Target rules for targets named CallbackMaker
+
+# Build rule for target.
+CallbackMaker: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 CallbackMaker
+.PHONY : CallbackMaker
+
+# fast build rule for target.
+CallbackMaker/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker.dir/build
+.PHONY : CallbackMaker/fast
+
+#=============================================================================
+# Target rules for targets named CallbackMaker_static
+
+# Build rule for target.
+CallbackMaker_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 CallbackMaker_static
+.PHONY : CallbackMaker_static
+
+# fast build rule for target.
+CallbackMaker_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker_static.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker_static.dir/build
+.PHONY : CallbackMaker_static/fast
+
+#=============================================================================
+# Target rules for targets named Fractals
+
+# Build rule for target.
+Fractals: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Fractals
+.PHONY : Fractals
+
+# fast build rule for target.
+Fractals/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Fractals.dir/build.make lib/freeglut/CMakeFiles/Fractals.dir/build
+.PHONY : Fractals/fast
+
+#=============================================================================
+# Target rules for targets named Fractals_random
+
+# Build rule for target.
+Fractals_random: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Fractals_random
+.PHONY : Fractals_random
+
+# fast build rule for target.
+Fractals_random/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random.dir/build.make lib/freeglut/CMakeFiles/Fractals_random.dir/build
+.PHONY : Fractals_random/fast
+
+#=============================================================================
+# Target rules for targets named Fractals_random_static
+
+# Build rule for target.
+Fractals_random_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Fractals_random_static
+.PHONY : Fractals_random_static
+
+# fast build rule for target.
+Fractals_random_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_random_static.dir/build
+.PHONY : Fractals_random_static/fast
+
+#=============================================================================
+# Target rules for targets named Fractals_static
+
+# Build rule for target.
+Fractals_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Fractals_static
+.PHONY : Fractals_static
+
+# fast build rule for target.
+Fractals_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Fractals_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_static.dir/build
+.PHONY : Fractals_static/fast
+
+#=============================================================================
+# Target rules for targets named Lorenz
+
+# Build rule for target.
+Lorenz: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Lorenz
+.PHONY : Lorenz
+
+# fast build rule for target.
+Lorenz/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Lorenz.dir/build.make lib/freeglut/CMakeFiles/Lorenz.dir/build
+.PHONY : Lorenz/fast
+
+#=============================================================================
+# Target rules for targets named Lorenz_static
+
+# Build rule for target.
+Lorenz_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Lorenz_static
+.PHONY : Lorenz_static
+
+# fast build rule for target.
+Lorenz_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Lorenz_static.dir/build.make lib/freeglut/CMakeFiles/Lorenz_static.dir/build
+.PHONY : Lorenz_static/fast
+
+#=============================================================================
+# Target rules for targets named One
+
+# Build rule for target.
+One: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 One
+.PHONY : One
+
+# fast build rule for target.
+One/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/One.dir/build.make lib/freeglut/CMakeFiles/One.dir/build
+.PHONY : One/fast
+
+#=============================================================================
+# Target rules for targets named One_static
+
+# Build rule for target.
+One_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 One_static
+.PHONY : One_static
+
+# fast build rule for target.
+One_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/One_static.dir/build.make lib/freeglut/CMakeFiles/One_static.dir/build
+.PHONY : One_static/fast
+
+#=============================================================================
+# Target rules for targets named Resizer
+
+# Build rule for target.
+Resizer: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Resizer
+.PHONY : Resizer
+
+# fast build rule for target.
+Resizer/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Resizer.dir/build.make lib/freeglut/CMakeFiles/Resizer.dir/build
+.PHONY : Resizer/fast
+
+#=============================================================================
+# Target rules for targets named Resizer_static
+
+# Build rule for target.
+Resizer_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Resizer_static
+.PHONY : Resizer_static
+
+# fast build rule for target.
+Resizer_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/Resizer_static.dir/build.make lib/freeglut/CMakeFiles/Resizer_static.dir/build
+.PHONY : Resizer_static/fast
+
+#=============================================================================
 # Target rules for targets named freeglut
 
 # Build rule for target.
@@ -193,6 +349,162 @@ freeglut_static: cmake_check_build_system
 freeglut_static/fast:
 	$(MAKE) -f lib/freeglut/CMakeFiles/freeglut_static.dir/build.make lib/freeglut/CMakeFiles/freeglut_static.dir/build
 .PHONY : freeglut_static/fast
+
+#=============================================================================
+# Target rules for targets named multi-touch
+
+# Build rule for target.
+multi-touch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 multi-touch
+.PHONY : multi-touch
+
+# fast build rule for target.
+multi-touch/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/multi-touch.dir/build.make lib/freeglut/CMakeFiles/multi-touch.dir/build
+.PHONY : multi-touch/fast
+
+#=============================================================================
+# Target rules for targets named multi-touch_static
+
+# Build rule for target.
+multi-touch_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 multi-touch_static
+.PHONY : multi-touch_static
+
+# fast build rule for target.
+multi-touch_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/multi-touch_static.dir/build.make lib/freeglut/CMakeFiles/multi-touch_static.dir/build
+.PHONY : multi-touch_static/fast
+
+#=============================================================================
+# Target rules for targets named shapes
+
+# Build rule for target.
+shapes: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 shapes
+.PHONY : shapes
+
+# fast build rule for target.
+shapes/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/build
+.PHONY : shapes/fast
+
+#=============================================================================
+# Target rules for targets named shapes_static
+
+# Build rule for target.
+shapes_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 shapes_static
+.PHONY : shapes_static
+
+# fast build rule for target.
+shapes_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/build
+.PHONY : shapes_static/fast
+
+#=============================================================================
+# Target rules for targets named smooth_opengl3
+
+# Build rule for target.
+smooth_opengl3: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 smooth_opengl3
+.PHONY : smooth_opengl3
+
+# fast build rule for target.
+smooth_opengl3/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3.dir/build
+.PHONY : smooth_opengl3/fast
+
+#=============================================================================
+# Target rules for targets named smooth_opengl3_static
+
+# Build rule for target.
+smooth_opengl3_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 smooth_opengl3_static
+.PHONY : smooth_opengl3_static
+
+# fast build rule for target.
+smooth_opengl3_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/build
+.PHONY : smooth_opengl3_static/fast
+
+#=============================================================================
+# Target rules for targets named spaceball
+
+# Build rule for target.
+spaceball: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 spaceball
+.PHONY : spaceball
+
+# fast build rule for target.
+spaceball/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/build
+.PHONY : spaceball/fast
+
+#=============================================================================
+# Target rules for targets named spaceball_static
+
+# Build rule for target.
+spaceball_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 spaceball_static
+.PHONY : spaceball_static
+
+# fast build rule for target.
+spaceball_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/build
+.PHONY : spaceball_static/fast
+
+#=============================================================================
+# Target rules for targets named subwin
+
+# Build rule for target.
+subwin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 subwin
+.PHONY : subwin
+
+# fast build rule for target.
+subwin/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/subwin.dir/build.make lib/freeglut/CMakeFiles/subwin.dir/build
+.PHONY : subwin/fast
+
+#=============================================================================
+# Target rules for targets named subwin_static
+
+# Build rule for target.
+subwin_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 subwin_static
+.PHONY : subwin_static
+
+# fast build rule for target.
+subwin_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/subwin_static.dir/build.make lib/freeglut/CMakeFiles/subwin_static.dir/build
+.PHONY : subwin_static/fast
+
+#=============================================================================
+# Target rules for targets named timer
+
+# Build rule for target.
+timer: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 timer
+.PHONY : timer
+
+# fast build rule for target.
+timer/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/timer.dir/build.make lib/freeglut/CMakeFiles/timer.dir/build
+.PHONY : timer/fast
+
+#=============================================================================
+# Target rules for targets named timer_static
+
+# Build rule for target.
+timer_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 timer_static
+.PHONY : timer_static
+
+# fast build rule for target.
+timer_static/fast:
+	$(MAKE) -f lib/freeglut/CMakeFiles/timer_static.dir/build.make lib/freeglut/CMakeFiles/timer_static.dir/build
+.PHONY : timer_static/fast
 
 #=============================================================================
 # Target rules for targets named gmock
@@ -332,8 +644,32 @@ help:
 	@echo "... rasterizer"
 	@echo "... PA2_SRC"
 	@echo "... install/local"
+	@echo "... smooth_opengl3"
+	@echo "... spaceball"
+	@echo "... Fractals"
+	@echo "... multi-touch"
+	@echo "... subwin"
+	@echo "... spaceball_static"
+	@echo "... Resizer_static"
+	@echo "... multi-touch_static"
+	@echo "... shapes"
+	@echo "... Resizer"
+	@echo "... Lorenz"
+	@echo "... subwin_static"
+	@echo "... Fractals_random_static"
+	@echo "... CallbackMaker_static"
+	@echo "... One_static"
+	@echo "... One"
+	@echo "... timer_static"
+	@echo "... shapes_static"
 	@echo "... freeglut_static"
+	@echo "... smooth_opengl3_static"
+	@echo "... Fractals_random"
+	@echo "... Lorenz_static"
 	@echo "... freeglut"
+	@echo "... CallbackMaker"
+	@echo "... Fractals_static"
+	@echo "... timer"
 	@echo "... gmock"
 	@echo "... gmock_main"
 	@echo "... gtest"

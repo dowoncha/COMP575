@@ -543,6 +543,8 @@ Renderer.h
 /home/dowoncha/Documents/comp575_pa2/src/Renderer.h
 
 /home/dowoncha/Documents/comp575_pa2/src/Renderer.h
+string
+-
 glm/vec3.hpp
 -
 

@@ -6,19 +6,25 @@
  *
  ******************************************************************************/
 
+#include <GLFW/glfw3.h>
 #include <glm/vec3.hpp>
 
 #include "Scene.h"
 #include "Rasterizer.h"
+#include "easylogging++.h"
 
 static const char* TITLE = "Comp 770 PA2 - Rasterizer";
 static const int SCREEN_WIDTH = 512, SCREEN_HEIGHT = 512;
 
+INITIALIZE_EASYLOGGINGPP
+
 int main(int argc, char* argv[])
 {
     // parse arguments here
+    START_EASYLOGGINGPP(argc, argv);
 
     // Initialize the Scene
+    LOG(INFO) << "Initializing Scene";
     Scene scene;
 
     scene.SetScreen(512, 512);
@@ -36,7 +42,10 @@ int main(int argc, char* argv[])
     scene.SetupMVP();
     scene.ApplyAllTransforms();
 
-    // Rasterize
-    Rasterizer rasterize;
     // Render Output code, GL CODE
+    Renderer renderer(scene);
+    renderer.Initialize();
+    renderer.Render();
+
+    exit(EXIT_SUCCESS);
 }

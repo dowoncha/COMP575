@@ -1,21 +1,19 @@
 Determining if files usbhid.h exist failed with the following output:
 Change Dir: /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTryCompileExec3103796309/fast"
+Run Build Command:"/usr/bin/make" "cmTryCompileExec403067559/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec403067559.dir/build.make CMakeFiles/cmTryCompileExec403067559.dir/build
 make[1]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-/usr/bin/make -f CMakeFiles/cmTryCompileExec3103796309.dir/build.make CMakeFiles/cmTryCompileExec3103796309.dir/build
-make[2]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec3103796309.dir/CheckIncludeFiles.c.o
-/usr/bin/cc   -Wall -pedantic    -o CMakeFiles/cmTryCompileExec3103796309.dir/CheckIncludeFiles.c.o   -c /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Building C object CMakeFiles/cmTryCompileExec403067559.dir/CheckIncludeFiles.c.o
+/usr/bin/cc   -Wall -pedantic    -o CMakeFiles/cmTryCompileExec403067559.dir/CheckIncludeFiles.c.o   -c /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
 /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CheckIncludeFiles.c:2:20: fatal error: usbhid.h: No such file or directory
  #include <usbhid.h>
                     ^
 compilation terminated.
-make[2]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-make[2]: *** [CMakeFiles/cmTryCompileExec3103796309.dir/CheckIncludeFiles.c.o] Error 1
+make[1]: *** [CMakeFiles/cmTryCompileExec403067559.dir/CheckIncludeFiles.c.o] Error 1
 make[1]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-make[1]: *** [cmTryCompileExec3103796309/fast] Error 2
+make: *** [cmTryCompileExec403067559/fast] Error 2
 
 Source:
 /* */
@@ -27,45 +25,41 @@ int main(void){return 0;}
 Determining if the function XParseGeometry exists failed with the following output:
 Change Dir: /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTryCompileExec135642031/fast"
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1553569786/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1553569786.dir/build.make CMakeFiles/cmTryCompileExec1553569786.dir/build
 make[1]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-/usr/bin/make -f CMakeFiles/cmTryCompileExec135642031.dir/build.make CMakeFiles/cmTryCompileExec135642031.dir/build
-make[2]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec135642031.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -Wall -pedantic -DCHECK_FUNCTION_EXISTS=XParseGeometry   -o CMakeFiles/cmTryCompileExec135642031.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
-Linking C executable cmTryCompileExec135642031
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec135642031.dir/link.txt --verbose=1
-/usr/bin/cc   -Wall -pedantic -DCHECK_FUNCTION_EXISTS=XParseGeometry    CMakeFiles/cmTryCompileExec135642031.dir/CheckFunctionExists.c.o  -o cmTryCompileExec135642031 -rdynamic -lm 
-CMakeFiles/cmTryCompileExec135642031.dir/CheckFunctionExists.c.o: In function `main':
+Building C object CMakeFiles/cmTryCompileExec1553569786.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -Wall -pedantic -DCHECK_FUNCTION_EXISTS=XParseGeometry   -o CMakeFiles/cmTryCompileExec1553569786.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec1553569786
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1553569786.dir/link.txt --verbose=1
+/usr/bin/cc   -Wall -pedantic -DCHECK_FUNCTION_EXISTS=XParseGeometry    CMakeFiles/cmTryCompileExec1553569786.dir/CheckFunctionExists.c.o  -o cmTryCompileExec1553569786 -rdynamic -lm 
+CMakeFiles/cmTryCompileExec1553569786.dir/CheckFunctionExists.c.o: In function `main':
 CheckFunctionExists.c:(.text+0x15): undefined reference to `XParseGeometry'
 collect2: error: ld returned 1 exit status
-make[2]: *** [cmTryCompileExec135642031] Error 1
-make[2]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-make[1]: *** [cmTryCompileExec135642031/fast] Error 2
 make[1]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec1553569786] Error 1
+make: *** [cmTryCompileExec1553569786/fast] Error 2
 
 
 Determining if the pthread_create exist failed with the following output:
 Change Dir: /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTryCompileExec4192667970/fast"
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1580606164/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1580606164.dir/build.make CMakeFiles/cmTryCompileExec1580606164.dir/build
 make[1]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-/usr/bin/make -f CMakeFiles/cmTryCompileExec4192667970.dir/build.make CMakeFiles/cmTryCompileExec4192667970.dir/build
-make[2]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec4192667970.dir/CheckSymbolExists.c.o
-/usr/bin/cc    -o CMakeFiles/cmTryCompileExec4192667970.dir/CheckSymbolExists.c.o   -c /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
-Linking C executable cmTryCompileExec4192667970
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4192667970.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTryCompileExec4192667970.dir/CheckSymbolExists.c.o  -o cmTryCompileExec4192667970 -rdynamic 
-CMakeFiles/cmTryCompileExec4192667970.dir/CheckSymbolExists.c.o: In function `main':
+Building C object CMakeFiles/cmTryCompileExec1580606164.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec1580606164.dir/CheckSymbolExists.c.o   -c /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec1580606164
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1580606164.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec1580606164.dir/CheckSymbolExists.c.o  -o cmTryCompileExec1580606164 -rdynamic 
+CMakeFiles/cmTryCompileExec1580606164.dir/CheckSymbolExists.c.o: In function `main':
 CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
-make[2]: *** [cmTryCompileExec4192667970] Error 1
-make[2]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-make[1]: *** [cmTryCompileExec4192667970/fast] Error 2
+make[1]: *** [cmTryCompileExec1580606164] Error 1
 make[1]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec1580606164/fast] Error 2
 
 File /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
 /* */
@@ -85,21 +79,19 @@ int main(int argc, char** argv)
 Determining if the function pthread_create exists in the pthreads failed with the following output:
 Change Dir: /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTryCompileExec293746752/fast"
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3788547844/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3788547844.dir/build.make CMakeFiles/cmTryCompileExec3788547844.dir/build
 make[1]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-/usr/bin/make -f CMakeFiles/cmTryCompileExec293746752.dir/build.make CMakeFiles/cmTryCompileExec293746752.dir/build
-make[2]: Entering directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec293746752.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec293746752.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
-Linking C executable cmTryCompileExec293746752
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec293746752.dir/link.txt --verbose=1
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec293746752.dir/CheckFunctionExists.c.o  -o cmTryCompileExec293746752 -rdynamic -lpthreads 
+Building C object CMakeFiles/cmTryCompileExec3788547844.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec3788547844.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3788547844
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3788547844.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec3788547844.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3788547844 -rdynamic -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-make[2]: *** [cmTryCompileExec293746752] Error 1
-make[2]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
-make[1]: *** [cmTryCompileExec293746752/fast] Error 2
 make[1]: Leaving directory `/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec3788547844] Error 1
+make: *** [cmTryCompileExec3788547844/fast] Error 2
 
 

@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/dowoncha/Documents/comp575_pa2/tools/googletest/googletest/src/gtest_main.cc" "/home/dowoncha/Documents/comp575_pa2/build/tools/googletest/googlemock/gtest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES

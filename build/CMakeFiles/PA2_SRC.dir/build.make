@@ -53,15 +53,15 @@ CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o: CMakeFiles/PA2_SRC.dir/flags.make
 CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o: ../src/Renderer.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o -c /home/dowoncha/Documents/comp575_pa2/src/Renderer.cpp
+	/usr/bin/clang   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o -c /home/dowoncha/Documents/comp575_pa2/src/Renderer.cpp
 
 CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/src/Renderer.cpp > CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.i
+	/usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/src/Renderer.cpp > CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.i
 
 CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/src/Renderer.cpp -o CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.s
+	/usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/src/Renderer.cpp -o CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.s
 
 CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o.requires:
 .PHONY : CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o.requires
@@ -76,15 +76,15 @@ CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o: CMakeFiles/PA2_SRC.dir/flags.make
 CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o: ../src/Scene.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o -c /home/dowoncha/Documents/comp575_pa2/src/Scene.cpp
+	/usr/bin/clang   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o -c /home/dowoncha/Documents/comp575_pa2/src/Scene.cpp
 
 CMakeFiles/PA2_SRC.dir/src/Scene.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/PA2_SRC.dir/src/Scene.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/src/Scene.cpp > CMakeFiles/PA2_SRC.dir/src/Scene.cpp.i
+	/usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/src/Scene.cpp > CMakeFiles/PA2_SRC.dir/src/Scene.cpp.i
 
 CMakeFiles/PA2_SRC.dir/src/Scene.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/PA2_SRC.dir/src/Scene.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/src/Scene.cpp -o CMakeFiles/PA2_SRC.dir/src/Scene.cpp.s
+	/usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/src/Scene.cpp -o CMakeFiles/PA2_SRC.dir/src/Scene.cpp.s
 
 CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o.requires:
 .PHONY : CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o.requires

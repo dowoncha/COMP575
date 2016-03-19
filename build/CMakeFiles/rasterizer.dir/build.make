@@ -53,15 +53,15 @@ CMakeFiles/rasterizer.dir/main.cpp.o: CMakeFiles/rasterizer.dir/flags.make
 CMakeFiles/rasterizer.dir/main.cpp.o: ../main.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/rasterizer.dir/main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/rasterizer.dir/main.cpp.o -c /home/dowoncha/Documents/comp575_pa2/main.cpp
+	/usr/bin/clang   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/rasterizer.dir/main.cpp.o -c /home/dowoncha/Documents/comp575_pa2/main.cpp
 
 CMakeFiles/rasterizer.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/rasterizer.dir/main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/main.cpp > CMakeFiles/rasterizer.dir/main.cpp.i
+	/usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/main.cpp > CMakeFiles/rasterizer.dir/main.cpp.i
 
 CMakeFiles/rasterizer.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/rasterizer.dir/main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/main.cpp -o CMakeFiles/rasterizer.dir/main.cpp.s
+	/usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/main.cpp -o CMakeFiles/rasterizer.dir/main.cpp.s
 
 CMakeFiles/rasterizer.dir/main.cpp.o.requires:
 .PHONY : CMakeFiles/rasterizer.dir/main.cpp.o.requires

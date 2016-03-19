@@ -143,6 +143,174 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+lib/freeglut/CMakeFiles/CallbackMaker.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/CallbackMaker.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/CallbackMaker.dir/rule
+
+# Convenience name for target.
+CallbackMaker: lib/freeglut/CMakeFiles/CallbackMaker.dir/rule
+.PHONY : CallbackMaker
+
+# fast build rule for target.
+CallbackMaker/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker.dir/build
+.PHONY : CallbackMaker/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/CallbackMaker_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/CallbackMaker_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/CallbackMaker_static.dir/rule
+
+# Convenience name for target.
+CallbackMaker_static: lib/freeglut/CMakeFiles/CallbackMaker_static.dir/rule
+.PHONY : CallbackMaker_static
+
+# fast build rule for target.
+CallbackMaker_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker_static.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker_static.dir/build
+.PHONY : CallbackMaker_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Fractals.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Fractals.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Fractals.dir/rule
+
+# Convenience name for target.
+Fractals: lib/freeglut/CMakeFiles/Fractals.dir/rule
+.PHONY : Fractals
+
+# fast build rule for target.
+Fractals/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals.dir/build.make lib/freeglut/CMakeFiles/Fractals.dir/build
+.PHONY : Fractals/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Fractals_random.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Fractals_random.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Fractals_random.dir/rule
+
+# Convenience name for target.
+Fractals_random: lib/freeglut/CMakeFiles/Fractals_random.dir/rule
+.PHONY : Fractals_random
+
+# fast build rule for target.
+Fractals_random/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random.dir/build.make lib/freeglut/CMakeFiles/Fractals_random.dir/build
+.PHONY : Fractals_random/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Fractals_random_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Fractals_random_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Fractals_random_static.dir/rule
+
+# Convenience name for target.
+Fractals_random_static: lib/freeglut/CMakeFiles/Fractals_random_static.dir/rule
+.PHONY : Fractals_random_static
+
+# fast build rule for target.
+Fractals_random_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_random_static.dir/build
+.PHONY : Fractals_random_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Fractals_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Fractals_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Fractals_static.dir/rule
+
+# Convenience name for target.
+Fractals_static: lib/freeglut/CMakeFiles/Fractals_static.dir/rule
+.PHONY : Fractals_static
+
+# fast build rule for target.
+Fractals_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_static.dir/build
+.PHONY : Fractals_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Lorenz.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Lorenz.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Lorenz.dir/rule
+
+# Convenience name for target.
+Lorenz: lib/freeglut/CMakeFiles/Lorenz.dir/rule
+.PHONY : Lorenz
+
+# fast build rule for target.
+Lorenz/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz.dir/build.make lib/freeglut/CMakeFiles/Lorenz.dir/build
+.PHONY : Lorenz/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Lorenz_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Lorenz_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Lorenz_static.dir/rule
+
+# Convenience name for target.
+Lorenz_static: lib/freeglut/CMakeFiles/Lorenz_static.dir/rule
+.PHONY : Lorenz_static
+
+# fast build rule for target.
+Lorenz_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz_static.dir/build.make lib/freeglut/CMakeFiles/Lorenz_static.dir/build
+.PHONY : Lorenz_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/One.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/One.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/One.dir/rule
+
+# Convenience name for target.
+One: lib/freeglut/CMakeFiles/One.dir/rule
+.PHONY : One
+
+# fast build rule for target.
+One/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One.dir/build.make lib/freeglut/CMakeFiles/One.dir/build
+.PHONY : One/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/One_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/One_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/One_static.dir/rule
+
+# Convenience name for target.
+One_static: lib/freeglut/CMakeFiles/One_static.dir/rule
+.PHONY : One_static
+
+# fast build rule for target.
+One_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One_static.dir/build.make lib/freeglut/CMakeFiles/One_static.dir/build
+.PHONY : One_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Resizer.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Resizer.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Resizer.dir/rule
+
+# Convenience name for target.
+Resizer: lib/freeglut/CMakeFiles/Resizer.dir/rule
+.PHONY : Resizer
+
+# fast build rule for target.
+Resizer/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer.dir/build.make lib/freeglut/CMakeFiles/Resizer.dir/build
+.PHONY : Resizer/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/Resizer_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/Resizer_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/Resizer_static.dir/rule
+
+# Convenience name for target.
+Resizer_static: lib/freeglut/CMakeFiles/Resizer_static.dir/rule
+.PHONY : Resizer_static
+
+# fast build rule for target.
+Resizer_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer_static.dir/build.make lib/freeglut/CMakeFiles/Resizer_static.dir/build
+.PHONY : Resizer_static/fast
+
+# Convenience name for target.
 lib/freeglut/CMakeFiles/freeglut.dir/rule:
 	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/freeglut.dir/rule
 .PHONY : lib/freeglut/CMakeFiles/freeglut.dir/rule
@@ -169,6 +337,552 @@ freeglut_static: lib/freeglut/CMakeFiles/freeglut_static.dir/rule
 freeglut_static/fast:
 	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/freeglut_static.dir/build.make lib/freeglut/CMakeFiles/freeglut_static.dir/build
 .PHONY : freeglut_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/multi-touch.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/multi-touch.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/multi-touch.dir/rule
+
+# Convenience name for target.
+multi-touch: lib/freeglut/CMakeFiles/multi-touch.dir/rule
+.PHONY : multi-touch
+
+# fast build rule for target.
+multi-touch/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch.dir/build.make lib/freeglut/CMakeFiles/multi-touch.dir/build
+.PHONY : multi-touch/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/multi-touch_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/multi-touch_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/multi-touch_static.dir/rule
+
+# Convenience name for target.
+multi-touch_static: lib/freeglut/CMakeFiles/multi-touch_static.dir/rule
+.PHONY : multi-touch_static
+
+# fast build rule for target.
+multi-touch_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch_static.dir/build.make lib/freeglut/CMakeFiles/multi-touch_static.dir/build
+.PHONY : multi-touch_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/shapes.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/shapes.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/shapes.dir/rule
+
+# Convenience name for target.
+shapes: lib/freeglut/CMakeFiles/shapes.dir/rule
+.PHONY : shapes
+
+# fast build rule for target.
+shapes/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/build
+.PHONY : shapes/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/shapes_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/shapes_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/shapes_static.dir/rule
+
+# Convenience name for target.
+shapes_static: lib/freeglut/CMakeFiles/shapes_static.dir/rule
+.PHONY : shapes_static
+
+# fast build rule for target.
+shapes_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/build
+.PHONY : shapes_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/smooth_opengl3.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/smooth_opengl3.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/smooth_opengl3.dir/rule
+
+# Convenience name for target.
+smooth_opengl3: lib/freeglut/CMakeFiles/smooth_opengl3.dir/rule
+.PHONY : smooth_opengl3
+
+# fast build rule for target.
+smooth_opengl3/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3.dir/build
+.PHONY : smooth_opengl3/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/rule
+
+# Convenience name for target.
+smooth_opengl3_static: lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/rule
+.PHONY : smooth_opengl3_static
+
+# fast build rule for target.
+smooth_opengl3_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/build
+.PHONY : smooth_opengl3_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/spaceball.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/spaceball.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/spaceball.dir/rule
+
+# Convenience name for target.
+spaceball: lib/freeglut/CMakeFiles/spaceball.dir/rule
+.PHONY : spaceball
+
+# fast build rule for target.
+spaceball/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/build
+.PHONY : spaceball/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/spaceball_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/spaceball_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/spaceball_static.dir/rule
+
+# Convenience name for target.
+spaceball_static: lib/freeglut/CMakeFiles/spaceball_static.dir/rule
+.PHONY : spaceball_static
+
+# fast build rule for target.
+spaceball_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/build
+.PHONY : spaceball_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/subwin.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/subwin.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/subwin.dir/rule
+
+# Convenience name for target.
+subwin: lib/freeglut/CMakeFiles/subwin.dir/rule
+.PHONY : subwin
+
+# fast build rule for target.
+subwin/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin.dir/build.make lib/freeglut/CMakeFiles/subwin.dir/build
+.PHONY : subwin/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/subwin_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/subwin_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/subwin_static.dir/rule
+
+# Convenience name for target.
+subwin_static: lib/freeglut/CMakeFiles/subwin_static.dir/rule
+.PHONY : subwin_static
+
+# fast build rule for target.
+subwin_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin_static.dir/build.make lib/freeglut/CMakeFiles/subwin_static.dir/build
+.PHONY : subwin_static/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/timer.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/timer.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/timer.dir/rule
+
+# Convenience name for target.
+timer: lib/freeglut/CMakeFiles/timer.dir/rule
+.PHONY : timer
+
+# fast build rule for target.
+timer/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer.dir/build.make lib/freeglut/CMakeFiles/timer.dir/build
+.PHONY : timer/fast
+
+# Convenience name for target.
+lib/freeglut/CMakeFiles/timer_static.dir/rule:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f CMakeFiles/Makefile2 lib/freeglut/CMakeFiles/timer_static.dir/rule
+.PHONY : lib/freeglut/CMakeFiles/timer_static.dir/rule
+
+# Convenience name for target.
+timer_static: lib/freeglut/CMakeFiles/timer_static.dir/rule
+.PHONY : timer_static
+
+# fast build rule for target.
+timer_static/fast:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer_static.dir/build.make lib/freeglut/CMakeFiles/timer_static.dir/build
+.PHONY : timer_static/fast
+
+progs/demos/CallbackMaker/CallbackMaker.o: progs/demos/CallbackMaker/CallbackMaker.c.o
+.PHONY : progs/demos/CallbackMaker/CallbackMaker.o
+
+# target to build an object file
+progs/demos/CallbackMaker/CallbackMaker.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker.dir/progs/demos/CallbackMaker/CallbackMaker.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker_static.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker_static.dir/progs/demos/CallbackMaker/CallbackMaker.c.o
+.PHONY : progs/demos/CallbackMaker/CallbackMaker.c.o
+
+progs/demos/CallbackMaker/CallbackMaker.i: progs/demos/CallbackMaker/CallbackMaker.c.i
+.PHONY : progs/demos/CallbackMaker/CallbackMaker.i
+
+# target to preprocess a source file
+progs/demos/CallbackMaker/CallbackMaker.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker.dir/progs/demos/CallbackMaker/CallbackMaker.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker_static.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker_static.dir/progs/demos/CallbackMaker/CallbackMaker.c.i
+.PHONY : progs/demos/CallbackMaker/CallbackMaker.c.i
+
+progs/demos/CallbackMaker/CallbackMaker.s: progs/demos/CallbackMaker/CallbackMaker.c.s
+.PHONY : progs/demos/CallbackMaker/CallbackMaker.s
+
+# target to generate assembly for a file
+progs/demos/CallbackMaker/CallbackMaker.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker.dir/progs/demos/CallbackMaker/CallbackMaker.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/CallbackMaker_static.dir/build.make lib/freeglut/CMakeFiles/CallbackMaker_static.dir/progs/demos/CallbackMaker/CallbackMaker.c.s
+.PHONY : progs/demos/CallbackMaker/CallbackMaker.c.s
+
+progs/demos/Fractals/fractals.o: progs/demos/Fractals/fractals.c.o
+.PHONY : progs/demos/Fractals/fractals.o
+
+# target to build an object file
+progs/demos/Fractals/fractals.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals.dir/build.make lib/freeglut/CMakeFiles/Fractals.dir/progs/demos/Fractals/fractals.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_static.dir/progs/demos/Fractals/fractals.c.o
+.PHONY : progs/demos/Fractals/fractals.c.o
+
+progs/demos/Fractals/fractals.i: progs/demos/Fractals/fractals.c.i
+.PHONY : progs/demos/Fractals/fractals.i
+
+# target to preprocess a source file
+progs/demos/Fractals/fractals.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals.dir/build.make lib/freeglut/CMakeFiles/Fractals.dir/progs/demos/Fractals/fractals.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_static.dir/progs/demos/Fractals/fractals.c.i
+.PHONY : progs/demos/Fractals/fractals.c.i
+
+progs/demos/Fractals/fractals.s: progs/demos/Fractals/fractals.c.s
+.PHONY : progs/demos/Fractals/fractals.s
+
+# target to generate assembly for a file
+progs/demos/Fractals/fractals.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals.dir/build.make lib/freeglut/CMakeFiles/Fractals.dir/progs/demos/Fractals/fractals.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_static.dir/progs/demos/Fractals/fractals.c.s
+.PHONY : progs/demos/Fractals/fractals.c.s
+
+progs/demos/Fractals_random/fractals_random.o: progs/demos/Fractals_random/fractals_random.c.o
+.PHONY : progs/demos/Fractals_random/fractals_random.o
+
+# target to build an object file
+progs/demos/Fractals_random/fractals_random.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random.dir/build.make lib/freeglut/CMakeFiles/Fractals_random.dir/progs/demos/Fractals_random/fractals_random.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_random_static.dir/progs/demos/Fractals_random/fractals_random.c.o
+.PHONY : progs/demos/Fractals_random/fractals_random.c.o
+
+progs/demos/Fractals_random/fractals_random.i: progs/demos/Fractals_random/fractals_random.c.i
+.PHONY : progs/demos/Fractals_random/fractals_random.i
+
+# target to preprocess a source file
+progs/demos/Fractals_random/fractals_random.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random.dir/build.make lib/freeglut/CMakeFiles/Fractals_random.dir/progs/demos/Fractals_random/fractals_random.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_random_static.dir/progs/demos/Fractals_random/fractals_random.c.i
+.PHONY : progs/demos/Fractals_random/fractals_random.c.i
+
+progs/demos/Fractals_random/fractals_random.s: progs/demos/Fractals_random/fractals_random.c.s
+.PHONY : progs/demos/Fractals_random/fractals_random.s
+
+# target to generate assembly for a file
+progs/demos/Fractals_random/fractals_random.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random.dir/build.make lib/freeglut/CMakeFiles/Fractals_random.dir/progs/demos/Fractals_random/fractals_random.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Fractals_random_static.dir/build.make lib/freeglut/CMakeFiles/Fractals_random_static.dir/progs/demos/Fractals_random/fractals_random.c.s
+.PHONY : progs/demos/Fractals_random/fractals_random.c.s
+
+progs/demos/Lorenz/lorenz.o: progs/demos/Lorenz/lorenz.c.o
+.PHONY : progs/demos/Lorenz/lorenz.o
+
+# target to build an object file
+progs/demos/Lorenz/lorenz.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz.dir/build.make lib/freeglut/CMakeFiles/Lorenz.dir/progs/demos/Lorenz/lorenz.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz_static.dir/build.make lib/freeglut/CMakeFiles/Lorenz_static.dir/progs/demos/Lorenz/lorenz.c.o
+.PHONY : progs/demos/Lorenz/lorenz.c.o
+
+progs/demos/Lorenz/lorenz.i: progs/demos/Lorenz/lorenz.c.i
+.PHONY : progs/demos/Lorenz/lorenz.i
+
+# target to preprocess a source file
+progs/demos/Lorenz/lorenz.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz.dir/build.make lib/freeglut/CMakeFiles/Lorenz.dir/progs/demos/Lorenz/lorenz.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz_static.dir/build.make lib/freeglut/CMakeFiles/Lorenz_static.dir/progs/demos/Lorenz/lorenz.c.i
+.PHONY : progs/demos/Lorenz/lorenz.c.i
+
+progs/demos/Lorenz/lorenz.s: progs/demos/Lorenz/lorenz.c.s
+.PHONY : progs/demos/Lorenz/lorenz.s
+
+# target to generate assembly for a file
+progs/demos/Lorenz/lorenz.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz.dir/build.make lib/freeglut/CMakeFiles/Lorenz.dir/progs/demos/Lorenz/lorenz.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Lorenz_static.dir/build.make lib/freeglut/CMakeFiles/Lorenz_static.dir/progs/demos/Lorenz/lorenz.c.s
+.PHONY : progs/demos/Lorenz/lorenz.c.s
+
+progs/demos/One/one.o: progs/demos/One/one.c.o
+.PHONY : progs/demos/One/one.o
+
+# target to build an object file
+progs/demos/One/one.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One.dir/build.make lib/freeglut/CMakeFiles/One.dir/progs/demos/One/one.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One_static.dir/build.make lib/freeglut/CMakeFiles/One_static.dir/progs/demos/One/one.c.o
+.PHONY : progs/demos/One/one.c.o
+
+progs/demos/One/one.i: progs/demos/One/one.c.i
+.PHONY : progs/demos/One/one.i
+
+# target to preprocess a source file
+progs/demos/One/one.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One.dir/build.make lib/freeglut/CMakeFiles/One.dir/progs/demos/One/one.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One_static.dir/build.make lib/freeglut/CMakeFiles/One_static.dir/progs/demos/One/one.c.i
+.PHONY : progs/demos/One/one.c.i
+
+progs/demos/One/one.s: progs/demos/One/one.c.s
+.PHONY : progs/demos/One/one.s
+
+# target to generate assembly for a file
+progs/demos/One/one.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One.dir/build.make lib/freeglut/CMakeFiles/One.dir/progs/demos/One/one.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/One_static.dir/build.make lib/freeglut/CMakeFiles/One_static.dir/progs/demos/One/one.c.s
+.PHONY : progs/demos/One/one.c.s
+
+progs/demos/Resizer/Resizer.o: progs/demos/Resizer/Resizer.cpp.o
+.PHONY : progs/demos/Resizer/Resizer.o
+
+# target to build an object file
+progs/demos/Resizer/Resizer.cpp.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer.dir/build.make lib/freeglut/CMakeFiles/Resizer.dir/progs/demos/Resizer/Resizer.cpp.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer_static.dir/build.make lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o
+.PHONY : progs/demos/Resizer/Resizer.cpp.o
+
+progs/demos/Resizer/Resizer.i: progs/demos/Resizer/Resizer.cpp.i
+.PHONY : progs/demos/Resizer/Resizer.i
+
+# target to preprocess a source file
+progs/demos/Resizer/Resizer.cpp.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer.dir/build.make lib/freeglut/CMakeFiles/Resizer.dir/progs/demos/Resizer/Resizer.cpp.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer_static.dir/build.make lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.i
+.PHONY : progs/demos/Resizer/Resizer.cpp.i
+
+progs/demos/Resizer/Resizer.s: progs/demos/Resizer/Resizer.cpp.s
+.PHONY : progs/demos/Resizer/Resizer.s
+
+# target to generate assembly for a file
+progs/demos/Resizer/Resizer.cpp.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer.dir/build.make lib/freeglut/CMakeFiles/Resizer.dir/progs/demos/Resizer/Resizer.cpp.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/Resizer_static.dir/build.make lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.s
+.PHONY : progs/demos/Resizer/Resizer.cpp.s
+
+progs/demos/multi-touch/multi-touch.o: progs/demos/multi-touch/multi-touch.c.o
+.PHONY : progs/demos/multi-touch/multi-touch.o
+
+# target to build an object file
+progs/demos/multi-touch/multi-touch.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch.dir/build.make lib/freeglut/CMakeFiles/multi-touch.dir/progs/demos/multi-touch/multi-touch.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch_static.dir/build.make lib/freeglut/CMakeFiles/multi-touch_static.dir/progs/demos/multi-touch/multi-touch.c.o
+.PHONY : progs/demos/multi-touch/multi-touch.c.o
+
+progs/demos/multi-touch/multi-touch.i: progs/demos/multi-touch/multi-touch.c.i
+.PHONY : progs/demos/multi-touch/multi-touch.i
+
+# target to preprocess a source file
+progs/demos/multi-touch/multi-touch.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch.dir/build.make lib/freeglut/CMakeFiles/multi-touch.dir/progs/demos/multi-touch/multi-touch.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch_static.dir/build.make lib/freeglut/CMakeFiles/multi-touch_static.dir/progs/demos/multi-touch/multi-touch.c.i
+.PHONY : progs/demos/multi-touch/multi-touch.c.i
+
+progs/demos/multi-touch/multi-touch.s: progs/demos/multi-touch/multi-touch.c.s
+.PHONY : progs/demos/multi-touch/multi-touch.s
+
+# target to generate assembly for a file
+progs/demos/multi-touch/multi-touch.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch.dir/build.make lib/freeglut/CMakeFiles/multi-touch.dir/progs/demos/multi-touch/multi-touch.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/multi-touch_static.dir/build.make lib/freeglut/CMakeFiles/multi-touch_static.dir/progs/demos/multi-touch/multi-touch.c.s
+.PHONY : progs/demos/multi-touch/multi-touch.c.s
+
+progs/demos/shapes/glmatrix.o: progs/demos/shapes/glmatrix.c.o
+.PHONY : progs/demos/shapes/glmatrix.o
+
+# target to build an object file
+progs/demos/shapes/glmatrix.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/progs/demos/shapes/glmatrix.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/progs/demos/shapes/glmatrix.c.o
+.PHONY : progs/demos/shapes/glmatrix.c.o
+
+progs/demos/shapes/glmatrix.i: progs/demos/shapes/glmatrix.c.i
+.PHONY : progs/demos/shapes/glmatrix.i
+
+# target to preprocess a source file
+progs/demos/shapes/glmatrix.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/progs/demos/shapes/glmatrix.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/progs/demos/shapes/glmatrix.c.i
+.PHONY : progs/demos/shapes/glmatrix.c.i
+
+progs/demos/shapes/glmatrix.s: progs/demos/shapes/glmatrix.c.s
+.PHONY : progs/demos/shapes/glmatrix.s
+
+# target to generate assembly for a file
+progs/demos/shapes/glmatrix.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/progs/demos/shapes/glmatrix.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/progs/demos/shapes/glmatrix.c.s
+.PHONY : progs/demos/shapes/glmatrix.c.s
+
+progs/demos/shapes/shapes.o: progs/demos/shapes/shapes.c.o
+.PHONY : progs/demos/shapes/shapes.o
+
+# target to build an object file
+progs/demos/shapes/shapes.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/progs/demos/shapes/shapes.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/progs/demos/shapes/shapes.c.o
+.PHONY : progs/demos/shapes/shapes.c.o
+
+progs/demos/shapes/shapes.i: progs/demos/shapes/shapes.c.i
+.PHONY : progs/demos/shapes/shapes.i
+
+# target to preprocess a source file
+progs/demos/shapes/shapes.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/progs/demos/shapes/shapes.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/progs/demos/shapes/shapes.c.i
+.PHONY : progs/demos/shapes/shapes.c.i
+
+progs/demos/shapes/shapes.s: progs/demos/shapes/shapes.c.s
+.PHONY : progs/demos/shapes/shapes.s
+
+# target to generate assembly for a file
+progs/demos/shapes/shapes.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes.dir/build.make lib/freeglut/CMakeFiles/shapes.dir/progs/demos/shapes/shapes.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/shapes_static.dir/build.make lib/freeglut/CMakeFiles/shapes_static.dir/progs/demos/shapes/shapes.c.s
+.PHONY : progs/demos/shapes/shapes.c.s
+
+progs/demos/smooth_opengl3/smooth_opengl3.o: progs/demos/smooth_opengl3/smooth_opengl3.c.o
+.PHONY : progs/demos/smooth_opengl3/smooth_opengl3.o
+
+# target to build an object file
+progs/demos/smooth_opengl3/smooth_opengl3.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3.dir/progs/demos/smooth_opengl3/smooth_opengl3.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/progs/demos/smooth_opengl3/smooth_opengl3.c.o
+.PHONY : progs/demos/smooth_opengl3/smooth_opengl3.c.o
+
+progs/demos/smooth_opengl3/smooth_opengl3.i: progs/demos/smooth_opengl3/smooth_opengl3.c.i
+.PHONY : progs/demos/smooth_opengl3/smooth_opengl3.i
+
+# target to preprocess a source file
+progs/demos/smooth_opengl3/smooth_opengl3.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3.dir/progs/demos/smooth_opengl3/smooth_opengl3.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/progs/demos/smooth_opengl3/smooth_opengl3.c.i
+.PHONY : progs/demos/smooth_opengl3/smooth_opengl3.c.i
+
+progs/demos/smooth_opengl3/smooth_opengl3.s: progs/demos/smooth_opengl3/smooth_opengl3.c.s
+.PHONY : progs/demos/smooth_opengl3/smooth_opengl3.s
+
+# target to generate assembly for a file
+progs/demos/smooth_opengl3/smooth_opengl3.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3.dir/progs/demos/smooth_opengl3/smooth_opengl3.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/build.make lib/freeglut/CMakeFiles/smooth_opengl3_static.dir/progs/demos/smooth_opengl3/smooth_opengl3.c.s
+.PHONY : progs/demos/smooth_opengl3/smooth_opengl3.c.s
+
+progs/demos/spaceball/spaceball.o: progs/demos/spaceball/spaceball.c.o
+.PHONY : progs/demos/spaceball/spaceball.o
+
+# target to build an object file
+progs/demos/spaceball/spaceball.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/progs/demos/spaceball/spaceball.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/progs/demos/spaceball/spaceball.c.o
+.PHONY : progs/demos/spaceball/spaceball.c.o
+
+progs/demos/spaceball/spaceball.i: progs/demos/spaceball/spaceball.c.i
+.PHONY : progs/demos/spaceball/spaceball.i
+
+# target to preprocess a source file
+progs/demos/spaceball/spaceball.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/progs/demos/spaceball/spaceball.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/progs/demos/spaceball/spaceball.c.i
+.PHONY : progs/demos/spaceball/spaceball.c.i
+
+progs/demos/spaceball/spaceball.s: progs/demos/spaceball/spaceball.c.s
+.PHONY : progs/demos/spaceball/spaceball.s
+
+# target to generate assembly for a file
+progs/demos/spaceball/spaceball.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/progs/demos/spaceball/spaceball.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/progs/demos/spaceball/spaceball.c.s
+.PHONY : progs/demos/spaceball/spaceball.c.s
+
+progs/demos/spaceball/vmath.o: progs/demos/spaceball/vmath.c.o
+.PHONY : progs/demos/spaceball/vmath.o
+
+# target to build an object file
+progs/demos/spaceball/vmath.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/progs/demos/spaceball/vmath.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/progs/demos/spaceball/vmath.c.o
+.PHONY : progs/demos/spaceball/vmath.c.o
+
+progs/demos/spaceball/vmath.i: progs/demos/spaceball/vmath.c.i
+.PHONY : progs/demos/spaceball/vmath.i
+
+# target to preprocess a source file
+progs/demos/spaceball/vmath.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/progs/demos/spaceball/vmath.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/progs/demos/spaceball/vmath.c.i
+.PHONY : progs/demos/spaceball/vmath.c.i
+
+progs/demos/spaceball/vmath.s: progs/demos/spaceball/vmath.c.s
+.PHONY : progs/demos/spaceball/vmath.s
+
+# target to generate assembly for a file
+progs/demos/spaceball/vmath.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball.dir/build.make lib/freeglut/CMakeFiles/spaceball.dir/progs/demos/spaceball/vmath.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/spaceball_static.dir/build.make lib/freeglut/CMakeFiles/spaceball_static.dir/progs/demos/spaceball/vmath.c.s
+.PHONY : progs/demos/spaceball/vmath.c.s
+
+progs/demos/subwin/subwin.o: progs/demos/subwin/subwin.c.o
+.PHONY : progs/demos/subwin/subwin.o
+
+# target to build an object file
+progs/demos/subwin/subwin.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin.dir/build.make lib/freeglut/CMakeFiles/subwin.dir/progs/demos/subwin/subwin.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin_static.dir/build.make lib/freeglut/CMakeFiles/subwin_static.dir/progs/demos/subwin/subwin.c.o
+.PHONY : progs/demos/subwin/subwin.c.o
+
+progs/demos/subwin/subwin.i: progs/demos/subwin/subwin.c.i
+.PHONY : progs/demos/subwin/subwin.i
+
+# target to preprocess a source file
+progs/demos/subwin/subwin.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin.dir/build.make lib/freeglut/CMakeFiles/subwin.dir/progs/demos/subwin/subwin.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin_static.dir/build.make lib/freeglut/CMakeFiles/subwin_static.dir/progs/demos/subwin/subwin.c.i
+.PHONY : progs/demos/subwin/subwin.c.i
+
+progs/demos/subwin/subwin.s: progs/demos/subwin/subwin.c.s
+.PHONY : progs/demos/subwin/subwin.s
+
+# target to generate assembly for a file
+progs/demos/subwin/subwin.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin.dir/build.make lib/freeglut/CMakeFiles/subwin.dir/progs/demos/subwin/subwin.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/subwin_static.dir/build.make lib/freeglut/CMakeFiles/subwin_static.dir/progs/demos/subwin/subwin.c.s
+.PHONY : progs/demos/subwin/subwin.c.s
+
+progs/demos/timer/timer.o: progs/demos/timer/timer.c.o
+.PHONY : progs/demos/timer/timer.o
+
+# target to build an object file
+progs/demos/timer/timer.c.o:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer.dir/build.make lib/freeglut/CMakeFiles/timer.dir/progs/demos/timer/timer.c.o
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer_static.dir/build.make lib/freeglut/CMakeFiles/timer_static.dir/progs/demos/timer/timer.c.o
+.PHONY : progs/demos/timer/timer.c.o
+
+progs/demos/timer/timer.i: progs/demos/timer/timer.c.i
+.PHONY : progs/demos/timer/timer.i
+
+# target to preprocess a source file
+progs/demos/timer/timer.c.i:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer.dir/build.make lib/freeglut/CMakeFiles/timer.dir/progs/demos/timer/timer.c.i
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer_static.dir/build.make lib/freeglut/CMakeFiles/timer_static.dir/progs/demos/timer/timer.c.i
+.PHONY : progs/demos/timer/timer.c.i
+
+progs/demos/timer/timer.s: progs/demos/timer/timer.c.s
+.PHONY : progs/demos/timer/timer.s
+
+# target to generate assembly for a file
+progs/demos/timer/timer.c.s:
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer.dir/build.make lib/freeglut/CMakeFiles/timer.dir/progs/demos/timer/timer.c.s
+	cd /home/dowoncha/Documents/comp575_pa2/build && $(MAKE) -f lib/freeglut/CMakeFiles/timer_static.dir/build.make lib/freeglut/CMakeFiles/timer_static.dir/progs/demos/timer/timer.c.s
+.PHONY : progs/demos/timer/timer.c.s
 
 src/fg_callbacks.o: src/fg_callbacks.c.o
 .PHONY : src/fg_callbacks.o
@@ -1310,14 +2024,80 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... smooth_opengl3"
 	@echo "... install/strip"
+	@echo "... spaceball"
+	@echo "... Fractals"
+	@echo "... multi-touch"
+	@echo "... subwin"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... spaceball_static"
 	@echo "... install"
+	@echo "... Resizer_static"
+	@echo "... multi-touch_static"
+	@echo "... shapes"
+	@echo "... Resizer"
+	@echo "... Lorenz"
+	@echo "... subwin_static"
 	@echo "... list_install_components"
+	@echo "... Fractals_random_static"
+	@echo "... CallbackMaker_static"
+	@echo "... One_static"
+	@echo "... One"
+	@echo "... timer_static"
+	@echo "... shapes_static"
 	@echo "... freeglut_static"
+	@echo "... smooth_opengl3_static"
+	@echo "... Fractals_random"
+	@echo "... Lorenz_static"
 	@echo "... freeglut"
+	@echo "... CallbackMaker"
 	@echo "... install/local"
+	@echo "... Fractals_static"
+	@echo "... timer"
+	@echo "... progs/demos/CallbackMaker/CallbackMaker.o"
+	@echo "... progs/demos/CallbackMaker/CallbackMaker.i"
+	@echo "... progs/demos/CallbackMaker/CallbackMaker.s"
+	@echo "... progs/demos/Fractals/fractals.o"
+	@echo "... progs/demos/Fractals/fractals.i"
+	@echo "... progs/demos/Fractals/fractals.s"
+	@echo "... progs/demos/Fractals_random/fractals_random.o"
+	@echo "... progs/demos/Fractals_random/fractals_random.i"
+	@echo "... progs/demos/Fractals_random/fractals_random.s"
+	@echo "... progs/demos/Lorenz/lorenz.o"
+	@echo "... progs/demos/Lorenz/lorenz.i"
+	@echo "... progs/demos/Lorenz/lorenz.s"
+	@echo "... progs/demos/One/one.o"
+	@echo "... progs/demos/One/one.i"
+	@echo "... progs/demos/One/one.s"
+	@echo "... progs/demos/Resizer/Resizer.o"
+	@echo "... progs/demos/Resizer/Resizer.i"
+	@echo "... progs/demos/Resizer/Resizer.s"
+	@echo "... progs/demos/multi-touch/multi-touch.o"
+	@echo "... progs/demos/multi-touch/multi-touch.i"
+	@echo "... progs/demos/multi-touch/multi-touch.s"
+	@echo "... progs/demos/shapes/glmatrix.o"
+	@echo "... progs/demos/shapes/glmatrix.i"
+	@echo "... progs/demos/shapes/glmatrix.s"
+	@echo "... progs/demos/shapes/shapes.o"
+	@echo "... progs/demos/shapes/shapes.i"
+	@echo "... progs/demos/shapes/shapes.s"
+	@echo "... progs/demos/smooth_opengl3/smooth_opengl3.o"
+	@echo "... progs/demos/smooth_opengl3/smooth_opengl3.i"
+	@echo "... progs/demos/smooth_opengl3/smooth_opengl3.s"
+	@echo "... progs/demos/spaceball/spaceball.o"
+	@echo "... progs/demos/spaceball/spaceball.i"
+	@echo "... progs/demos/spaceball/spaceball.s"
+	@echo "... progs/demos/spaceball/vmath.o"
+	@echo "... progs/demos/spaceball/vmath.i"
+	@echo "... progs/demos/spaceball/vmath.s"
+	@echo "... progs/demos/subwin/subwin.o"
+	@echo "... progs/demos/subwin/subwin.i"
+	@echo "... progs/demos/subwin/subwin.s"
+	@echo "... progs/demos/timer/timer.o"
+	@echo "... progs/demos/timer/timer.i"
+	@echo "... progs/demos/timer/timer.s"
 	@echo "... src/fg_callbacks.o"
 	@echo "... src/fg_callbacks.i"
 	@echo "... src/fg_callbacks.s"

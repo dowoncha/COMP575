@@ -20,33 +20,30 @@
 
 class Scene
 {
-public:
+private:
     glm::mat4x4 ModelTransform;
-    glm::mat4x4 EyeTransform;
     glm::mat4x4 ViewTransform;
     glm::mat4x4 ProjTransform;
+    glm::mat4x4 ViewportTransform;
     glm::mat4x4 MVP;
-
-    int ScreenWidth, ScreenHeight;
-
+public:
+    // TODO: Sphere Object members, cause too lazy to implement an Object class
     int gNumVertices;        // # of vertices
     int gNumTriangles;       // # of triangles
     std::vector<int> vIndexBuffer;
     std::vector<glm::vec3> vertices;
     int* gIndexBuffer;
-
+public:
     Scene();
 
     ~Scene();
-
-    void SetScreen(int width, int height);
 
     // Generate a sphere and load it into NumVertices, NumTriangles, IndexBuffer
     void LoadSphere();
 
     void SetupModelTransform(float scale, const glm::vec3& center);
 
-    void SetupEyeTransform(const glm::vec3& u, const glm::vec3& v, const glm::vec3& w, const glm::vec3& p);
+    void SetupViewTransform(const glm::vec3& u, const glm::vec3& v, const glm::vec3& w, const glm::vec3& p);
 
     void SetupProjTransform(float l, float r, float b, float t, float n, float f);
 
@@ -62,7 +59,9 @@ public:
      */
     void SetupMVP();
 
-    glm::mat4x4 GetMVP();
+    glm::mat4x4 ModelViewProj() const;
+
+    glm::mat4x4 ModelView() const;
 };
 
 #endif // _RAST_SCENE_

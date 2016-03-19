@@ -24,6 +24,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
   "../lib/freeglut/include"
   "."
   "../lib/glm"
+  "/include"
   )
 set(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
 set(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

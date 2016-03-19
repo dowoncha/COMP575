@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/dowoncha/Documents/comp575_pa2/lib/freeglut/progs/demos/Resizer/Resizer.cpp" "/home/dowoncha/Documents/comp575_pa2/build/lib/freeglut/CMakeFiles/Resizer.dir/progs/demos/Resizer/Resizer.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS
@@ -24,6 +24,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
   "../lib/freeglut/include"
   "."
   "../lib/glm"
+  "/include"
   )
 set(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
 set(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

@@ -7,7 +7,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/dowoncha/Documents/comp575_pa2/src/Renderer.cpp" "/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o"
   "/home/dowoncha/Documents/comp575_pa2/src/Scene.cpp" "/home/dowoncha/Documents/comp575_pa2/build/CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES

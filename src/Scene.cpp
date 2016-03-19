@@ -4,8 +4,6 @@ Scene::Scene() :
     gNumVertices(0),
     gNumTriangles(0),
     gIndexBuffer(nullptr),
-    ScreenWidth(512),
-    ScreenHeight(512),
     ViewTransform(1.0f),
     EyeTransform(1.0f)
 {
@@ -18,8 +16,6 @@ Scene::~Scene()
 
 void Scene::SetScreen(int width, int height)
 {
-  ScreenWidth = width;
-  ScreenHeight = height;
 }
 
 void Scene::LoadSphere()
@@ -126,7 +122,7 @@ void Scene::SetupModelTransform(float scale, const glm::vec3& center)
     ModelTransform = translate * scale;
 }
 
-void Scene::SetupEyeTransform(const glm::vec3& u, const glm::vec3& v, const glm::vec3& w, const glm::vec3& p)
+void Scene::SetupViewTransform(const glm::vec3& u, const glm::vec3& v, const glm::vec3& w, const glm::vec3& p)
 {
     EyeTransform[0] = glm::vec4(u, 0);
     EyeTransform[1] = glm::vec4(v, 0);
@@ -160,10 +156,15 @@ void Scene::SetupViewportTransform(int nx, int ny)
 void Scene::SetupMVP()
 {
     // I hope this is the right order
-    MVP = ViewTransform * ProjTransform * EyeTransform * ModelTransform;
+    MVP = ViewportTransform * ProjTransform * ViewTransform * ModelTransform;
 }
 
-glm::mat4x4 Scene::GetMVP()
+glm::mat4x4 Scene::ModelViewProj()
 {
     return MVP;
+}
+
+glm::mat4x4 Scene::ModelView()
+{
+  return ViewTransform * ModelTransform;
 }

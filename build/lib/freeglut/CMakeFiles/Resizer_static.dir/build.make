@@ -53,15 +53,15 @@ lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o: li
 lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o: ../lib/freeglut/progs/demos/Resizer/Resizer.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/dowoncha/Documents/comp575_pa2/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o"
-	cd /home/dowoncha/Documents/comp575_pa2/build/lib/freeglut && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o -c /home/dowoncha/Documents/comp575_pa2/lib/freeglut/progs/demos/Resizer/Resizer.cpp
+	cd /home/dowoncha/Documents/comp575_pa2/build/lib/freeglut && /usr/bin/clang   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o -c /home/dowoncha/Documents/comp575_pa2/lib/freeglut/progs/demos/Resizer/Resizer.cpp
 
 lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.i"
-	cd /home/dowoncha/Documents/comp575_pa2/build/lib/freeglut && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/lib/freeglut/progs/demos/Resizer/Resizer.cpp > CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.i
+	cd /home/dowoncha/Documents/comp575_pa2/build/lib/freeglut && /usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/dowoncha/Documents/comp575_pa2/lib/freeglut/progs/demos/Resizer/Resizer.cpp > CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.i
 
 lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.s"
-	cd /home/dowoncha/Documents/comp575_pa2/build/lib/freeglut && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/lib/freeglut/progs/demos/Resizer/Resizer.cpp -o CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.s
+	cd /home/dowoncha/Documents/comp575_pa2/build/lib/freeglut && /usr/bin/clang  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/dowoncha/Documents/comp575_pa2/lib/freeglut/progs/demos/Resizer/Resizer.cpp -o CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.s
 
 lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o.requires:
 .PHONY : lib/freeglut/CMakeFiles/Resizer_static.dir/progs/demos/Resizer/Resizer.cpp.o.requires
