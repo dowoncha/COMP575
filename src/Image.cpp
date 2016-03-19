@@ -64,19 +64,19 @@ glm::vec4 Image::GammaEncode(glm::vec4 const & color)
 glm::vec3 Image::PinToUnit(glm::vec3 const & a)
 {
     return glm::vec3(
-        Utility::PinToUnit(a.x),
-        Utility::PinToUnit(a.y),
-        Utility::PinToUnit(a.z)
+        Util::PinToUnit(a.x),
+        Util::PinToUnit(a.y),
+        Util::PinToUnit(a.z)
     );
 }
 
 glm::vec4 Image::PinToUnit(glm::vec4 const & a)
 {
     return glm::vec4(
-        Utility::PinToUnit(a.x),
-        Utility::PinToUnit(a.y),
-        Utility::PinToUnit(a.z),
-        Utility::PinToUnit(a.w)
+        Util::PinToUnit(a.x),
+        Util::PinToUnit(a.y),
+        Util::PinToUnit(a.z),
+        Util::PinToUnit(a.w)
     );
 }
 

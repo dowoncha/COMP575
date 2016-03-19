@@ -1,2 +1,0 @@
-/usr/bin/ar cq libPA2_SRC.a  CMakeFiles/PA2_SRC.dir/src/Renderer.cpp.o CMakeFiles/PA2_SRC.dir/src/Scene.cpp.o
-/usr/bin/ranlib libPA2_SRC.a

@@ -1,7 +1,11 @@
 #include "Renderer.h"
 
+using namespace Rasterizer;
+
 Renderer::Renderer(const Scene& _scene) :
     scene(_scene),
+    ScreenWidth(512),
+    ScreenHeight(512),
     window(nullptr)
 {
 }
@@ -11,27 +15,59 @@ Renderer::~Renderer()
     // Destroy GLFW window and context
 }
 
-void Renderer::Initialize(int width, int height)
+void Renderer::Initialize(int argc, char* argv[])
 {
-  if (!glfwInit())
-  {
-    return -1;
-  }
+    for (int i = 1; i < *argc; ++i)
+    {
+        if (std::strcmp(argv[i], "--width") == 0)
+        {
+            ScreenWidth = atoi(argv[++i]);
+        }
+        else if (std::strcmp(argv[i], "--height") == 0)
+        {
+            ScreenHeight = atoi(argv[++i]);
+        }
+    }
 
-  window = glfwCreateWindow(scene.ScreenWidth, scene.ScreenHeight, "title", nullptr, nullptr);
+    GLInit();
+    BufferInit();
+}
 
-  glfwMakeContextCurrent(window);
+void Renderer::GLInit()
+{
+    if (!glfwInit())
+    {
+        LOG(ERROR) << "Failed to initialize GLFW";
 
-  ScreenWidth = width;
-  ScreenHeight = height;
+        exit(EXIT_FAILURE);
+    }
 
-  bufferSize = ScreenWidth * ScreenHeight;
+    window = glfwCreateWindow(ScreenWidth, ScreenHeight, "title", nullptr, nullptr);
 
-  ColorBuffer.reserve(bufferSize);
-  DepthBuffer.reserve(bufferSize);
+    glfwMakeContextCurrent(window);
 
-  ClearColorBuffer();
-  ClearDepthBuffer();
+    if (gl3wInit())
+    {
+        LOG(ERROR) << "Failed to initialize OpenGL\n";
+        exit(EXIT_FAILURE);
+    }
+
+    if (!gl3wIsSupported(2, 0))
+    {
+        LOG(ERROR) << "OpenGL 2.0 is not supported";
+        exit(EXIT_FAILURE);
+    }
+}
+
+void Renderer::BufferInit()
+{
+    bufferSize = ScreenWidth * ScreenHeight;
+
+    ColorBuffer.reserve(bufferSize);
+    DepthBuffer.reserve(bufferSize);
+
+    ClearColorBuffer();
+    ClearDepthBuffer();
 }
 
 void Renderer::Resize(int width, int height)
@@ -47,7 +83,7 @@ void Renderer::Resize(int width, int height)
   ClearColorBuffer();
   ClearDepthBuffer();
 
-  // TODO: reisze window and such,probably scene as well
+  // TODO: resize glfw window and such, probably scene as well
 }
 
 void Renderer::Run()
@@ -119,17 +155,17 @@ void Renderer::Rasterize(const Triangle& tri)
 {
   // Rasterization using Bresenham Algorithm
   // First sort the vertices by y and partition into 2 top and bottom triangles
-  std::sort(tri.vertices, [] (const Vertex& a, const Vertex& b) -> bool {
-    return a.vertex.y < b.vertex.y;
+  std::sort(tri.vertices.begin(), tri.vertices.end(), [] (const Vertex& a, const Vertex& b) -> bool {
+    return a.pos.y < b.pos.y;
   });
 
   // Neccessary Case: If bottom vertices are on the same row just calculate top
-  if (tri.vertices[1].y == tri.vertices[2].y)
+  if (tri.vertices[1].pos.y == tri.vertices[2].pos.y)
   {
     DrawTopTriangle(tri.vertices[0], tri.vertices[1], tri.vertices[2]);
   }
   // Necessary Case: If top 2 vertices are on the same row draw bottom
-  else if ( v0.y == v1.y)
+  else if ( tri.vertices[0].pos.y == tri.vertices[1].pos.y)
   {
     DrawBotTriangle(tri.vertices[0], tri.vertices[1], tri.vertices[2]);
   }
@@ -137,21 +173,21 @@ void Renderer::Rasterize(const Triangle& tri)
   {
     //Partition the triangle horizontally into 2 halves
     //Vertex of the partitioning point
-    //glm::vec2 g;
-    DrawTopTriangle(v0, v1, g);
-    DawBotTriangle(g, v1, v2);
+    Vertex g;
+    DrawTopTriangle(tri.vertices[0], tri.vertices[1], g);
+    DrawBotTriangle(g, tri.vertices[1], tri.vertices[2], g);
   }
 }
 
-void Renderer::DrawTopTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
+void Renderer::DrawTopTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2)
 {
   // Calculate the inverse slope here
-  float invSlope1 = (v1.x - v0.x) / (v1.y - v0.y);
-  float invSlope2 = (v2.x - v0.x) / (v2.y - v0.y);
+  float invSlope1 = (v1.pos.x - v0.pos.x) / (v1.pos.y - v0.pos.y);
+  float invSlope2 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
 
-  float currentX1 = v1.x;
-  float currentX2 = v2.x;
-  for (float y = v0.y; y < v1.y; ++y)
+  float currentX1 = v1.pos.x;
+  float currentX2 = v2.pos.x;
+  for (float y = v0.pos.y; y < v1.pos.y; ++y)
   {
     DrawRow(currentX1, currentX2, y);
     currentX1 += invSlope1;
@@ -159,7 +195,7 @@ void Renderer::DrawTopTriangle(const glm::vec3& v0, const glm::vec3& v1, const g
   }
 }
 
-void Renderer::DrawBotTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2)
+void Renderer::DrawBotTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2)
 {
   // Calculate inverse slope here
   float invSlope1 = (v2.x - v0.x) / (v2.y - v0.y);
@@ -202,24 +238,8 @@ void Renderer::ClearDepthBuffer()
 {
   for (int i = 0; i < bufferSize; ++i )
   {
-    //TODO: change at to [], cause fuck range check safety
-    DepthBuffer.at(i) = 0.0f;
+      DepthBuffer.at(i) = 0.0f;
   }
-}
-
-GPixel Renderer::ColorToPixel(const glm::vec4& color)
-{
-  // TODO: Temporarily using normalize, but this is potentially incorrect
-  // each x,w,y,z value needs to be pinned between 0-1, not normalized
-  auto pinned = glm::normalize(color);
-
-  float fA =  pinned.a * 255.9999f;		  //Convert from 0-1 to 0-255
-  uint8_t uA = (uint8_t) fA;
-  uint8_t uR = (uint8_t) (pinned.r * fA);  //Multiply rgb values by the new alpha
-  uint8_t uG = (uint8_t) (pinned.g * fA);
-  uint8_t uB = (uint8_t) (pinned.b * fA);
-
-  return GPixel_PackARGB(uA, uR, uG, uB);	  //Returned the packed pixel
 }
 
 glm::vec3 Renderer::GammaEncode(const glm::vec3& color)

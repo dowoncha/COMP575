@@ -18,9 +18,9 @@
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include "Utility.hpp"
 
 #include "easylogging++.h"
-#include "Utility.h"
 
 /**
  *  Define the output pixel as a 32 bit uint32_t. Currently in RGBA format

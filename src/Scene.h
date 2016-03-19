@@ -11,12 +11,17 @@
 #define _RAST_SCENE_
 
 #include <vector>
-#include <cmath>
+//#include <cmath>
 #include <cstdio>
 
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "Utility.hpp"
+
+namespace Rasterizer
+{
 
 class Scene
 {
@@ -41,6 +46,9 @@ public:
     // Generate a sphere and load it into NumVertices, NumTriangles, IndexBuffer
     void LoadSphere();
 
+    /**
+     * Camera and matrix creations
+     */
     void SetupModelTransform(float scale, const glm::vec3& center);
 
     void SetupViewTransform(const glm::vec3& u, const glm::vec3& v, const glm::vec3& w, const glm::vec3& p);
@@ -49,8 +57,8 @@ public:
 
     /**
      *  Setup up the viewport transform matrix
-     *  @param nx X scaling factor?
-     *  @param ny Y scaling factor?
+     *  @param nx X scaling factor
+     *  @param ny Y scaling factor
      */
     void SetupViewportTransform(int nx, int ny);
 
@@ -63,5 +71,7 @@ public:
 
     glm::mat4x4 ModelView() const;
 };
+
+} // end of namespace Rasterizer
 
 #endif // _RAST_SCENE_

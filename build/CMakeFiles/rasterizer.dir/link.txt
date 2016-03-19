@@ -1,1 +1,0 @@
-/usr/bin/clang      CMakeFiles/rasterizer.dir/main.cpp.o  -o rasterizer -rdynamic libPA2_SRC.a 
