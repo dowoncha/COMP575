@@ -5,8 +5,7 @@ using namespace Rasterizer;
 Renderer::Renderer(const Scene& _scene) :
     scene(_scene),
     ScreenWidth(512),
-    ScreenHeight(512),
-    window(nullptr)
+    ScreenHeight(512)
 {
 }
 
@@ -17,7 +16,7 @@ Renderer::~Renderer()
 
 void Renderer::Initialize(int argc, char* argv[])
 {
-    for (int i = 1; i < *argc; ++i)
+    for (int i = 1; i < argc; ++i)
     {
         if (std::strcmp(argv[i], "--width") == 0)
         {
@@ -29,39 +28,14 @@ void Renderer::Initialize(int argc, char* argv[])
         }
     }
 
-    GLInit();
     BufferInit();
-}
-
-void Renderer::GLInit()
-{
-    if (!glfwInit())
-    {
-        LOG(ERROR) << "Failed to initialize GLFW";
-
-        exit(EXIT_FAILURE);
-    }
-
-    window = glfwCreateWindow(ScreenWidth, ScreenHeight, "title", nullptr, nullptr);
-
-    glfwMakeContextCurrent(window);
-
-    if (gl3wInit())
-    {
-        LOG(ERROR) << "Failed to initialize OpenGL\n";
-        exit(EXIT_FAILURE);
-    }
-
-    if (!gl3wIsSupported(2, 0))
-    {
-        LOG(ERROR) << "OpenGL 2.0 is not supported";
-        exit(EXIT_FAILURE);
-    }
 }
 
 void Renderer::BufferInit()
 {
     bufferSize = ScreenWidth * ScreenHeight;
+
+    LOG(INFO) << "Buffer size is: " << bufferSize;
 
     ColorBuffer.reserve(bufferSize);
     DepthBuffer.reserve(bufferSize);
@@ -86,163 +60,134 @@ void Renderer::Resize(int width, int height)
   // TODO: resize glfw window and such, probably scene as well
 }
 
-void Renderer::Run()
-{
-  // Render the scene sphere into the FrameBuffer
-  Render();
-
-  // Main loop
-  while(!glfwWindowShouldClose(window))
-  {
-    // Update
-    // If this wasn't on CPU put login in here
-
-    glClear(GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT);
-
-    // Draw the FrameBuffer
-    glDrawPixels(
-      SCREEN_WIDTH,     // width
-      SCREEN_HEIGHT,    // height
-      GL_RGB,          // Format
-      GL_FLOAT,         // Type
-      &ColorBuffer[0]   // buffer ptr
-    );
-    // Swap Front and back buffers
-    glfwSwapBuffers(window);
-    // Poll for and process events
-    glfwPollEvents();
-  }
-
-  glfwTerminate();
-}
-
 void Renderer::Render()
 {
-    // Vertex Shader
-    std::vector<Triangle> triangles(scene.gNumTriangles);
-
     for (int i = 0; i < scene.gNumTriangles; ++i)
     {
-      int base = 3 * triIndex;
+      int base = 3 * i;
 
       //Model View Transformation
-      Triangle tri;
-      tri.vertices[0] = scene.ModelView() * scene.vertices[base];
-      tri.vertices[1] = scene.ModelView() * scene.vertices[base + 1];
-      tri.vertices[2] = scene.ModelView() * scene.vertices[base + 2];
+      //Triangle tri;
+      //tri.vertices[0].pos = scene.ModelView() * scene.vertices[base];
+      //tri.vertices[1].pos = scene.ModelView() * scene.vertices[base + 1];
+      //tri.vertices[2].pos = scene.ModelView() * scene.vertices[base + 2];
       // Vertex Shader
       // Shading
 
       // Projection Transformation
-      tri.vertices[0] = scene.Projection() * scene.vertices[base];
-      tri.vertices[1] = scene.Projection() * scene.vertices[base + 1];
-      tri.vertices[2] = scene.Projection() * scene.vertices[base + 2];
+      //tri.vertices[0].pos = scene.Projection() * scene.vertices[base];
+      //tri.vertices[1].pos = scene.Projection() * scene.vertices[base + 1];
+      //tri.vertices[2].pos = scene.Projection() * scene.vertices[base + 2];
 
-      // Screen Mapping
+      //auto v0 = scene.ModelViewProj() * scene.vertices[base];
+      //auto v1 = scene.ModelViewProj() * scene.vertices[base + 1];
+      //auto v2 = scene.ModelViewProj() * scene.vertices[base + 2];
+
+      Barycentric(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
     }
+}
 
-    // Triangle Setup
-    // Triangle Traversal
-    for (const Triangle& tri : triangles)
+void Renderer::Barycentric(const glm::vec3& v0,
+                           const glm::vec3& v1,
+                           const glm::vec3& v2 )
+{
+  int maxX = std::max(v0.x, std::max(v1.x, v2.x));
+  int minX = std::min(v0.x, std::min(v1.x, v2.x));
+  int maxY = std::max(v0.y, std::max(v1.y, v2.y));
+  int minY = std::min(v0.y, std::min(v1.y, v2.y));
+
+  glm::vec3 vs1(v1.x - v0.x, v1.y - v0.y, 1.0f);
+  glm::vec3 vs2(v2.x - v0.x, v2.y - v0.y, 1.0f);
+
+  for (int y = minY; y <= maxY; ++y)
+  {
+    for (int x = minX; x <= maxX; ++x)
     {
-      Rasterize(tri);
-      // Pixel Shader
-      // Merge && Depth Buffer Test
+      glm::vec3 q(x - v0.x, y - v1.y, 1.0f);
+
+      float s = glm::length(glm::cross(q, vs2)) / glm::length(glm::cross(vs1, vs2));
+      float t = glm::length(glm::cross(vs1, q)) / glm::length(glm::cross(vs1, vs2));
+
+      if ((s >= 0) && (t >= 0) && (s + t <= 1))
+      {
+        //Inside triangle
+        DrawPixel(x, y, glm::vec3(1.0f));
+      }
     }
-}
-
-void Renderer::Rasterize(const Triangle& tri)
-{
-  // Rasterization using Bresenham Algorithm
-  // First sort the vertices by y and partition into 2 top and bottom triangles
-  std::sort(tri.vertices.begin(), tri.vertices.end(), [] (const Vertex& a, const Vertex& b) -> bool {
-    return a.pos.y < b.pos.y;
-  });
-
-  // Neccessary Case: If bottom vertices are on the same row just calculate top
-  if (tri.vertices[1].pos.y == tri.vertices[2].pos.y)
-  {
-    DrawTopTriangle(tri.vertices[0], tri.vertices[1], tri.vertices[2]);
-  }
-  // Necessary Case: If top 2 vertices are on the same row draw bottom
-  else if ( tri.vertices[0].pos.y == tri.vertices[1].pos.y)
-  {
-    DrawBotTriangle(tri.vertices[0], tri.vertices[1], tri.vertices[2]);
-  }
-  else
-  {
-    //Partition the triangle horizontally into 2 halves
-    //Vertex of the partitioning point
-    Vertex g;
-    DrawTopTriangle(tri.vertices[0], tri.vertices[1], g);
-    DrawBotTriangle(g, tri.vertices[1], tri.vertices[2], g);
   }
 }
 
-void Renderer::DrawTopTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2)
+void Renderer::DrawRow(int x1, int x2, int y)
 {
-  // Calculate the inverse slope here
-  float invSlope1 = (v1.pos.x - v0.pos.x) / (v1.pos.y - v0.pos.y);
-  float invSlope2 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
-
-  float currentX1 = v1.pos.x;
-  float currentX2 = v2.pos.x;
-  for (float y = v0.pos.y; y < v1.pos.y; ++y)
-  {
-    DrawRow(currentX1, currentX2, y);
-    currentX1 += invSlope1;
-    currentX2 += invSlope2;
-  }
-}
-
-void Renderer::DrawBotTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2)
-{
-  // Calculate inverse slope here
-  float invSlope1 = (v2.x - v0.x) / (v2.y - v0.y);
-  float invSlope2 = (v2.x - v1.x) / (v2.y - v1.y);
-
-  float currentX1 = v0.x;
-  float currentX2 = v1.x;
-
-  for (int y = v0.y; y < v2.y; ++y)
-  {
-    // Draw Row
-    DrawRow(currentX1, currentX2, y);
-    currentX1 += invSlope1;
-    currentX2 += invSlope2;
-  }
-}
-
-void Renderer::DrawRow(int x1, int x2, int scanlineY)
-{
+  int rowOffset = y * ScreenWidth;
   for (int i = x1; i < x2; ++i)
   {
-    FrameBuffer[i][scanlineY] = FragmentStage(glm::ivec3(255, 255, 255));
+    //FrameBuffer[i][scanlineY] = FragmentStage(glm::ivec3(255, 255, 255));
+    ColorBuffer.at(rowOffset + i) = glm::vec3(1.0f);
   }
 }
 
-glm::vec3 Renderer::FragmentStage(const glm::vec3& color)
+void Renderer::DrawPixel(int x, int y, const glm::vec3& color)
 {
-  return glm::vec3(1.0f);
+    ColorBuffer.at(y * ScreenWidth + x) = color;
 }
 
 void Renderer::ClearColorBuffer()
 {
-  for (int i = 0; i < bufferSize; ++i)
+  for (auto& c : ColorBuffer)
   {
-      ColorBuffer.at(i) = glm::vec3(0.0f);
+    c = glm::vec3(1.0f);
   }
 }
 
 void Renderer::ClearDepthBuffer()
 {
-  for (int i = 0; i < bufferSize; ++i )
+  for (auto& d : DepthBuffer)
   {
-      DepthBuffer.at(i) = 0.0f;
+    d = 0.0f;
   }
 }
 
-glm::vec3 Renderer::GammaEncode(const glm::vec3& color)
+void Renderer::OutputToPPM(const std::string& filename) const
+{
+    if (ColorBuffer.empty())
+    {
+        LOG(ERROR) << "Image Buffer empty, please call SetBuffer before outputting";
+        return;
+    }
+    if (ColorBuffer.size() != bufferSize)
+    {
+        LOG(WARNING) << "Buffer size is not equal to image width and height";
+        return;
+    }
+
+    LOG(INFO) << "Outputting to ppm file: " << filename;
+
+    // Open stream and write ppm headers, color bit's set to 255 per channel
+    std::ofstream ofs(filename, std::ios::out | std::ios::binary);
+
+    // write headers
+    ofs << "P6"     << '\n'
+        << ScreenWidth    << ' '
+        << ScreenHeight   << '\n'
+        << 255      << '\n';
+
+    for (glm::vec3 color : ColorBuffer)
+    {
+        glm::vec3 encoded = GammaEncode(color);
+        Pixel p = ColorToPixel(color);
+
+        ofs << Pixel_R(p)
+            << Pixel_G(p)
+            << Pixel_B(p);
+    }
+
+    ofs.close();
+
+    LOG(INFO) << "Finished outputting to " << filename << ", closing file.";
+}
+
+glm::vec3 Renderer::GammaEncode(const glm::vec3& color) const
 {
     float gamma = 1.0f / 2.4f;
 
@@ -253,4 +198,40 @@ glm::vec3 Renderer::GammaEncode(const glm::vec3& color)
     out.z = (color.z <= 0.0031308f ) ? 12.92f * color.z : 1.055f * std::pow(color.z, gamma) - 0.055f;
 
     return out;
+}
+
+glm::vec3 Renderer::PinToUnit(const glm::vec3& color) const
+{
+  float x = std::max(0.0f, std::min(1.0f, color.x));
+  float y = std::max(0.0f, std::min(1.0f, color.y));
+  float z = std::max(0.0f, std::min(1.0f, color.z));
+
+  return glm::vec3(x, y, z);
+}
+
+Pixel Renderer::ColorToPixel(const glm::vec3& color) const
+{
+    glm::vec3 pinned = PinToUnit(color);
+
+    uint8_t uR = (uint8_t) (pinned.x * 255.9999f);
+    uint8_t uG = (uint8_t) (pinned.y * 255.9999f);
+    uint8_t uB = (uint8_t) (pinned.z * 255.9999f);
+
+    return MakeRGBA(uR, uG, uB, 255);
+}
+
+void Renderer::linEval(int xl, int xr, int yl, int yr, const glm::vec3& color)
+{
+  float qRow = color.x * xl + color.y * yl + color.z;
+
+  for (int y = yl; y < yr; ++y)
+  {
+    float qPix = qRow;
+    for (int x = xl; x < xr; ++x)
+    {
+      DrawPixel(x, y, glm::vec3(1.0f));
+      qPix += color.x;
+    }
+    qRow += color.y;
+  }
 }

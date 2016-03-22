@@ -11,13 +11,15 @@
 #define _RAST_SCENE_
 
 #include <vector>
-//#include <cmath>
 #include <cstdio>
 
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/ext.hpp>
 
+#include "easylogging++.h"
+#include "Light.hpp"
 #include "Utility.hpp"
 
 namespace Rasterizer
@@ -37,7 +39,8 @@ public:
     int gNumTriangles;       // # of triangles
     std::vector<int> vIndexBuffer;
     std::vector<glm::vec3> vertices;
-    int* gIndexBuffer;
+
+    Light light;
 public:
     Scene();
 
@@ -70,6 +73,8 @@ public:
     glm::mat4x4 ModelViewProj() const;
 
     glm::mat4x4 ModelView() const;
+
+    glm::mat4x4 Projection() const;
 };
 
 } // end of namespace Rasterizer

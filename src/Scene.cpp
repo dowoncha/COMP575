@@ -5,8 +5,8 @@ using namespace Rasterizer;
 Scene::Scene() :
     gNumVertices(0),
     gNumTriangles(0),
-    gIndexBuffer(nullptr),
-    ViewTransform(1.0f)
+    ViewTransform(1.0f),
+    light(glm::vec3(-4, 4, -3), 1.0f)
 {
 }
 
@@ -24,24 +24,19 @@ void Scene::LoadSphere()
     gNumVertices    = (height - 2) * width + 2;
     gNumTriangles   = (height - 2) * (width - 1) * 2;
 
-    // RESOLVED: Allocate an array for gNumVertices vertices.
-    // Using a vector, no allocation needed
-
-    gIndexBuffer    = new int[ 3 * gNumTriangles];
-
     for (int j = 1; j < height-1; ++j)
     {
         for (int i = 0; i < width; ++i)
         {
             theta = (float) j / (height-1) * M_PI;
-            phi   = (float) i / (width-1)  * M_PI * 2;
+            phi   = (float) i / (width-1)  * M_PI * 2.0f;
 
             float   x   = sinf(theta) * cosf(phi);
             float   y   = cosf(theta);
             float   z   = -sinf(theta) * sinf(phi);
 
             // TODO: Set vertex t in the vertex array to {x, y, z}.
-            vertices.emplace_back(x, y, z);
+            vertices.push_back(glm::vec3(x, y, z));
         }
     }
 
@@ -51,13 +46,15 @@ void Scene::LoadSphere()
     // TODO: Set vertex t in the vertex array to {0, -1, 0}.
     vertices.emplace_back(0.0f, -1.0f, 0.0f);
 
+    vIndexBuffer.reserve(3 * gNumTriangles);
+
     int t = 0;
-    for (int j = 0; j < height-3; ++j)
+    for (int j = 0; j < height - 3; ++j)
     {
-        for (int i = 0; i < width-1; ++i)
+        for (int i = 0; i < width - 1; ++i)
         {
             vIndexBuffer.push_back(j * width + i);
-            vIndexBuffer.push_back((j+1) * width + (i + 1));
+            vIndexBuffer.push_back((j + 1) * width + (i + 1));
             vIndexBuffer.push_back(j * width + (i + 1));
             vIndexBuffer.push_back(j * width + i);
             vIndexBuffer.push_back((j + 1) * width + i);
@@ -96,49 +93,58 @@ void Scene::LoadSphere()
 void Scene::SetupModelTransform(float scale, const glm::vec3& center)
 {
     // Make Scale matrix
-    glm::mat4x4 scale = glm::scale(glm::mat4x4(1.0f), glm::vec3(scale));
+    glm::mat4x4 scaleMat = glm::scale(glm::mat4x4(1.0f), glm::vec3(scale));
 
     // Make Translation matrix
-    glm::mat4x4 translate = glm::translate(glm::mat4x4(1.0f), center);
+    glm::mat4x4 transMat = glm::translate(glm::mat4x4(1.0f), center);
 
-    ModelTransform = translate * scale;
+    ModelTransform = transMat * scaleMat;
+
+    LOG(INFO) << "Model Transform: " << glm::to_string(ModelTransform);
 }
 
 void Scene::SetupViewTransform(const glm::vec3& u, const glm::vec3& v, const glm::vec3& w, const glm::vec3& p)
 {
-    ViewTransform[0] = glm::vec4(u, 0);
-    ViewTransform[1] = glm::vec4(v, 0);
-    ViewTransform[2] = glm::vec4(w, 0);
+    ViewTransform[0] = glm::vec4(u, 0.0f);
+    ViewTransform[1] = glm::vec4(v, 0.0f);
+    ViewTransform[2] = glm::vec4(w, 0.0f);
 
     // Homogenous coordinate magic
     glm::vec4 temp = ViewTransform * glm::vec4(p, 1.0f);
     ViewTransform[0][3] = -temp.x;
     ViewTransform[1][3] = -temp.y;
     ViewTransform[2][3] = -temp.z;
+
+    LOG(INFO) << "View Transform: " << glm::to_string(ViewTransform);
 }
 
 void Scene::SetupProjTransform(float l, float r, float b, float t, float n, float f)
 {
   float n2 = 2 * n;
 
-  ProjTransform[0] = glm::vec4( n2 / (r - 1),    0, (l+r)/(l-r), 0);
-  ProjTransform[1] = glm::vec4( 0, n2 / (r - 1), 0, (b+t)/(b-t));
-  ProjTransform[2] = glm::vec4( 0, 0, (n+f)/(n-f), n2 * f / (f - n));
-  ProjTransform[3] = glm::vec4( 0, 0, 1, 0);
+  ProjTransform[0] = glm::vec4( n2 / (r - 1),    0.0f, (l+r)/(l-r), 0.0f);
+  ProjTransform[1] = glm::vec4( 0.0f, n2 / (r - 1), 0.0f, (b+t)/(b-t));
+  ProjTransform[2] = glm::vec4( 0.0f, 0.0f, (n+f)/(n-f), n2 * f / (f - n));
+  ProjTransform[3] = glm::vec4( 0.0f, 0.0f, 1.0f, 0.0f);
+
+  LOG(INFO) << "Projection Transform: " << glm::to_string(ProjTransform);
 }
 
 void Scene::SetupViewportTransform(int nx, int ny)
 {
-    ViewportTransform[0] = glm::vec4(nx / 2, 0, 0, (nx - 1) / 2);
-    ViewportTransform[1] = glm::vec4(0, ny / 2, 0, (ny - 1) / 2);
-    ViewportTransform[2] = glm::vec4(0, 0, 1, 0);
-    ViewportTransform[3] = glm::vec4(0, 0, 0, 1);
+    ViewportTransform[0] = glm::vec4(nx / 2.0f, 0.0f, 0.0f, (nx - 1) / 2.0f);
+    ViewportTransform[1] = glm::vec4(0.0f, ny / 2.0f, 0.0f, (ny - 1) / 2.0f);
+    ViewportTransform[2] = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
+    ViewportTransform[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    LOG(INFO) << "Viewport Transform: " << glm::to_string(ViewportTransform);
 }
 
 void Scene::SetupMVP()
 {
     // I hope this is the right order
     MVP = ViewportTransform * ProjTransform * ViewTransform * ModelTransform;
+    LOG(INFO) << "MVP: " << glm::to_string(MVP);
 }
 
 glm::mat4x4 Scene::ModelViewProj() const
@@ -149,4 +155,9 @@ glm::mat4x4 Scene::ModelViewProj() const
 glm::mat4x4 Scene::ModelView() const
 {
   return ViewTransform * ModelTransform;
+}
+
+glm::mat4x4 Scene::Projection() const
+{
+  return ViewportTransform * ProjTransform;
 }

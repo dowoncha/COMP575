@@ -18,14 +18,14 @@ public:
     glm::vec3 pos;
     float intensity;
 
-    Light(const glm::vec3 pos, float intensity) :
-        pos(pos),
-        intensity(intensity)
+    Light(const glm::vec3& _pos, float _intensity) :
+        pos(_pos),
+        intensity(_intensity)
     { }
 
-    Light(float x, float y, float z, float intensity) :
+    Light(float x, float y, float z, float _intensity) :
         pos(x, y, z),
-        intensity(intensity)
+        intensity(_intensity)
     { }
 
     ~Light() {}

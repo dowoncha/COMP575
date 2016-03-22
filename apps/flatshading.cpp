@@ -5,7 +5,7 @@
  *	content:     Start point for rasterizer
  *
  ******************************************************************************/
-
+ *
 #include "Scene.h"
 #include "Renderer.h"
 #include "easylogging++.h"
@@ -17,15 +17,13 @@ INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char* argv[])
 {
-    // parse arguments here
+    // Initialize logging
     START_EASYLOGGINGPP(argc, argv);
-
     // Initialize the Scene
-    LOG(INFO) << "Initializing Scene";
     Rasterizer::Scene scene;
 
     scene.LoadSphere();
-    scene.SetupModelTransform(2, glm::vec3(0.0f, 0.0f, -7.0f) );
+    scene.SetupModelTransform(2.0f, glm::vec3(0.0f, 0.0f, -7.0f) );
     scene.SetupViewTransform(
         glm::vec3(1.0f, 0.0f, 0.0f),
         glm::vec3(0.0f, 1.0f, 0.0f),
@@ -33,15 +31,14 @@ int main(int argc, char* argv[])
         glm::vec3(0.0f, 0.0f, 0.0f)
     );
 
-    scene.SetupProjTransform(-0.1f, 0.1f, -0.1f, -0.1f, -1000.0f);
+    scene.SetupProjTransform(-0.1f, 0.1f, -0.1f, 0.1f, -.1f, -1000.0f);
     scene.SetupViewportTransform(SCREEN_WIDTH, SCREEN_HEIGHT);
     scene.SetupMVP();
 
-    // Render Output code, GL CODE
-    Rasterizer::Renderer renderer(scene);
+    // Initialize Renderer
 
-    renderer.Initialize(argc, argv);
-    renderer.Run();
+    //renderer.Initialize(argc, argv);
+    //renderer.Run();
 
     exit(EXIT_SUCCESS);
 }

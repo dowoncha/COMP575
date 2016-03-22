@@ -1,15 +1,16 @@
 #pragma once
 
+#ifndef _RAST_UTILITY_
+#define _RAST_UTILITY_
+
 #include <algorithm>
 
-#ifdef __WIN32
+#ifdef _WIN32
 #define M_PI 3.141592653
 #endif
 
 namespace Util
 {
-	float PinToUnit(float in)
-	{
-		return std::max(0.0f, std::min(1.0f, in));
-	}
 } //namespace Util
+
+#endif // _RAST_UTILITY_
