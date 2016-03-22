@@ -17,6 +17,8 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_access.hpp>
+#include <glm/geometric.hpp>
 #include <glm/ext.hpp>
 
 #include "easylogging++.h"
@@ -53,7 +55,7 @@ public:
     /**
      * Camera and matrix creations
      */
-    void SetupModelTransform(float scale, const glm::vec3& center);
+    void SetupModelTransform(const glm::vec3& scale, const glm::vec3& center);
 
     void SetupViewTransform(const glm::vec3& u, const glm::vec3& v, const glm::vec3& w, const glm::vec3& p);
 
@@ -65,6 +67,8 @@ public:
      *  @param ny Y scaling factor
      */
     void SetupViewportTransform(int nx, int ny);
+
+    void SetupMVP();
 
     /**
      *  Calculate the Model-View-Projectiion matrix by multiplying all of the transforms

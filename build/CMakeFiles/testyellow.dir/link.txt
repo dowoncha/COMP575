@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/testyellow.dir/apps/test.cpp.o  -o testyellow -rdynamic 

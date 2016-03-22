@@ -46,7 +46,7 @@ void Scene::LoadSphere()
     // TODO: Set vertex t in the vertex array to {0, -1, 0}.
     vertices.emplace_back(0.0f, -1.0f, 0.0f, 1.0f);
 
-    vIndexBuffer.reserve(3 * gNumTriangles);
+    assert(vertices.size() == gNumVertices);
 
     int t = 0;
     for (int j = 0; j < height - 3; ++j)
@@ -71,6 +71,8 @@ void Scene::LoadSphere()
         vIndexBuffer.push_back((height - 3) * width + i);
     }
 
+    //assert(vIndexBuffer.size() == gNumTriangles / 3);
+
     // The index buffer has now been generated. Here's how to use to determine
     // the vertices of a triangle. Suppose you want to determine the vertices
     // of triangle i, with 0 <= i < gNumTriangles. Define:
@@ -88,17 +90,31 @@ void Scene::LoadSphere()
     // add 1 to k0, k1, and k2.
     //
     printf("Sphere loaded, # of vertices: %d, # of Triangles: %d\n", gNumVertices, gNumTriangles);
+    printf("Vertex Buffer Size: %d, IndexBuffer Size: %d\n", vertices.size(), vIndexBuffer.size());
 }
 
-void Scene::SetupModelTransform(float scale, const glm::vec3& center)
+void Scene::SetupModelTransform(const glm::vec3& scale, const glm::vec3& center)
 {
     // Make Scale matrix
-    glm::mat4x4 scaleMat = glm::scale(glm::mat4x4(1.0f), glm::vec3(scale));
+    glm::mat4x4 scaleMat(
+      glm::vec4(scale.x, 0.0f, 0.0f, 0.0f),
+      glm::vec4(0.0f, scale.y, 0.0f, 0.0f),
+      glm::vec4(0.0f, 0.0f, scale.z, 0.0f),
+      glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+    );
 
     // Make Translation matrix
-    glm::mat4x4 transMat = glm::translate(glm::mat4x4(1.0f), center);
+    glm::mat4x4 transMat(
+      glm::vec4(1.0f, 0.0f, 0.0f, 0.0f),
+      glm::vec4(0.0f, 1.0f, 0.0f, 0.0f),
+      glm::vec4(0.0f, 0.0f, 1.0f, -7.0f),
+      glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+    );
 
-    ModelTransform = transMat * scaleMat;
+    ModelTransform = scaleMat * transMat;
+    //ModelTransform = transMat * scaleMat;
+
+    //ModelTransform = glm::transpose(ModelTransform);
 
     LOG(INFO) << "Model Transform: " << glm::to_string(ModelTransform);
 }
@@ -115,16 +131,16 @@ void Scene::SetupViewTransform(const glm::vec3& u, const glm::vec3& v, const glm
     ViewTransform[1][3] = -temp.y;
     ViewTransform[2][3] = -temp.z;
 
+    //ViewTransform = glm::transpose(ViewTransform);
+
     LOG(INFO) << "View Transform: " << glm::to_string(ViewTransform);
 }
 
 void Scene::SetupProjTransform(float l, float r, float b, float t, float n, float f)
 {
-  float n2 = 2 * n;
-
-  ProjTransform[0] = glm::vec4( n2 / (r - 1),    0.0f, (l+r)/(l-r), 0.0f);
-  ProjTransform[1] = glm::vec4( 0.0f, n2 / (r - 1), 0.0f, (b+t)/(b-t));
-  ProjTransform[2] = glm::vec4( 0.0f, 0.0f, (n+f)/(n-f), n2 * f / (f - n));
+  ProjTransform[0] = glm::vec4( 2.0f*n/(r-l), 0.0f, (l+r)/(l-r), 0.0f);
+  ProjTransform[1] = glm::vec4( 0.0f, 2.0f*n/(t-b), (b+t)/(b-t), 0.0f);
+  ProjTransform[2] = glm::vec4( 0.0f, 0.0f, (n+f)/(n-f), 2.0f*n*f/(f-n));
   ProjTransform[3] = glm::vec4( 0.0f, 0.0f, 1.0f, 0.0f);
 
   LOG(INFO) << "Projection Transform: " << glm::to_string(ProjTransform);
@@ -140,23 +156,39 @@ void Scene::SetupViewportTransform(int nx, int ny)
     LOG(INFO) << "Viewport Transform: " << glm::to_string(ViewportTransform);
 }
 
+void Scene::SetupMVP()
+{
+    //MVP = ViewportTransform * ProjTransform * ViewTransform * ModelTransform;
+    MVP = ModelTransform * ViewTransform * ProjTransform * ViewportTransform;
+    MVP = glm::transpose(MVP);
+    LOG(INFO) << "MVP: " << glm::to_string(MVP);
+}
+
 void Scene::ApplyTransforms()
 {
-    MVP = ViewportTransform * ProjTransform * ViewTransform * ModelTransform;
-    LOG(INFO) << "MVP: " << glm::to_string(MVP);
+    SetupMVP();
 
-    // Apply MVP to all vertices, and then normalize by each vector's W.
+    // Multiplay all vec4 vertices by MVP and then normalize by w coordinate into vec3
   	for (int i = 0; i < gNumVertices; ++i)
   	{
-  		vertices.at(i) = MVP * vertices.at(i);
+      LOG(INFO) << glm::to_string(vertices.at(i));
+      vertices.at(i) = MVP * vertices.at(i);
+
   		NormalizeW(vertices.at(i));
+      LOG(INFO) << glm::to_string(vertices.at(i)) << std::endl;
   	}
 }
 
 void Scene::NormalizeW(glm::vec4& v) const
 {
-	v.x /= v.w;
-	v.y /= v.w;
-	v.z /= v.w;
-	v.w = 1.0f;
+  v.x /= v.w;
+  v.y /= v.w;
+  v.z /= v.w;
+  v.w = 1.0f;
 }
+
+//MVP
+//-512, 0, 511, -1788.5
+//0, -512, 511, -1788.5
+//0, 0, -2.000339, 6.81
+//0, 0, 2, -7

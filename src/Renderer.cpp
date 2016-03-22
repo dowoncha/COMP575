@@ -49,7 +49,8 @@ void Renderer::BufferInit()
 
 void Renderer::Render()
 {
-    int fragCount = 0;
+    float minX = 10000.0f, minY = 10000.0f;
+    float maxX = 0, maxY = 0;
 
     for (int i = 0; i < scene.gNumTriangles; ++i)
     {
@@ -59,23 +60,79 @@ void Renderer::Render()
   		int k1 = scene.vIndexBuffer.at(base + 1);
   		int k2 = scene.vIndexBuffer.at(base + 2);
 
+      // Vector should already be homogenous with x, y, z, 1.0f
   		glm::vec4 v0 = scene.vertices.at(k0);
   		glm::vec4 v1 = scene.vertices.at(k1);
   		glm::vec4 v2 = scene.vertices.at(k2);
 
-  		Barycentric bary(v0, v1, v2);
-  		std::vector<glm::vec2> pixels = bary.GetInterior();
+      minX = v0.x < minX ? v0.x : minX;
+      minX = v1.x < minX ? v1.x : minX;
+      minX = v2.x < minX ? v2.x : minX;
 
-      if (pixels.empty())
-        fragCount++;
+      minY = v0.y < minY ? v0.y : minY;
+      minY = v1.y < minY ? v1.y : minY;
+      minY = v2.y < minY ? v2.y : minY;
 
-  		for (glm::vec2 pixel : pixels)
-  		{
-  			ColorBuffer.at(pixel.x + pixel.y * ScreenWidth) = glm::vec3(1.0f);
-      }
+      maxX = v0.x > maxX ? v0.x : maxX ;
+      maxX = v1.x > maxX ? v1.x : maxX ;
+      maxX = v2.x > maxX ? v2.x : maxX ;
+
+      maxY = v0.y > maxY ? v0.y : maxY;
+      maxY = v1.y > maxY ? v1.y : maxY;
+      maxY = v2.y > maxY ? v2.y : maxY;
+
+      ColorBuffer.at((512 - v0.y) * 512 + v0.x) = glm::vec3(1.0f);
+      ColorBuffer.at((512 - v1.y) * 512 + v1.x) = glm::vec3(1.0f);
+      ColorBuffer.at((512 - v2.y) * 512 + v2.x) = glm::vec3(1.0f);
+
+      /*
+      DrawTriangle(
+        glm::vec2(v0.x, v0.y),
+        glm::vec2(v1.x, v1.y),
+        glm::vec2(v2.x, v2.y)
+      );
+      */
     }
 
-    LOG(INFO) << "Empty frag count: " << fragCount;
+    LOG(INFO) << "Max x: " << maxX << ", Maxy: " << maxY;
+    LOG(INFO) << "Min x: " << minX << ", Min y: " << minY;
+}
+
+void Renderer::DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2)
+{
+  Barycentric bary(
+    glm::vec4(v0, 0.0f, 1.0f),
+    glm::vec4(v1, 0.0f, 1.0f),
+    glm::vec4(v2, 0.0f, 1.0f)
+  );
+
+  glm::vec2 point;
+  for(point.y = bary.yMin; point.y <= bary.yMax; ++point.y)
+  {
+    for (point.x = bary.xMin; point.x <= bary.xMax; ++point.x)
+    {
+      //Determine bary coordinates
+      float w0 = Orient2D(v1, v2, point);
+      float w1 = Orient2D(v2, v0, point);
+      float w2 = Orient2D(v0, v1, point);
+
+      if (w0 >= 0.0f && w1 >= 0.0f && w2 >= 0.0f)
+      {
+        if (point.x < 0 || point.x > 512 || point.y < 0 || point.y > 512)
+        {
+          LOG(ERROR) << "Point out of bounds: " << point.x << ", " << point.y;
+          continue;
+        }
+
+        ColorBuffer.at(point.x + point.y * ScreenWidth) = glm::vec3(1.0f);
+      }
+    }
+  }
+}
+
+float Renderer::Orient2D(const glm::vec2& a, const glm::vec2& b, const glm::vec2& c)
+{
+  return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 
 void Renderer::DrawRow(int x1, int x2, int y)

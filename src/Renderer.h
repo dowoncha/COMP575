@@ -93,6 +93,10 @@ public:
 private:
 	void BufferInit();
 
+	void DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
+
+	float Orient2D(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
+
 	void DrawRow(int x1, int x2, int scanlineY);
 
 	void DrawPixel(int x, int y, const glm::vec3& color);

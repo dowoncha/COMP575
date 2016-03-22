@@ -1,3 +1,0 @@
-file(REMOVE_RECURSE
-  "libRAST_LIBRARY.a"
-)

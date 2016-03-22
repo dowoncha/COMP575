@@ -1,2 +1,0 @@
-/usr/bin/ar cq libRAST_LIBRARY.a  CMakeFiles/RAST_LIBRARY.dir/src/Renderer.cpp.o CMakeFiles/RAST_LIBRARY.dir/src/Scene.cpp.o CMakeFiles/RAST_LIBRARY.dir/src/Barycentric.cpp.o
-/usr/bin/ranlib libRAST_LIBRARY.a

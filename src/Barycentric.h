@@ -2,10 +2,12 @@
 #ifndef _RAST_BARY_
 #define _RAST_BARY_
 
+#include <iostream>
 #include <vector>
 #include <cmath>
 
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
 class Barycentric
@@ -18,20 +20,25 @@ public:
 
   Barycentric(const glm::vec4& a, const glm::vec4& b, const glm::vec4& c);
 
-  /**
-   *  return a buffer containing x,y coordinates that should be drawn.
-   */
-  std::vector<glm::vec2> GetInterior();
+  // return a buffer containing x,y coordinates that should be drawn.
+  // Should interpoation occur here?
+  std::vector<glm::vec2> GetFragments();
 
+  // Return a vec3 of the
+  glm::vec3 GetCentroid() const;
 private:
   // TODO: Use a GLM::vec3 here
-  float beta0, betaX, betaY;
-  float gamma0, gammaX, gammaY;
+  glm::vec3 betaCoef;   // Beta constants: betaX, betaY, beta0
+  glm::vec3 gammaCoef;  // Gamma constants: gammaX, gammaY, gamma0
 
-  /**
-   *  Compute beta, gamma
-   */
-  void ComputeConstants();
+  // Calculate the bounding box for the 3 vertices
+  void CalculateBounds();
+
+  // Compute beta, gamma for abg
+  void CalcBetaCoef();
+  void CalcGammaCoef();
+
+  void CalcAlpha();
 };
 
 #endif

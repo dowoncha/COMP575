@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     Rasterizer::Scene scene;
 
     scene.LoadSphere();
-    scene.SetupModelTransform(2.0f, glm::vec3(0.0f, 0.0f, -7.0f) );
+    scene.SetupModelTransform(glm::vec3(2.0f), glm::vec3(0.0f, 0.0f, -7.0f) );
     scene.SetupViewTransform(
         glm::vec3(1.0f, 0.0f, 0.0f),
         glm::vec3(0.0f, 1.0f, 0.0f),
