@@ -36,15 +36,15 @@ void Scene::LoadSphere()
             float   z   = -sinf(theta) * sinf(phi);
 
             // TODO: Set vertex t in the vertex array to {x, y, z}.
-            vertices.push_back(glm::vec3(x, y, z));
+            vertices.push_back(glm::vec4(x, y, z, 1.0f));
         }
     }
 
     // TODO: Set vertex t in the vertex array to {0, 1, 0}.
-    vertices.emplace_back(0.0f, 1.0f, 0.0f);
+    vertices.emplace_back(0.0f, 1.0f, 0.0f, 1.0f);
 
     // TODO: Set vertex t in the vertex array to {0, -1, 0}.
-    vertices.emplace_back(0.0f, -1.0f, 0.0f);
+    vertices.emplace_back(0.0f, -1.0f, 0.0f, 1.0f);
 
     vIndexBuffer.reserve(3 * gNumTriangles);
 
@@ -140,24 +140,22 @@ void Scene::SetupViewportTransform(int nx, int ny)
     LOG(INFO) << "Viewport Transform: " << glm::to_string(ViewportTransform);
 }
 
-void Scene::SetupMVP()
+void Scene::ApplyTransforms()
 {
-    // I hope this is the right order
     MVP = ViewportTransform * ProjTransform * ViewTransform * ModelTransform;
     LOG(INFO) << "MVP: " << glm::to_string(MVP);
+
+	for (int i = 0; i < gNumVertices; ++i)
+	{
+		vertices.at(i) = MVP * vertices.at(i);
+		NormalizeW(vertices.at(i));
+	}
 }
 
-glm::mat4x4 Scene::ModelViewProj() const
+void Scene::NormalizeW(glm::vec4& v) const
 {
-    return MVP;
-}
-
-glm::mat4x4 Scene::ModelView() const
-{
-  return ViewTransform * ModelTransform;
-}
-
-glm::mat4x4 Scene::Projection() const
-{
-  return ViewportTransform * ProjTransform;
+	v.x /= v.w;
+	v.y /= v.w;
+	v.z /= v.w;
+	v.w = 1.0f;
 }

@@ -14,6 +14,7 @@
 #include <cstdio>
 
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext.hpp>
@@ -38,7 +39,7 @@ public:
     int gNumVertices;        // # of vertices
     int gNumTriangles;       // # of triangles
     std::vector<int> vIndexBuffer;
-    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec4> vertices;
 
     Light light;
 public:
@@ -68,13 +69,9 @@ public:
     /**
      *  Calculate the Model-View-Projectiion matrix by multiplying all of the transforms
      */
-    void SetupMVP();
+    void ApplyTransforms();
 
-    glm::mat4x4 ModelViewProj() const;
-
-    glm::mat4x4 ModelView() const;
-
-    glm::mat4x4 Projection() const;
+	void NormalizeW(glm::vec4& v) const;
 };
 
 } // end of namespace Rasterizer

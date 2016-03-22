@@ -5,13 +5,13 @@
  *	content:     Start point for rasterizer
  *
  ******************************************************************************/
- *
+ 
 #include "Scene.h"
 #include "Renderer.h"
 #include "easylogging++.h"
 
-static const char* TITLE = "Comp 770 PA2 - Rasterizer";
-static const int SCREEN_WIDTH = 512, SCREEN_HEIGHT = 512;
+const char* TITLE = "Comp 770 PA2 - Rasterizer";
+const int SCREEN_WIDTH = 512, SCREEN_HEIGHT = 512;
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -19,7 +19,8 @@ int main(int argc, char* argv[])
 {
     // Initialize logging
     START_EASYLOGGINGPP(argc, argv);
-    // Initialize the Scene
+    
+	// Initialize the Scene
     Rasterizer::Scene scene;
 
     scene.LoadSphere();
@@ -33,12 +34,14 @@ int main(int argc, char* argv[])
 
     scene.SetupProjTransform(-0.1f, 0.1f, -0.1f, 0.1f, -.1f, -1000.0f);
     scene.SetupViewportTransform(SCREEN_WIDTH, SCREEN_HEIGHT);
-    scene.SetupMVP();
+    scene.ApplyTransforms();
 
     // Initialize Renderer
-
-    //renderer.Initialize(argc, argv);
-    //renderer.Run();
+	Rasterizer::Renderer renderer(scene);
+    renderer.Initialize(argc, argv);
+	renderer.OutputToPPM("init.ppm");
+	renderer.Render();
+	renderer.OutputToPPM("flatshading.ppm");
 
     exit(EXIT_SUCCESS);
 }

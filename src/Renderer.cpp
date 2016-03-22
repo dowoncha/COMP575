@@ -40,81 +40,38 @@ void Renderer::BufferInit()
     ColorBuffer.reserve(bufferSize);
     DepthBuffer.reserve(bufferSize);
 
+	for (size_t i = 0; i < bufferSize; ++i)
+	{
+		ColorBuffer.push_back(glm::vec3(1.0f));
+		DepthBuffer.push_back(0.0f);
+	}
+
     ClearColorBuffer();
     ClearDepthBuffer();
-}
-
-void Renderer::Resize(int width, int height)
-{
-  ScreenWidth = width;
-  ScreenHeight = height;
-
-  bufferSize = width * height;
-
-  ColorBuffer.resize(bufferSize);
-  DepthBuffer.resize(bufferSize);
-
-  ClearColorBuffer();
-  ClearDepthBuffer();
-
-  // TODO: resize glfw window and such, probably scene as well
 }
 
 void Renderer::Render()
 {
     for (int i = 0; i < scene.gNumTriangles; ++i)
     {
-      int base = 3 * i;
+		int base = 3 * i;
 
-      //Model View Transformation
-      //Triangle tri;
-      //tri.vertices[0].pos = scene.ModelView() * scene.vertices[base];
-      //tri.vertices[1].pos = scene.ModelView() * scene.vertices[base + 1];
-      //tri.vertices[2].pos = scene.ModelView() * scene.vertices[base + 2];
-      // Vertex Shader
-      // Shading
+		int k0 = scene.vIndexBuffer.at(base);
+		int k1 = scene.vIndexBuffer.at(base + 1);
+		int k2 = scene.vIndexBuffer.at(base + 2);
 
-      // Projection Transformation
-      //tri.vertices[0].pos = scene.Projection() * scene.vertices[base];
-      //tri.vertices[1].pos = scene.Projection() * scene.vertices[base + 1];
-      //tri.vertices[2].pos = scene.Projection() * scene.vertices[base + 2];
+		glm::vec4 v0 = scene.vertices.at(k0);
+		glm::vec4 v1 = scene.vertices.at(k1);
+		glm::vec4 v2 = scene.vertices.at(k2);
 
-      //auto v0 = scene.ModelViewProj() * scene.vertices[base];
-      //auto v1 = scene.ModelViewProj() * scene.vertices[base + 1];
-      //auto v2 = scene.ModelViewProj() * scene.vertices[base + 2];
+		Barycentric bary(v0, v1, v2);
+		std::vector<glm::vec2> pixels = bary.GetInterior();
 
-      Barycentric(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
+		for (glm::vec2 pixel : pixels)
+		{
+			ColorBuffer.at(pixel.x + pixel.y * ScreenWidth) = glm::vec3(1.0f);
+		}				
     }
-}
-
-void Renderer::Barycentric(const glm::vec3& v0,
-                           const glm::vec3& v1,
-                           const glm::vec3& v2 )
-{
-  int maxX = std::max(v0.x, std::max(v1.x, v2.x));
-  int minX = std::min(v0.x, std::min(v1.x, v2.x));
-  int maxY = std::max(v0.y, std::max(v1.y, v2.y));
-  int minY = std::min(v0.y, std::min(v1.y, v2.y));
-
-  glm::vec3 vs1(v1.x - v0.x, v1.y - v0.y, 1.0f);
-  glm::vec3 vs2(v2.x - v0.x, v2.y - v0.y, 1.0f);
-
-  for (int y = minY; y <= maxY; ++y)
-  {
-    for (int x = minX; x <= maxX; ++x)
-    {
-      glm::vec3 q(x - v0.x, y - v1.y, 1.0f);
-
-      float s = glm::length(glm::cross(q, vs2)) / glm::length(glm::cross(vs1, vs2));
-      float t = glm::length(glm::cross(vs1, q)) / glm::length(glm::cross(vs1, vs2));
-
-      if ((s >= 0) && (t >= 0) && (s + t <= 1))
-      {
-        //Inside triangle
-        DrawPixel(x, y, glm::vec3(1.0f));
-      }
-    }
-  }
 }
 
 void Renderer::DrawRow(int x1, int x2, int y)
@@ -129,6 +86,8 @@ void Renderer::DrawRow(int x1, int x2, int y)
 
 void Renderer::DrawPixel(int x, int y, const glm::vec3& color)
 {
+	if (x < 0 || x > 512 || y < 0 || y > 512) return;
+
     ColorBuffer.at(y * ScreenWidth + x) = color;
 }
 
@@ -136,7 +95,7 @@ void Renderer::ClearColorBuffer()
 {
   for (auto& c : ColorBuffer)
   {
-    c = glm::vec3(1.0f);
+    c = glm::vec3(0.0f);
   }
 }
 
@@ -152,7 +111,7 @@ void Renderer::OutputToPPM(const std::string& filename) const
 {
     if (ColorBuffer.empty())
     {
-        LOG(ERROR) << "Image Buffer empty, please call SetBuffer before outputting";
+        LOG(ERROR) << "Image Buffer empty, please call SetBuffer before outputting. size: " << ColorBuffer.size();
         return;
     }
     if (ColorBuffer.size() != bufferSize)
@@ -167,22 +126,23 @@ void Renderer::OutputToPPM(const std::string& filename) const
     std::ofstream ofs(filename, std::ios::out | std::ios::binary);
 
     // write headers
-    ofs << "P6"     << '\n'
+    ofs << "P6"			  << '\n'
         << ScreenWidth    << ' '
         << ScreenHeight   << '\n'
-        << 255      << '\n';
+        << 255			  << '\n';
 
-    for (glm::vec3 color : ColorBuffer)
+    for (auto color : ColorBuffer)
     {
-        glm::vec3 encoded = GammaEncode(color);
-        Pixel p = ColorToPixel(color);
+        glm::vec3 e = GammaEncode(color);
+        Pixel p = ColorToPixel(e);
 
+		ofs << 125 << 255 << 255;
+		/*
         ofs << Pixel_R(p)
             << Pixel_G(p)
             << Pixel_B(p);
+		*/
     }
-
-    ofs.close();
 
     LOG(INFO) << "Finished outputting to " << filename << ", closing file.";
 }
