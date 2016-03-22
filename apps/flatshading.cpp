@@ -5,7 +5,7 @@
  *	content:     Start point for rasterizer
  *
  ******************************************************************************/
- 
+
 #include "Scene.h"
 #include "Renderer.h"
 #include "easylogging++.h"
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 {
     // Initialize logging
     START_EASYLOGGINGPP(argc, argv);
-    
+
 	// Initialize the Scene
     Rasterizer::Scene scene;
 
@@ -37,11 +37,10 @@ int main(int argc, char* argv[])
     scene.ApplyTransforms();
 
     // Initialize Renderer
-	Rasterizer::Renderer renderer(scene);
+	  Rasterizer::Renderer renderer(scene);
     renderer.Initialize(argc, argv);
-	renderer.OutputToPPM("init.ppm");
-	renderer.Render();
-	renderer.OutputToPPM("flatshading.ppm");
+	  renderer.Render();
+	  renderer.OutputToPPM("flatshading.ppm");
 
     exit(EXIT_SUCCESS);
 }

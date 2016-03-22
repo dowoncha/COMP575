@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/flatshading.dir/apps/flatshading.cpp.o  -o flatshading -rdynamic libRAST_LIBRARY.a 

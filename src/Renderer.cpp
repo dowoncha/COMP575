@@ -40,38 +40,42 @@ void Renderer::BufferInit()
     ColorBuffer.reserve(bufferSize);
     DepthBuffer.reserve(bufferSize);
 
-	for (size_t i = 0; i < bufferSize; ++i)
-	{
-		ColorBuffer.push_back(glm::vec3(1.0f));
-		DepthBuffer.push_back(0.0f);
-	}
-
-    ClearColorBuffer();
-    ClearDepthBuffer();
+	  for (size_t i = 0; i < bufferSize; ++i)
+	  {
+		    ColorBuffer.push_back(glm::vec3(0.0f));
+		    DepthBuffer.push_back(0.0f);
+	  }
 }
 
 void Renderer::Render()
 {
+    int fragCount = 0;
+
     for (int i = 0; i < scene.gNumTriangles; ++i)
     {
-		int base = 3 * i;
+  		int base = 3 * i;
 
-		int k0 = scene.vIndexBuffer.at(base);
-		int k1 = scene.vIndexBuffer.at(base + 1);
-		int k2 = scene.vIndexBuffer.at(base + 2);
+  		int k0 = scene.vIndexBuffer.at(base);
+  		int k1 = scene.vIndexBuffer.at(base + 1);
+  		int k2 = scene.vIndexBuffer.at(base + 2);
 
-		glm::vec4 v0 = scene.vertices.at(k0);
-		glm::vec4 v1 = scene.vertices.at(k1);
-		glm::vec4 v2 = scene.vertices.at(k2);
+  		glm::vec4 v0 = scene.vertices.at(k0);
+  		glm::vec4 v1 = scene.vertices.at(k1);
+  		glm::vec4 v2 = scene.vertices.at(k2);
 
-		Barycentric bary(v0, v1, v2);
-		std::vector<glm::vec2> pixels = bary.GetInterior();
+  		Barycentric bary(v0, v1, v2);
+  		std::vector<glm::vec2> pixels = bary.GetInterior();
 
-		for (glm::vec2 pixel : pixels)
-		{
-			ColorBuffer.at(pixel.x + pixel.y * ScreenWidth) = glm::vec3(1.0f);
-		}				
+      if (pixels.empty())
+        fragCount++;
+
+  		for (glm::vec2 pixel : pixels)
+  		{
+  			ColorBuffer.at(pixel.x + pixel.y * ScreenWidth) = glm::vec3(1.0f);
+      }
     }
+
+    LOG(INFO) << "Empty frag count: " << fragCount;
 }
 
 void Renderer::DrawRow(int x1, int x2, int y)
@@ -123,7 +127,8 @@ void Renderer::OutputToPPM(const std::string& filename) const
     LOG(INFO) << "Outputting to ppm file: " << filename;
 
     // Open stream and write ppm headers, color bit's set to 255 per channel
-    std::ofstream ofs(filename, std::ios::out | std::ios::binary);
+    //std::ofstream ofs(filename, std::ios::out | std::ios::binary);
+    std::ofstream ofs(filename, std::ios::out);
 
     // write headers
     ofs << "P6"			  << '\n'
@@ -136,12 +141,9 @@ void Renderer::OutputToPPM(const std::string& filename) const
         glm::vec3 e = GammaEncode(color);
         Pixel p = ColorToPixel(e);
 
-		ofs << 125 << 255 << 255;
-		/*
         ofs << Pixel_R(p)
             << Pixel_G(p)
             << Pixel_B(p);
-		*/
     }
 
     LOG(INFO) << "Finished outputting to " << filename << ", closing file.";

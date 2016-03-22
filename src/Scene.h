@@ -71,7 +71,7 @@ public:
      */
     void ApplyTransforms();
 
-	void NormalizeW(glm::vec4& v) const;
+	  void NormalizeW(glm::vec4& v) const;
 };
 
 } // end of namespace Rasterizer

@@ -10,6 +10,7 @@ include_directories(src)
 add_library(RAST_LIBRARY src/Renderer.cpp
                          src/Scene.cpp
                          src/Light.hpp
+                         src/Barycentric.cpp
            )
 target_compile_features(RAST_LIBRARY PRIVATE cxx_range_for)
 
@@ -25,3 +26,6 @@ target_compile_features(RAST_LIBRARY PRIVATE cxx_range_for)
 add_executable(flatshading apps/flatshading.cpp)
 target_link_libraries(flatshading RAST_LIBRARY)
 target_compile_features(flatshading PRIVATE cxx_range_for)
+
+add_executable(testyellow apps/test.cpp)
+target_compile_features(testyellow PRIVATE cxx_range_for)

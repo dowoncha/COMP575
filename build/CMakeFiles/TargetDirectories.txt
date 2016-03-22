@@ -1,0 +1,3 @@
+/home/dowoncha/Documents/Rasterizer/build/CMakeFiles/RAST_LIBRARY.dir
+/home/dowoncha/Documents/Rasterizer/build/CMakeFiles/testyellow.dir
+/home/dowoncha/Documents/Rasterizer/build/CMakeFiles/flatshading.dir

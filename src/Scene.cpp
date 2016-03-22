@@ -145,11 +145,12 @@ void Scene::ApplyTransforms()
     MVP = ViewportTransform * ProjTransform * ViewTransform * ModelTransform;
     LOG(INFO) << "MVP: " << glm::to_string(MVP);
 
-	for (int i = 0; i < gNumVertices; ++i)
-	{
-		vertices.at(i) = MVP * vertices.at(i);
-		NormalizeW(vertices.at(i));
-	}
+    // Apply MVP to all vertices, and then normalize by each vector's W.
+  	for (int i = 0; i < gNumVertices; ++i)
+  	{
+  		vertices.at(i) = MVP * vertices.at(i);
+  		NormalizeW(vertices.at(i));
+  	}
 }
 
 void Scene::NormalizeW(glm::vec4& v) const
