@@ -109,12 +109,13 @@ void Renderer::RenderFlat()
 		v2.Transform(scene.ModelView());
 
 		// Calculate the color for the triangle? Still not sure what flat shading is
-		glm::vec3 color = CalculateFlatShading(v0, v1, v2);
+		glm::vec4 color = glm::vec4(CalculateFlatShading(v0, v1, v2), 1.0f);
+		LOG(INFO) << "Flat shading color: " << glm::to_string(color);
 
 		// Set the color of each vertex to Flat shaded color
-		v0.color = glm::vec4(color, 1.0f);
-		v1.color = glm::vec4(color, 1.0f);
-		v2.color = glm::vec4(color, 1.0f);
+		v0.color = color;
+		v1.color = color;
+		v2.color = color;
 
 		// Eye to screen space
 		v0.Transform(scene.ProjViewport());
@@ -218,6 +219,8 @@ void Renderer::DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm:
 
 void Renderer::DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& c)
 {
+	LOG(INFO) << "Drawing Triangle flat";
+
 	Barycentric bary(
 		a.pos,
 		b.pos,
@@ -247,6 +250,8 @@ void Renderer::DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& 
 				glm::vec3 centroid = GetCentroid(a, b, c);
 				if (centroid.z > DepthBuffer.at((int)point.x + (int)point.y * ScreenWidth))
 			  {
+				  LOG(INFO) << "Drawing";
+
 					int out = (int)point.x + (int)point.y * ScreenWidth;
 
 					DepthBuffer.at(out) = centroid.z;
@@ -299,7 +304,7 @@ void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
 	}
 }
 
-glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const Vertex& c) const
+void Renderer::CalculateFlatShading(Vertex& a, Vertex& b, Vertex& c) const
 {
 	glm::vec3 normal = GetNormal(a, b, c);
 
@@ -321,7 +326,7 @@ glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const
 	// AKA Eye(0, 0, 0) - Centroid
 	// Get directoni from eye to the light
 	// find angle do the cos same as above, also spec power
-	glm::vec3 pointToEye = glm::normalize(glm::vec3(0.0f) - GetCentroid(a, b, c));
+	glm::vec3 pointToEye = glm::normalize(-GetCentroid(a, b, c));
 	glm::vec3 h = glm::normalize(pointToEye + pointToLight);
 	float nh = glm::dot(normal, h);
 	if (nh > 0)
