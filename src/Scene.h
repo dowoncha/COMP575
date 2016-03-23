@@ -22,16 +22,18 @@
 #include <glm/ext.hpp>
 
 #include "easylogging++.h"
+#include "Vertex.hpp"
 #include "Light.hpp"
 #include "Utility.hpp"
-#include "Renderer.h"
+
+class Vertex;
 
 namespace Rasterizer
 {
 
 class Scene
 {
-public:
+private:
     glm::mat4x4 ModelTransform;
     glm::mat4x4 ViewTransform;
     glm::mat4x4 ProjTransform;
@@ -43,7 +45,7 @@ public:
     int gNumTriangles;       // # of triangles
     std::vector<int> vIndexBuffer;
     std::vector<glm::vec4> vertices;
-	std::vector<Vertex> vVertices;
+	  std::vector<Vertex> vVertices;
 
     Light light;
 public:
@@ -72,11 +74,13 @@ public:
 
     void SetupMVP();
 
-	glm::mat4x4 ModelView() const;
+	  glm::mat4x4 ModelView() const;
 
-	glm::mat4x4 ProjViewport() const;
+	  glm::mat4x4 ProjViewport() const;
 
-	void NormalizeW(glm::vec4& v) const;
+    glm::mat4x4 ModelViewProjection() const;
+
+	  void NormalizeW(glm::vec4& v) const;
 };
 
 } // end of namespace Rasterizer

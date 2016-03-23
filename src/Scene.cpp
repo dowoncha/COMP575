@@ -6,7 +6,7 @@ Scene::Scene() :
     gNumVertices(0),
     gNumTriangles(0),
     ViewTransform(1.0f),
-    light(glm::vec3(-4.0f, 4.0f, -3.0f), 1.0f)
+    light(glm::vec3(-4.0f, -4.0f, -3.0f), 1.0f)
 {
 }
 
@@ -46,7 +46,7 @@ void Scene::LoadSphere()
 			Vertex v(
 				glm::vec4(x, y, z, 1.0f),
 				glm::vec4(0.0f),
-				normal 
+				normal
 			);
 
 			vVertices.push_back(v);
@@ -187,7 +187,7 @@ void Scene::SetupMVP()
     MVP = ModelTransform * ViewTransform * ProjTransform * ViewportTransform;
     MVP = glm::transpose(MVP);
     LOG(INFO) << "MVP: " << glm::to_string(MVP);
-	LOG(INFO) << "MV * PV: " << glm::to_string(ProjViewport() * ModelView());
+	  LOG(INFO) << "MV * PV: " << glm::to_string(ProjViewport() * ModelView());
 }
 
 glm::mat4x4 Scene::ModelView() const
@@ -198,6 +198,11 @@ glm::mat4x4 Scene::ModelView() const
 glm::mat4x4 Scene::ProjViewport() const
 {
 	return glm::transpose(ProjTransform * ViewportTransform);
+}
+
+glm::mat4x4 Scene::ModelViewProjection() const
+{
+  return MVP;
 }
 
 void Scene::NormalizeW(glm::vec4& v) const

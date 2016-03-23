@@ -63,13 +63,13 @@ void Renderer::RenderUnshaded()
   		int k2 = scene.vIndexBuffer.at(base + 2);
 
       // Vector should already be homogenous with x, y, z, 1.0f
-  		glm::vec4 v0 = scene.MVP * scene.vertices.at(k0);
-  		glm::vec4 v1 = scene.MVP * scene.vertices.at(k1);
-  		glm::vec4 v2 = scene.MVP * scene.vertices.at(k2);
+  		glm::vec4 v0 = scene.ModelViewProjection() * scene.vertices.at(k0);
+  		glm::vec4 v1 = scene.ModelViewProjection() * scene.vertices.at(k1);
+  		glm::vec4 v2 = scene.ModelViewProjection() * scene.vertices.at(k2);
 
-		scene.NormalizeW(v0);
-		scene.NormalizeW(v1);
-		scene.NormalizeW(v2);
+			scene.NormalizeW(v0);
+			scene.NormalizeW(v1);
+			scene.NormalizeW(v2);
 
 		DrawTriangle(
 			glm::vec2(v0),
@@ -99,10 +99,6 @@ void Renderer::RenderFlat()
 		int k2 = scene.vIndexBuffer.at(base + 2);
 
 		// Vector should already be homogenous with x, y, z, 1.0f
-		//glm::vec4 v0 = scene.vertices.at(k0);
-		//glm::vec4 v1 = scene.vertices.at(k1);
-		//glm::vec4 v2 = scene.vertices.at(k2);
-
 		Vertex v0(scene.vVertices.at(k0));
 		Vertex v1(scene.vVertices.at(k1));
 		Vertex v2(scene.vVertices.at(k2));
@@ -115,11 +111,22 @@ void Renderer::RenderFlat()
 		// Calculate the color for the triangle? Still not sure what flat shading is
 		glm::vec3 color = CalculateFlatShading(v0, v1, v2);
 
+		v0.color = glm::vec4(color, 1.0f);
+		v1.color = glm::vec4(color, 1.0f);
+		v2.color = glm::vec4(color, 1.0f);
 		// Eye to screen space
 		v0.Transform(scene.ProjViewport());
 		v1.Transform(scene.ProjViewport());
 		v2.Transform(scene.ProjViewport());
 
+		scene.NormalizeW(v0.pos);
+		scene.NormalizeW(v0.normal);
+		scene.NormalizeW(v1.pos);
+		scene.NormalizeW(v1.normal);
+		scene.NormalizeW(v2.pos);
+		scene.NormalizeW(v2.normal);
+
+		//DrawTriangle(glm::vec2(v0.pos), glm::vec2(v1.pos), glm::vec2(v2.pos));
 		DrawTriangle(v0, v1, v2);
 	}
 }
@@ -200,9 +207,11 @@ void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
 				// Test Depth Buffer
 				glm::vec3 centroid = GetCentroid(a, b, c);
 				if (centroid.z > DepthBuffer.at((int)point.x + (int)point.y * ScreenWidth))
-				{
-					DepthBuffer.at((int)point.x + (int)point.y * ScreenWidth) = centroid.z;
-					ColorBuffer.at((int)point.x + (int)point.y * ScreenWidth) = glm::vec3(a.color);
+			  {
+					int out = (int)point.x + (int)point.y * ScreenWidth;
+
+					DepthBuffer.at(out) = centroid.z;
+					ColorBuffer.at(out) = glm::vec3(a.color);
 				}
 			}
 		}
@@ -214,7 +223,7 @@ glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const
 {
 	glm::vec3 normal = GetNormal(a, b, c);
 
-	// Set ambient color, scale by ambient intensity of 0.2 
+	// Set ambient color, scale by ambient intensity of 0.2
 	glm::vec3 outcolor = mat.ambient * 0.2f;
 	glm::vec3 amb = outcolor;
 	glm::vec3 diff;
@@ -229,7 +238,6 @@ glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const
 	if (nl > 0)
 	{
 		outcolor += mat.diffuse * scene.light.intensity * nl;
-		diff = mat.diffuse * scene.light.intensity * nl;
 	}
 
 	// Calculate Specular
@@ -245,18 +253,17 @@ glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const
 	if (nh > 0)
 	{
 		outcolor += mat.specular * scene.light.intensity * std::pow(nh, scene.light.specPower);
-		spec = mat.specular * scene.light.intensity * std::pow(nh, scene.light.specPower);
 	}
-
-	LOG(INFO) << "Ambient: " << glm::to_string(amb) << ", Diffuse: " << glm::to_string(diff) << ", Specular: " << glm::to_string(spec)
-		      << "Final: " << glm::to_string(outcolor);
 
 	return outcolor;
 }
 
 glm::vec3 Renderer::GetNormal(const Vertex& a, const Vertex& b, const Vertex& c)
 {
-	return glm::normalize(glm::cross(glm::vec3(c.pos - a.pos), glm::vec3(b.pos - a.pos)));
+	auto norm = glm::normalize(glm::cross(glm::vec3(c.pos - a.pos), glm::vec3(b.pos - a.pos)));
+	if (norm.z < 0)
+		norm = -norm;
+	return norm;
 }
 
 glm::vec3 Renderer::GetCentroid(const Vertex& a, const Vertex& b, const Vertex& c)
@@ -348,13 +355,17 @@ void Renderer::OutputToPPM(const std::string& filename) const
 
 glm::vec3 Renderer::GammaEncode(const glm::vec3& color) const
 {
-    float gamma = 1.0f / 2.4f;
+    //float gamma = 1.0f / 2.4f;
+    float gamma = 1.0f / 2.2f;
 
     glm::vec3 out;
 
-    out.x = (color.x <= 0.0031308f ) ? 12.92f * color.x : 1.055f * std::pow(color.x, gamma) - 0.055f;
-    out.y = (color.y <= 0.0031308f ) ? 12.92f * color.y : 1.055f * std::pow(color.y, gamma) - 0.055f;
-    out.z = (color.z <= 0.0031308f ) ? 12.92f * color.z : 1.055f * std::pow(color.z, gamma) - 0.055f;
+    //out.x = (color.x <= 0.0031308f ) ? 12.92f * color.x : 1.055f * std::pow(color.x, gamma) - 0.055f;
+    //out.y = (color.y <= 0.0031308f ) ? 12.92f * color.y : 1.055f * std::pow(color.y, gamma) - 0.055f;
+    //out.z = (color.z <= 0.0031308f ) ? 12.92f * color.z : 1.055f * std::pow(color.z, gamma) - 0.055f;
+    out.x = std::pow(color.x, gamma);
+		out.y = std::pow(color.y, gamma);
+		out.z = std::pow(color.z, gamma);
 
     return out;
 }

@@ -25,7 +25,7 @@
 #include <glm/geometric.hpp> // glm::cross, glm::normalize
 
 #include "easylogging++.h"
-
+#include "Vertex.hpp"
 #include "Scene.h"
 #include "Utility.hpp"
 #include "Barycentric.h"
@@ -67,26 +67,6 @@ static inline Pixel MakeRGBA(unsigned r, unsigned g, unsigned b, unsigned a) {
 					(a << GPIXEL_SHIFT_A);
 }
 
-class Vertex
-{
-public:
-	glm::vec4 pos, color, normal;
-
-	Vertex() : pos(0.0f), color(0.0f), normal(0.0f) {}
-
-	Vertex(const glm::vec4& p, const glm::vec4& c) : pos(p), color(c), normal(0.0f) { }
-
-	Vertex(const glm::vec4& p, const glm::vec4& c, const glm::vec4& n) : pos(p), color(c), normal(n) { }
-
-	Vertex(const Vertex& a) : pos(a.pos), color(a.color), normal(a.normal) {}
-
-	void Transform(const glm::mat4x4& transform)
-	{
-		pos *= transform;
-		normal *= transform;
-	}
-};
-
 class Renderer
 {
 private:
@@ -96,7 +76,7 @@ private:
 		glm::vec3 ambient, diffuse, specular;
 
 		Material(const glm::vec3& a, const glm::vec3& d, const glm::vec3& s) :
-			ambient(a), diffuse(d), specular(s) 
+			ambient(a), diffuse(d), specular(s)
 		{}
 	};
 
@@ -136,7 +116,7 @@ private:
 
 	// idk
 	float Orient2D(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
-	 
+
 	// Don't use
 	void DrawRow(int x1, int x2, int scanlineY);
 
@@ -157,7 +137,7 @@ private:
 	void ClearDepthBuffer();
 public:
 
-	const Scene& scene;							
+	const Scene& scene;
 
 	int ScreenWidth, ScreenHeight;
 
