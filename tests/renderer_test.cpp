@@ -1,38 +1,36 @@
-#include "Rasterizer.h"
+#include "Renderer.h"
 #include "gtest/gtest.h"
 
 namespace
 {
-
-class RasterizerTest : public testing::Test
+class RendererTest : public testing::Test
 {
 protected:
-  Rasterizer(const Scene)
+  Renderer(const Scene&)
   {
 
   }
 
-  virtual ~Rasterizer()
+  virtual ~Renderer()
   {}
 
   virtual void SetUp()
   {
-
   }
 
   virtual void TearDown()
   {}
 
-  Rasterizer rast;
+  Renderer rend;
   Scene scene;
 };
 
-TEST_F(RasterizerTest, DefaultConstructor)
+TEST_F(RendererTest, DefaultConstructor)
 {
-  EXPECT_EQ(glm::mat4x4(0.0f), scene.ModelTransform);
+
 }
 
-TEST_F(QueueTest, SetupModelTransform)
+TEST_F(RendererTest, SetupModelTransform)
 {
   scene.SetupModelTransform(2, glm::vec3(0.0f, 0.0f, -7.0f));
 

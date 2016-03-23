@@ -8,4 +8,3 @@ Contains 4 programs to show 4 different types of shading:
   2. Flat Shading <br>
   3. Gourraud (per-vertex) shading <br>
   4. Phong (per-pixel) shading <br>
-  

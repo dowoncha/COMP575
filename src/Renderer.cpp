@@ -108,14 +108,8 @@ void Renderer::RenderFlat()
 		v1.Transform(scene.ModelView());
 		v2.Transform(scene.ModelView());
 
-		// Calculate the color for the triangle? Still not sure what flat shading is
-		glm::vec4 color = glm::vec4(CalculateFlatShading(v0, v1, v2), 1.0f);
-		LOG(INFO) << "Flat shading color: " << glm::to_string(color);
-
-		// Set the color of each vertex to Flat shaded color
-		v0.color = color;
-		v1.color = color;
-		v2.color = color;
+		// Calculate the color for the triangle, according to the centroid
+		CalculateFlatShading(v0, v1, v2);
 
 		// Eye to screen space
 		v0.Transform(scene.ProjViewport());
@@ -129,7 +123,6 @@ void Renderer::RenderFlat()
 		scene.NormalizeW(v1.normal);
 		scene.NormalizeW(v2.normal);
 
-		//DrawTriangle(glm::vec2(v0.pos), glm::vec2(v1.pos), glm::vec2(v2.pos));
 		DrawTriangleFlat(v0, v1, v2);
 	}
 }
@@ -219,8 +212,6 @@ void Renderer::DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm:
 
 void Renderer::DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& c)
 {
-	LOG(INFO) << "Drawing Triangle flat";
-
 	Barycentric bary(
 		a.pos,
 		b.pos,
@@ -250,12 +241,11 @@ void Renderer::DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& 
 				glm::vec3 centroid = GetCentroid(a, b, c);
 				if (centroid.z > DepthBuffer.at((int)point.x + (int)point.y * ScreenWidth))
 			  {
-				  LOG(INFO) << "Drawing";
 
 					int out = (int)point.x + (int)point.y * ScreenWidth;
 
 					DepthBuffer.at(out) = centroid.z;
-					ColorBuffer.at(out) = glm::vec3(a.color);
+					ColorBuffer.at(out) = glm::vec3(b.color);
 				}
 			}
 		}
@@ -334,7 +324,9 @@ void Renderer::CalculateFlatShading(Vertex& a, Vertex& b, Vertex& c) const
 		outcolor += mat.specular * scene.light.intensity * std::pow(nh, scene.light.specPower);
 	}
 
-	return outcolor;
+	a.color = glm::vec4(outcolor, 1.0f);
+	b.color = glm::vec4(outcolor, 1.0f);
+	c.color = glm::vec4(outcolor, 1.0f);
 }
 
 // Vertex coming in shulld be in eye coordinates.

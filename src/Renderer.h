@@ -108,7 +108,7 @@ private:
 
 	void DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c);
 
-	glm::vec3 CalculateFlatShading(const Vertex& a, const Vertex& b, const Vertex& c) const;
+	void CalculateFlatShading(Vertex& a, Vertex& b, Vertex& c) const;
 
 	void CalculateGouraudShading(Vertex& a) const;
 
