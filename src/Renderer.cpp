@@ -111,34 +111,73 @@ void Renderer::RenderFlat()
 		// Calculate the color for the triangle? Still not sure what flat shading is
 		glm::vec3 color = CalculateFlatShading(v0, v1, v2);
 
+		// Set the color of each vertex to Flat shaded color
 		v0.color = glm::vec4(color, 1.0f);
 		v1.color = glm::vec4(color, 1.0f);
 		v2.color = glm::vec4(color, 1.0f);
+
 		// Eye to screen space
 		v0.Transform(scene.ProjViewport());
 		v1.Transform(scene.ProjViewport());
 		v2.Transform(scene.ProjViewport());
 
 		scene.NormalizeW(v0.pos);
-		scene.NormalizeW(v0.normal);
 		scene.NormalizeW(v1.pos);
-		scene.NormalizeW(v1.normal);
 		scene.NormalizeW(v2.pos);
+		scene.NormalizeW(v0.normal);
+		scene.NormalizeW(v1.normal);
 		scene.NormalizeW(v2.normal);
 
 		//DrawTriangle(glm::vec2(v0.pos), glm::vec2(v1.pos), glm::vec2(v2.pos));
-		DrawTriangle(v0, v1, v2);
+		DrawTriangleFlat(v0, v1, v2);
 	}
 }
 
+// Calculate normal for each vertex
+// Interpolate across the vertices for each fragment
 void Renderer::RenderGouraud()
 {
 	ClearColorBuffer();
 	ClearDepthBuffer();
 
-	std::vector<glm::vec3> colors(scene.gNumVertices);
+	for (int i = 0; i < scene.gNumTriangles; ++i)
+	{
+		int base = 3 * i;
+
+		int k0 = scene.vIndexBuffer.at(base);
+		int k1 = scene.vIndexBuffer.at(base + 1);
+		int k2 = scene.vIndexBuffer.at(base + 2);
+
+		Vertex v0 = scene.vVertices.at(k0);
+		Vertex v1 = scene.vVertices.at(k1);
+		Vertex v2 = scene.vVertices.at(k2);
+
+		// Convert to eye space
+		v0.Transform(scene.ModelView());
+		v1.Transform(scene.ModelView());
+		v2.Transform(scene.ModelView());
+
+		CalculateGouraudShading(v0);
+		CalculateGouraudShading(v1);
+		CalculateGouraudShading(v2);
+
+		v0.Transform(scene.ProjViewport());
+		v1.Transform(scene.ProjViewport());
+		v2.Transform(scene.ProjViewport());
+
+		scene.NormalizeW(v0.pos);
+		scene.NormalizeW(v1.pos);
+		scene.NormalizeW(v2.pos);
+		scene.NormalizeW(v0.normal);
+		scene.NormalizeW(v1.normal);
+		scene.NormalizeW(v2.normal);
+
+		// IN drawing interpolate across fragment between the 3 vertices.
+		DrawTriangle(v0, v1, v2);
+	}
 }
 
+// Calculate lighting across polygon and cacluate color for each fragment
 void Renderer::RenderPhong()
 {
 	ClearColorBuffer();
@@ -177,7 +216,7 @@ void Renderer::DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm:
   }
 }
 
-void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
+void Renderer::DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& c)
 {
 	Barycentric bary(
 		a.pos,
@@ -219,21 +258,58 @@ void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
 
 }
 
+void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
+{
+	Barycentric bary(
+		a.pos,
+		b.pos,
+		c.pos
+	);
+
+	glm::vec2 point;
+	for (point.y = bary.yMin; point.y <= bary.yMax; ++point.y)
+	{
+		for (point.x = bary.xMin; point.x <= bary.xMax; ++point.x)
+		{
+			//Determine bary coordinates
+			float w0 = Orient2D(glm::vec2(b.pos), glm::vec2(c.pos), point);
+			float w1 = Orient2D(glm::vec2(c.pos), glm::vec2(a.pos), point);
+			float w2 = Orient2D(glm::vec2(a.pos), glm::vec2(b.pos), point);
+
+			// Barycentric test
+			if (w0 >= 0.0f && w1 >= 0.0f && w2 >= 0.0f)
+			{
+				if (point.x < 0 || point.x >= 512 || point.y < 0 || point.y >= 512)
+				{
+					LOG(ERROR) << "Vertex out of bounds";
+					continue;
+				}
+
+				// Test Depth Buffer
+				glm::vec3 centroid = GetCentroid(a, b, c);
+				if (centroid.z > DepthBuffer.at((int)point.x + (int)point.y * ScreenWidth))
+			  {
+					int out = (int)point.x + (int)point.y * ScreenWidth;
+
+					DepthBuffer.at(out) = centroid.z;
+					ColorBuffer.at(out) = TriWeightAverage(w0, w1, w2, glm::vec3(a.color), glm::vec3(b.color), glm::vec3(c.color));
+				}
+			}
+		}
+	}
+}
+
 glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const Vertex& c) const
 {
 	glm::vec3 normal = GetNormal(a, b, c);
 
 	// Set ambient color, scale by ambient intensity of 0.2
 	glm::vec3 outcolor = mat.ambient * 0.2f;
-	glm::vec3 amb = outcolor;
-	glm::vec3 diff;
-	glm::vec3 spec;
 	// Calculate Diffuse
 	// Get direction (normalize) from triangle centroid to the light
 	// Get nl = cos a between triangle normal and dir to line
 	// Scale material diffuse by the light intensity and cos a
-	glm::vec3 pointToLight = scene.light.pos - GetCentroid(a, b, c);
-	pointToLight = glm::normalize(pointToLight);
+	glm::vec3 pointToLight = glm::normalize(scene.light.pos - GetCentroid(a, b, c));
 	float nl = glm::dot(normal, pointToLight);
 	if (nl > 0)
 	{
@@ -245,10 +321,8 @@ glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const
 	// AKA Eye(0, 0, 0) - Centroid
 	// Get directoni from eye to the light
 	// find angle do the cos same as above, also spec power
-	glm::vec3 pointToEye = -GetCentroid(a, b, c);
-	pointToEye = glm::normalize(pointToEye);
-	glm::vec3 h = pointToEye + pointToLight;
-	h = glm::normalize(h);
+	glm::vec3 pointToEye = glm::normalize(glm::vec3(0.0f) - GetCentroid(a, b, c));
+	glm::vec3 h = glm::normalize(pointToEye + pointToLight);
 	float nh = glm::dot(normal, h);
 	if (nh > 0)
 	{
@@ -256,6 +330,27 @@ glm::vec3 Renderer::CalculateFlatShading(const Vertex& a, const Vertex& b, const
 	}
 
 	return outcolor;
+}
+
+// Vertex coming in shulld be in eye coordinates.
+void Renderer::CalculateGouraudShading(Vertex& a) const
+{
+	glm::vec3 out(0.0f);
+
+	out += mat.ambient * 0.2f;
+
+	glm::vec3 pointToLight = scene.light.pos - glm::vec3(a.pos);
+	pointToLight = glm::normalize(pointToLight);
+	float nl = glm::dot(glm::vec3(a.normal), pointToLight);
+	if (nl > 0)
+		out += mat.diffuse * (scene.light.intensity * nl);
+
+	glm::vec3 h = glm::normalize(pointToLight - glm::vec3(a.pos));
+	float nh = glm::dot(glm::vec3(a.normal), h);
+	if (nh > 0)
+		out += mat.specular * (scene.light.intensity * std::pow(nh, scene.light.specPower));
+
+	a.color = glm::vec4(out, 1.0f);
 }
 
 glm::vec3 Renderer::GetNormal(const Vertex& a, const Vertex& b, const Vertex& c)
@@ -275,6 +370,18 @@ glm::vec3 Renderer::GetCentroid(const Vertex& a, const Vertex& b, const Vertex& 
 	centroid.z = (a.pos.z + b.pos.z + c.pos.z) / 3.0f;
 
 	return centroid;
+}
+
+glm::vec3 Renderer::TriWeightAverage(float a, float b, float c,
+															 const glm::vec3& c0, const glm::vec3& c1, const glm::vec3& c2) const
+{
+	glm::vec3 out;
+
+	out.x = a * c0.x + b * c1.x + c * c2.x;
+	out.y = a * c0.y + b * c1.y + c * c2.y;
+	out.z = a * c0.z + b * c1.z + c * c2.z;
+
+	return out;
 }
 
 float Renderer::Orient2D(const glm::vec2& a, const glm::vec2& b, const glm::vec2& c)
@@ -388,20 +495,4 @@ Pixel Renderer::ColorToPixel(const glm::vec3& color) const
     uint8_t uB = (uint8_t) (pinned.z * 255.9999f);
 
     return MakeRGBA(uR, uG, uB, 255);
-}
-
-void Renderer::linEval(int xl, int xr, int yl, int yr, const glm::vec3& color)
-{
-  float qRow = color.x * xl + color.y * yl + color.z;
-
-  for (int y = yl; y < yr; ++y)
-  {
-    float qPix = qRow;
-    for (int x = xl; x < xr; ++x)
-    {
-      DrawPixel(x, y, glm::vec3(1.0f));
-      qPix += color.x;
-    }
-    qRow += color.y;
-  }
 }

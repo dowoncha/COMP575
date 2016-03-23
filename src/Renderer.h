@@ -104,9 +104,13 @@ private:
 
 	void DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
 
+	void DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& c);
+
 	void DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c);
 
 	glm::vec3 CalculateFlatShading(const Vertex& a, const Vertex& b, const Vertex& c) const;
+
+	void CalculateGouraudShading(Vertex& a) const;
 
 	// Calculate the normal of the triangle created by the 3 vertices
 	static glm::vec3 GetNormal(const Vertex& a, const Vertex& b, const Vertex& c);
@@ -116,6 +120,8 @@ private:
 
 	// idk
 	float Orient2D(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
+
+	glm::vec3 TriWeightAverage(float a, float b, float c, const glm::vec3& c0, const glm::vec3& c1, const glm::vec3& c2) const;
 
 	// Don't use
 	void DrawRow(int x1, int x2, int scanlineY);

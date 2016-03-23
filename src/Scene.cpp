@@ -35,7 +35,7 @@ void Scene::LoadSphere()
             float   y   = cosf(theta);
             float   z   = -sinf(theta) * sinf(phi);
 
-			glm::vec4 vert(x, y, z, 1.0f);
+			      glm::vec4 vert(x, y, z, 1.0f);
 
             // TODO: Set vertex t in the vertex array to {x, y, z}.
             vertices.push_back(vert);
