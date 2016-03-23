@@ -24,13 +24,14 @@
 #include "easylogging++.h"
 #include "Light.hpp"
 #include "Utility.hpp"
+#include "Renderer.h"
 
 namespace Rasterizer
 {
 
 class Scene
 {
-private:
+public:
     glm::mat4x4 ModelTransform;
     glm::mat4x4 ViewTransform;
     glm::mat4x4 ProjTransform;
@@ -42,6 +43,7 @@ public:
     int gNumTriangles;       // # of triangles
     std::vector<int> vIndexBuffer;
     std::vector<glm::vec4> vertices;
+	std::vector<Vertex> vVertices;
 
     Light light;
 public:
@@ -70,12 +72,11 @@ public:
 
     void SetupMVP();
 
-    /**
-     *  Calculate the Model-View-Projectiion matrix by multiplying all of the transforms
-     */
-    void ApplyTransforms();
+	glm::mat4x4 ModelView() const;
 
-	  void NormalizeW(glm::vec4& v) const;
+	glm::mat4x4 ProjViewport() const;
+
+	void NormalizeW(glm::vec4& v) const;
 };
 
 } // end of namespace Rasterizer

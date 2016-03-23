@@ -34,13 +34,20 @@ int main(int argc, char* argv[])
 
     scene.SetupProjTransform(-0.1f, 0.1f, -0.1f, 0.1f, -.1f, -1000.0f);
     scene.SetupViewportTransform(SCREEN_WIDTH, SCREEN_HEIGHT);
-    scene.ApplyTransforms();
+	scene.SetupMVP();
 
     // Initialize Renderer
 	  Rasterizer::Renderer renderer(scene);
-    renderer.Initialize(argc, argv);
-	  renderer.Render();
+	  renderer.Initialize(argc, argv);
+	  renderer.RenderUnshaded();
+	  renderer.OutputToPPM("unshaded.ppm");
+
+	  renderer.RenderFlat();
 	  renderer.OutputToPPM("flatshading.ppm");
+
+	  renderer.RenderGouraud();
+
+	  renderer.RenderPhong();
 
     exit(EXIT_SUCCESS);
 }

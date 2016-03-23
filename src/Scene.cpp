@@ -6,7 +6,7 @@ Scene::Scene() :
     gNumVertices(0),
     gNumTriangles(0),
     ViewTransform(1.0f),
-    light(glm::vec3(-4, 4, -3), 1.0f)
+    light(glm::vec3(-4.0f, 4.0f, -3.0f), 1.0f)
 {
 }
 
@@ -35,18 +35,42 @@ void Scene::LoadSphere()
             float   y   = cosf(theta);
             float   z   = -sinf(theta) * sinf(phi);
 
+			glm::vec4 vert(x, y, z, 1.0f);
+
             // TODO: Set vertex t in the vertex array to {x, y, z}.
-            vertices.push_back(glm::vec4(x, y, z, 1.0f));
+            vertices.push_back(vert);
+
+			// New shit
+			auto normal = glm::normalize(-vert);		// The normal of a sphere is from center to the vertex negated.
+			normal.w = 1.0f;							// does negating and normalizing keep the w at 1? i dont think so, need to test later on
+			Vertex v(
+				glm::vec4(x, y, z, 1.0f),
+				glm::vec4(0.0f),
+				normal 
+			);
+
+			vVertices.push_back(v);
         }
     }
 
     // TODO: Set vertex t in the vertex array to {0, 1, 0}.
     vertices.emplace_back(0.0f, 1.0f, 0.0f, 1.0f);
+	vVertices.emplace_back(
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+		glm::vec4(0.0f),
+		glm::vec4(0.0f, -1.0f, 0.0f, 1.0f)
+		);
 
     // TODO: Set vertex t in the vertex array to {0, -1, 0}.
     vertices.emplace_back(0.0f, -1.0f, 0.0f, 1.0f);
+	vVertices.emplace_back(
+		glm::vec4(0.0f, -1.0f, 0.0f, 1.0f),
+		glm::vec4(0.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)
+		);
 
     assert(vertices.size() == gNumVertices);
+	assert(vVertices.size() == gNumVertices);
 
     int t = 0;
     for (int j = 0; j < height - 3; ++j)
@@ -143,6 +167,8 @@ void Scene::SetupProjTransform(float l, float r, float b, float t, float n, floa
   ProjTransform[2] = glm::vec4( 0.0f, 0.0f, (n+f)/(n-f), 2.0f*n*f/(f-n));
   ProjTransform[3] = glm::vec4( 0.0f, 0.0f, 1.0f, 0.0f);
 
+  //ProjTransform = glm::transpose(ProjTransform);
+
   LOG(INFO) << "Projection Transform: " << glm::to_string(ProjTransform);
 }
 
@@ -158,25 +184,20 @@ void Scene::SetupViewportTransform(int nx, int ny)
 
 void Scene::SetupMVP()
 {
-    //MVP = ViewportTransform * ProjTransform * ViewTransform * ModelTransform;
     MVP = ModelTransform * ViewTransform * ProjTransform * ViewportTransform;
     MVP = glm::transpose(MVP);
     LOG(INFO) << "MVP: " << glm::to_string(MVP);
+	LOG(INFO) << "MV * PV: " << glm::to_string(ProjViewport() * ModelView());
 }
 
-void Scene::ApplyTransforms()
+glm::mat4x4 Scene::ModelView() const
 {
-    SetupMVP();
+	return glm::transpose(ModelTransform * ViewTransform);
+}
 
-    // Multiplay all vec4 vertices by MVP and then normalize by w coordinate into vec3
-  	for (int i = 0; i < gNumVertices; ++i)
-  	{
-      LOG(INFO) << glm::to_string(vertices.at(i));
-      vertices.at(i) = MVP * vertices.at(i);
-
-  		NormalizeW(vertices.at(i));
-      LOG(INFO) << glm::to_string(vertices.at(i)) << std::endl;
-  	}
+glm::mat4x4 Scene::ProjViewport() const
+{
+	return glm::transpose(ProjTransform * ViewportTransform);
 }
 
 void Scene::NormalizeW(glm::vec4& v) const

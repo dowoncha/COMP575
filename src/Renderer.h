@@ -67,16 +67,39 @@ static inline Pixel MakeRGBA(unsigned r, unsigned g, unsigned b, unsigned a) {
 					(a << GPIXEL_SHIFT_A);
 }
 
+class Vertex
+{
+public:
+	glm::vec4 pos, color, normal;
+
+	Vertex() : pos(0.0f), color(0.0f), normal(0.0f) {}
+
+	Vertex(const glm::vec4& p, const glm::vec4& c) : pos(p), color(c), normal(0.0f) { }
+
+	Vertex(const glm::vec4& p, const glm::vec4& c, const glm::vec4& n) : pos(p), color(c), normal(n) { }
+
+	Vertex(const Vertex& a) : pos(a.pos), color(a.color), normal(a.normal) {}
+
+	void Transform(const glm::mat4x4& transform)
+	{
+		pos *= transform;
+		normal *= transform;
+	}
+};
+
 class Renderer
 {
 private:
-	class Vertex
+	class Material
 	{
 	public:
-		glm::vec3 pos, color;
+		glm::vec3 ambient, diffuse, specular;
 
-		Vertex(const glm::vec3& p, const glm::vec3& c) : pos(p), color(c) {}
+		Material(const glm::vec3& a, const glm::vec3& d, const glm::vec3& s) :
+			ambient(a), diffuse(d), specular(s) 
+		{}
 	};
+
 public:
 	/**
 		*  Provide the output buffer and the width and height of the screen
@@ -87,7 +110,13 @@ public:
 
 	void Initialize(int argc, char* argv[]);
 
-	void Render();
+	void RenderUnshaded();
+
+	void RenderFlat();
+
+	void RenderGouraud();
+
+	void RenderPhong();
 
 	void OutputToPPM(const std::string& filename) const;
 private:
@@ -95,8 +124,20 @@ private:
 
 	void DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
 
-	float Orient2D(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
+	void DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c);
 
+	glm::vec3 CalculateFlatShading(const Vertex& a, const Vertex& b, const Vertex& c) const;
+
+	// Calculate the normal of the triangle created by the 3 vertices
+	static glm::vec3 GetNormal(const Vertex& a, const Vertex& b, const Vertex& c);
+
+	// Calculate the centroid of the triangle created by the 3 vertices
+	static glm::vec3 GetCentroid(const Vertex& a, const Vertex& b, const Vertex& c);
+
+	// idk
+	float Orient2D(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2);
+	 
+	// Don't use
 	void DrawRow(int x1, int x2, int scanlineY);
 
 	void DrawPixel(int x, int y, const glm::vec3& color);
@@ -115,7 +156,8 @@ private:
 	void ClearColorBuffer();
 	void ClearDepthBuffer();
 public:
-	const Scene& scene;							// Should this be a reference?
+
+	const Scene& scene;							
 
 	int ScreenWidth, ScreenHeight;
 
@@ -124,6 +166,8 @@ public:
 	std::vector<float> DepthBuffer;
 
 	size_t bufferSize;
+
+	Material mat;
 };
 
 } //end of namespace Rasterizer

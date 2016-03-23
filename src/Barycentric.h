@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -23,9 +24,6 @@ public:
   // return a buffer containing x,y coordinates that should be drawn.
   // Should interpoation occur here?
   std::vector<glm::vec2> GetFragments();
-
-  // Return a vec3 of the
-  glm::vec3 GetCentroid() const;
 private:
   // TODO: Use a GLM::vec3 here
   glm::vec3 betaCoef;   // Beta constants: betaX, betaY, beta0

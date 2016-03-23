@@ -49,17 +49,6 @@ std::vector<glm::vec2> Barycentric::GetFragments()
   return pixels;
 }
 
-glm::vec3 Barycentric::GetCentroid() const
-{
-    glm::vec3 centroid;
-
-    centroid.x = (va.x + vb.x + vc.x) / 3.0f;
-    centroid.y = (va.y + vb.y + vc.y) / 3.0f;
-    centroid.z = (va.z + vb.z + vc.z) / 3.0f;
-
-    return centroid;
-}
-
 void Barycentric::CalculateBounds()
 {
   // Calculate the bounding box
@@ -68,10 +57,10 @@ void Barycentric::CalculateBounds()
   yMax = (int) std::ceil ((std::max)(va.y, (std::max)(vb.y, vc.y)));
   yMin = (int) std::floor((std::min)(va.y, (std::min)(vb.y, vc.y)));
 
-  xMin = std::max(0, xMin);
-  xMax = std::min(512, xMax);
-  yMin = std::max(0, yMin);
-  yMax = std::min(512, yMax);
+  xMin = (std::max)(0, xMin);
+  xMax = (std::min)(512, xMax);
+  yMin = (std::max)(0, yMin);
+  yMax = (std::min)(512, yMax);
 }
 
 void Barycentric::CalcAlpha()
