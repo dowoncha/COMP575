@@ -106,11 +106,13 @@ private:
 
 	void DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& c);
 
-	void DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c);
+	void DrawTriangleGouraud(const Vertex& a, const Vertex& b, const Vertex& c);
 
 	void CalculateFlatShading(Vertex& a, Vertex& b, Vertex& c) const;
 
 	void CalculateGouraudShading(Vertex& a) const;
+
+	void SetVertexNormal(Vertex& a) const;
 
 	// Calculate the normal of the triangle created by the 3 vertices
 	static glm::vec3 GetNormal(const Vertex& a, const Vertex& b, const Vertex& c);
@@ -154,6 +156,8 @@ public:
 	size_t bufferSize;
 
 	Material mat;
+
+	const float AmbientIntensity = 0.2f;
 };
 
 } //end of namespace Rasterizer

@@ -12,28 +12,27 @@ Barycentric::Barycentric(const glm::vec4& a, const glm::vec4& b, const glm::vec4
 
 std::vector<glm::vec2> Barycentric::GetFragments()
 {
+  /*
   std::vector<glm::vec2> pixels;
 
-  beta = betaCoef.x * xMin + betaCoef.y * yMin + betaCoef.z;
-  gamma = gammaCoef.x * xMin + gammaCoef.y * yMin + gammaCoef.z;
-  CalcAlpha();
+  SetCurrent(xMin, yMin);
 
   float betaRow = beta;
   float gammaRow = gamma;
 
-  float alphaT;
-  float betaT;
-  float gammaT;
+  float alphaX;
+  float betaX;
+  float gammaX;
 
   for (int y = yMin; y <= yMax; ++y)
   {
-    betaT = betaRow;
-    gammaT = gammaRow;
-    alphaT = 1.0f - betaRow - gammaRow;
+    betaX = betaRow;
+    gammaX = gammaRow;
+    alphaX = 1.0f - betaRow - gammaRow;
 
     for (int x = xMin; x <= xMax; ++x)
     {
-      if (alphaT >= 0.0f && betaT >= 0.0f && gammaT >= 0.0f)
+      if (alphaX >= 0.0f && betaX >= 0.0f && gammaT >= 0.0f)
       {
         pixels.push_back(glm::vec2(x, y));
       }
@@ -45,8 +44,8 @@ std::vector<glm::vec2> Barycentric::GetFragments()
     betaRow += betaCoef.y;
     gammaRow += gammaCoef.y;
   }
-
-  return pixels;
+  */
+  return std::vector<glm::vec2>();
 }
 
 void Barycentric::CalculateBounds()
@@ -61,6 +60,37 @@ void Barycentric::CalculateBounds()
   xMax = (std::min)(512, xMax);
   yMin = (std::max)(0, yMin);
   yMax = (std::min)(512, yMax);
+}
+
+void Barycentric::CalculateBaryCoordinates()
+{
+  beta = betaCoef.x * current.x + betaCoef.y * current.y + betaCoef.z;
+  gamma = gammaCoef.x * current.x + gammaCoef.y * current.y + gammaCoef.z;
+  alpha = 1.0f - beta - gamma;
+}
+
+void Barycentric::SetCurrent(float x, float y)
+{
+  current.x = x;
+  current.y = y;
+
+  CalculateBaryCoordinates();
+}
+
+void Barycentric::SetCurrent(int x, int y)
+{
+  current.x = x;
+  current.y = y;
+
+  CalculateBaryCoordinates();
+}
+
+void Barycentric::SetCurrent(const glm::vec2& c)
+{
+  current.x = c.x;
+  current.y = c.y;
+
+  CalculateBaryCoordinates();
 }
 
 void Barycentric::CalcAlpha()

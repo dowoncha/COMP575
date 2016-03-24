@@ -20,6 +20,7 @@ public:
 	void Transform(const glm::mat4x4& transform)
 	{
 		pos = transform * pos;
-		normal = transform * normal; //glm::transpose(glm::inverse(transform)) * normal;
+		//normal = transform * normal; 
+		normal = glm::transpose(glm::inverse(transform)) * normal;
 	}
 };

@@ -151,23 +151,27 @@ void Renderer::RenderGouraud()
 		v1.Transform(scene.ModelView());
 		v2.Transform(scene.ModelView());
 
+		SetVertexNormal(v0);
+		SetVertexNormal(v1);
+		SetVertexNormal(v2);
+
+		// Calculate color at each vertex with its normal
 		CalculateGouraudShading(v0);
 		CalculateGouraudShading(v1);
 		CalculateGouraudShading(v2);
 
+		// Eye to screen space
 		v0.Transform(scene.ProjViewport());
 		v1.Transform(scene.ProjViewport());
 		v2.Transform(scene.ProjViewport());
 
+		// Homogenous coordinates need to be renormalized
 		scene.NormalizeW(v0.pos);
 		scene.NormalizeW(v1.pos);
 		scene.NormalizeW(v2.pos);
-		scene.NormalizeW(v0.normal);
-		scene.NormalizeW(v1.normal);
-		scene.NormalizeW(v2.normal);
 
-		// IN drawing interpolate across fragment between the 3 vertices.
-		DrawTriangle(v0, v1, v2);
+		// Drawing interpolate across fragment between the 3 vertices.
+		DrawTriangleGouraud(v0, v1, v2);
 	}
 }
 
@@ -176,6 +180,51 @@ void Renderer::RenderPhong()
 {
 	ClearColorBuffer();
 	ClearDepthBuffer();
+
+	for (int i = 0; i < scene.gNumTriangles; ++i)
+	{
+		int base = 3 * i;
+		int k0 = scene.vIndexBuffer.at(base);
+		int k1 = scene.vIndexBuffer.at(base + 1);
+		int k2 = scene.vIndexBuffer.at(base + 2);
+
+		Vertex v0 = scene.vVertices.at(k0);
+		Vertex v1 = scene.vVertices.at(k1);
+		Vertex v2 = scene.vVertices.at(k2);
+
+		v0.Transform(scene.ModelView());
+		v1.Transform(scene.ModelView());
+		v2.Transform(scene.ModelView());
+
+		v0.Transform(scene.ProjViewport());
+		v1.Transform(scene.ProjViewport());
+		v2.Transform(scene.ProjViewport());
+
+		scene.NormalizeW(v0.pos);
+		scene.NormalizeW(v1.pos);
+		scene.NormalizeW(v2.pos);
+		//scene.NormalizeW(v0.normal);
+		//scene.NormalizeW(v1.normal);
+		//scene.NormalizeW(v2.normal);
+
+		Barycentric bary(
+			v0.pos,
+			v1.pos,
+			v2.pos
+		);
+
+		glm::vec2 point;
+		for (point.y = bary.yMin; point.y <= bary.yMax; ++point.y )
+		{
+			for (point.x = bary.xMin; point.x <= bary.xMax; ++point.x)
+			{
+				bary.SetCurrent(point);
+				//glm::vec3 fragment = TriWeightAverage(bary.alpha, bary.beta, bary.gamma// eye vertex);
+				//glm::vec3 fragnormal = TriWeightAverage(bar)
+
+			}
+		}
+	}
 }
 
 void Renderer::DrawTriangle(const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2)
@@ -253,7 +302,7 @@ void Renderer::DrawTriangleFlat(const Vertex& a, const Vertex& b, const Vertex& 
 
 }
 
-void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
+void Renderer::DrawTriangleGouraud(const Vertex& a, const Vertex& b, const Vertex& c)
 {
 	Barycentric bary(
 		a.pos,
@@ -261,17 +310,18 @@ void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
 		c.pos
 	);
 
+	// Check all pixels in the bounding box
 	glm::vec2 point;
 	for (point.y = bary.yMin; point.y <= bary.yMax; ++point.y)
 	{
 		for (point.x = bary.xMin; point.x <= bary.xMax; ++point.x)
 		{
-			//Determine bary coordinates
+			//Determine 2x2 determinant for edge checking pixel
 			float w0 = Orient2D(glm::vec2(b.pos), glm::vec2(c.pos), point);
 			float w1 = Orient2D(glm::vec2(c.pos), glm::vec2(a.pos), point);
 			float w2 = Orient2D(glm::vec2(a.pos), glm::vec2(b.pos), point);
 
-			// Barycentric test
+			// Barycentric pixel edge test
 			if (w0 >= 0.0f && w1 >= 0.0f && w2 >= 0.0f)
 			{
 				if (point.x < 0 || point.x >= 512 || point.y < 0 || point.y >= 512)
@@ -280,14 +330,22 @@ void Renderer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
 					continue;
 				}
 
-				// Test Depth Buffer
-				glm::vec3 centroid = GetCentroid(a, b, c);
-				if (centroid.z > DepthBuffer.at((int)point.x + (int)point.y * ScreenWidth))
-			  {
-					int out = (int)point.x + (int)point.y * ScreenWidth;
+				// In Bary object set the current target pixel to caculate alpha, beta, gamma
+				bary.SetCurrent(point);
 
-					DepthBuffer.at(out) = centroid.z;
-					ColorBuffer.at(out) = TriWeightAverage(w0, w1, w2, glm::vec3(a.color), glm::vec3(b.color), glm::vec3(c.color));
+				// Get centroid of triangle for depth buffer test
+				glm::vec3 centroid = GetCentroid(a, b, c);
+
+				// Calculate index position in buffer
+				int outIndex = (int)point.x + (int)point.y * ScreenWidth;
+				if (centroid.z > DepthBuffer.at(outIndex))
+			  {
+					DepthBuffer.at(outIndex) = centroid.z;
+					glm::vec3 outc = TriWeightAverage(bary.alpha, bary.beta, bary.gamma, glm::vec3(a.color), glm::vec3(b.color), glm::vec3(c.color));
+
+					LOG(INFO) << "Gou color: " << glm::to_string(outc);
+
+					ColorBuffer.at(outIndex) = outc;
 				}
 			}
 		}
@@ -334,15 +392,18 @@ void Renderer::CalculateGouraudShading(Vertex& a) const
 {
 	glm::vec3 out(0.0f);
 
-	out += mat.ambient * 0.2f;
+	// Calculate ambient
+	out += mat.ambient * AmbientIntensity;
 
-	glm::vec3 pointToLight = scene.light.pos - glm::vec3(a.pos);
-	pointToLight = glm::normalize(pointToLight);
+	// Calculate diffuse
+	glm::vec3 pointToLight = glm::normalize(scene.light.pos - glm::vec3(a.pos));
 	float nl = glm::dot(glm::vec3(a.normal), pointToLight);
 	if (nl > 0)
 		out += mat.diffuse * (scene.light.intensity * nl);
 
-	glm::vec3 h = glm::normalize(pointToLight - glm::vec3(a.pos));
+  // Calculate specular
+  glm::vec3 pointToEye = glm::normalize(-glm::vec3(a.pos));
+	glm::vec3 h = glm::normalize(pointToEye + pointToLight);
 	float nh = glm::dot(glm::vec3(a.normal), h);
 	if (nh > 0)
 		out += mat.specular * (scene.light.intensity * std::pow(nh, scene.light.specPower));
@@ -356,6 +417,13 @@ glm::vec3 Renderer::GetNormal(const Vertex& a, const Vertex& b, const Vertex& c)
 	if (norm.z < 0)
 		norm = -norm;
 	return norm;
+}
+
+void Renderer::SetVertexNormal(Vertex& a) const
+{
+		a.normal = glm::normalize(a.pos);
+		if (a.normal.z < 0)
+			a.normal = -a.normal;
 }
 
 glm::vec3 Renderer::GetCentroid(const Vertex& a, const Vertex& b, const Vertex& c)
@@ -372,13 +440,11 @@ glm::vec3 Renderer::GetCentroid(const Vertex& a, const Vertex& b, const Vertex& 
 glm::vec3 Renderer::TriWeightAverage(float a, float b, float c,
 															 const glm::vec3& c0, const glm::vec3& c1, const glm::vec3& c2) const
 {
-	glm::vec3 out;
+	assert(a <= 1.0f);
+	assert(b <= 1.0f);
+	assert(c <= 1.0f);
 
-	out.x = a * c0.x + b * c1.x + c * c2.x;
-	out.y = a * c0.y + b * c1.y + c * c2.y;
-	out.z = a * c0.z + b * c1.z + c * c2.z;
-
-	return out;
+	return a * c0 + b * c1 + c * c2;
 }
 
 float Renderer::Orient2D(const glm::vec2& a, const glm::vec2& b, const glm::vec2& c)

@@ -41,8 +41,7 @@ void Scene::LoadSphere()
             vertices.push_back(vert);
 
 			// New shit
-			auto normal = glm::normalize(-vert);		// The normal of a sphere is from center to the vertex negated.
-			normal.w = 1.0f;							// does negating and normalizing keep the w at 1? i dont think so, need to test later on
+			glm::vec4 normal = glm::normalize(vert);		// The normal of a sphere is from center to the vertex negated.
 			Vertex v(
 				glm::vec4(x, y, z, 1.0f),
 				glm::vec4(0.0f),

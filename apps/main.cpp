@@ -42,11 +42,11 @@ int main(int argc, char* argv[])
 	  //renderer.RenderUnshaded();
 	  //renderer.OutputToPPM("unshaded.ppm");
 
-	  renderer.RenderFlat();
-	  renderer.OutputToPPM("flatshading.ppm");
+	  //renderer.RenderFlat();
+	  //renderer.OutputToPPM("flatshading.ppm");
 
-	  //renderer.RenderGouraud();
-    //renderer.OutputToPPM("gouraudshading.ppm");
+	  renderer.RenderGouraud();
+    renderer.OutputToPPM("gouraudshading.ppm");
 
 	  //renderer.RenderPhong();
     //renderer.OutputToPPM("flatshading.ppm");
