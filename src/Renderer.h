@@ -108,9 +108,15 @@ private:
 
 	void DrawTriangleGouraud(const Vertex& a, const Vertex& b, const Vertex& c);
 
+	void DrawTrianglePhong(const Vertex& a, const Vertex& b, const Vertex& c);
+
 	void CalculateFlatShading(Vertex& a, Vertex& b, Vertex& c) const;
 
+	void CalculateShading(Vertex& a) const;
+
 	void CalculateGouraudShading(Vertex& a) const;
+
+	glm::vec3 CalculatePhongShading(const glm::vec3& pos, const glm::vec3& normal) const;
 
 	void SetVertexNormal(Vertex& a) const;
 

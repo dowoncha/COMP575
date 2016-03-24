@@ -119,9 +119,6 @@ void Renderer::RenderFlat()
 		scene.NormalizeW(v0.pos);
 		scene.NormalizeW(v1.pos);
 		scene.NormalizeW(v2.pos);
-		scene.NormalizeW(v0.normal);
-		scene.NormalizeW(v1.normal);
-		scene.NormalizeW(v2.normal);
 
 		DrawTriangleFlat(v0, v1, v2);
 	}
@@ -192,21 +189,31 @@ void Renderer::RenderPhong()
 		Vertex v1 = scene.vVertices.at(k1);
 		Vertex v2 = scene.vVertices.at(k2);
 
+		// Model to World Space
 		v0.Transform(scene.ModelView());
 		v1.Transform(scene.ModelView());
 		v2.Transform(scene.ModelView());
 
+		// Calculate each vertex normal in world space
+		SetVertexNormal(v0);
+		SetVertexNormal(v1);
+		SetVertexNormal(v2);
+
+		Vertex e0 = v0;
+		Vertex e1 = v1;
+		Vertex e2 = v2;
+
+		// World to screen space
 		v0.Transform(scene.ProjViewport());
 		v1.Transform(scene.ProjViewport());
 		v2.Transform(scene.ProjViewport());
 
+		// Normalize homogeneous coordinates
 		scene.NormalizeW(v0.pos);
 		scene.NormalizeW(v1.pos);
 		scene.NormalizeW(v2.pos);
-		//scene.NormalizeW(v0.normal);
-		//scene.NormalizeW(v1.normal);
-		//scene.NormalizeW(v2.normal);
 
+		// Make barycentric coordinates
 		Barycentric bary(
 			v0.pos,
 			v1.pos,
@@ -218,10 +225,35 @@ void Renderer::RenderPhong()
 		{
 			for (point.x = bary.xMin; point.x <= bary.xMax; ++point.x)
 			{
-				bary.SetCurrent(point);
-				//glm::vec3 fragment = TriWeightAverage(bary.alpha, bary.beta, bary.gamma// eye vertex);
-				//glm::vec3 fragnormal = TriWeightAverage(bar)
+				//Determine 2x2 determinant for edge checking pixel
+				float w0 = Orient2D(glm::vec2(v1.pos), glm::vec2(v2.pos), point);
+				float w1 = Orient2D(glm::vec2(v2.pos), glm::vec2(v0.pos), point);
+				float w2 = Orient2D(glm::vec2(v0.pos), glm::vec2(v1.pos), point);
 
+				// Barycentric pixel edge test
+				if (w0 >= 0.0f && w1 >= 0.0f && w2 >= 0.0f)
+				{
+					if (point.x < 0 || point.x >= 512 || point.y < 0 || point.y >= 512)
+					{
+						LOG(ERROR) << "Vertex out of bounds";
+						continue;
+					}
+
+					// In Bary object set the current target pixel to caculate alpha, beta, gamma
+					bary.SetCurrent(point);
+					Vertex fragment;
+					glm::vec3 fragpos = TriWeightAverage(bary.alpha, bary.beta, bary.gamma, glm::vec3(e0.pos), glm::vec3(e1.pos), glm::vec3(e2.pos));
+					glm::vec3 fragnormal = TriWeightAverage(bary.alpha, bary.beta, bary.gamma, glm::vec3(e0.normal), glm::vec3(e1.normal), glm::vec3(e2.normal));
+					fragnormal = glm::normalize(fragnormal);
+
+					// Calculate index position in buffer
+					int outIndex = (int)point.x + (int)point.y * ScreenWidth;
+					if (fragpos.z > DepthBuffer.at(outIndex))
+				  {
+						DepthBuffer.at(outIndex) = fragpos.z;
+						ColorBuffer.at(outIndex) = CalculatePhongShading(fragpos, fragnormal);
+					}
+				}
 			}
 		}
 	}
@@ -343,8 +375,6 @@ void Renderer::DrawTriangleGouraud(const Vertex& a, const Vertex& b, const Verte
 					DepthBuffer.at(outIndex) = centroid.z;
 					glm::vec3 outc = TriWeightAverage(bary.alpha, bary.beta, bary.gamma, glm::vec3(a.color), glm::vec3(b.color), glm::vec3(c.color));
 
-					LOG(INFO) << "Gou color: " << glm::to_string(outc);
-
 					ColorBuffer.at(outIndex) = outc;
 				}
 			}
@@ -401,6 +431,8 @@ void Renderer::CalculateGouraudShading(Vertex& a) const
 	if (nl > 0)
 		out += mat.diffuse * (scene.light.intensity * nl);
 
+	LOG(INFO) << "Out Ambient + Diffuse: " << nl;
+
   // Calculate specular
   glm::vec3 pointToEye = glm::normalize(-glm::vec3(a.pos));
 	glm::vec3 h = glm::normalize(pointToEye + pointToLight);
@@ -409,6 +441,29 @@ void Renderer::CalculateGouraudShading(Vertex& a) const
 		out += mat.specular * (scene.light.intensity * std::pow(nh, scene.light.specPower));
 
 	a.color = glm::vec4(out, 1.0f);
+}
+
+glm::vec3 Renderer::CalculatePhongShading(const glm::vec3& pos, const glm::vec3& normal) const
+{
+	glm::vec3 out(0.0f);
+
+	// Calculate ambient
+	out += mat.ambient * AmbientIntensity;
+
+	// Calculate diffuse
+	glm::vec3 pointToLight = glm::normalize(scene.light.pos - pos);
+	float nl = glm::dot(normal, pointToLight);
+	if (nl > 0)
+		out += mat.diffuse * (scene.light.intensity * nl);
+
+	// Calculate specular
+	glm::vec3 pointToEye = glm::normalize(-pos);
+	glm::vec3 h = glm::normalize(pointToEye + pointToLight);
+	float nh = glm::dot(normal, h);
+	if (nh > 0)
+		out += mat.specular * (scene.light.intensity * std::pow(nh, scene.light.specPower));
+
+	return out;
 }
 
 glm::vec3 Renderer::GetNormal(const Vertex& a, const Vertex& b, const Vertex& c)
@@ -421,9 +476,11 @@ glm::vec3 Renderer::GetNormal(const Vertex& a, const Vertex& b, const Vertex& c)
 
 void Renderer::SetVertexNormal(Vertex& a) const
 {
-		a.normal = glm::normalize(a.pos);
-		if (a.normal.z < 0)
-			a.normal = -a.normal;
+	glm::vec4 center = glm::vec4(0.0f, 0.0f, -7.0f, 1.0f);
+
+	a.normal = glm::normalize(a.pos - center);
+	if (a.normal.z < 0)
+		a.normal = -a.normal;
 }
 
 glm::vec3 Renderer::GetCentroid(const Vertex& a, const Vertex& b, const Vertex& c)

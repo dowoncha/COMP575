@@ -45,7 +45,7 @@ void Scene::LoadSphere()
 			Vertex v(
 				glm::vec4(x, y, z, 1.0f),
 				glm::vec4(0.0f),
-				normal
+				glm::vec4(0.0f)
 			);
 
 			vVertices.push_back(v);
