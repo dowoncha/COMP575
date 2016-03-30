@@ -1,25 +1,3 @@
-/*
-	How to use this code:
-
-	Call load_mesh("bunny.obj") after creating the window using GLUT. This will
-	read the mesh data from bunny.obj and populate the arrays gPositions,
-	gNormals, and gTriangles.
-
-	When rendering, we use a similar convention to the sphere from PA2. In other
-	words, for triangle i, define:
-
-		k0 = gTriangles[i].indices[0];
-		k1 = gTriangles[i].indices[1];
-		k2 = gTriangles[i].indices[2];
-
-	Then the vertices of the triangle are at gPositions[k0], gPositions[k1], and
-	gPositions[k2], in that order. The normals of the corresponding vertices are
-	at gNormals[k0], gNormals[k1], and gNormals[k2], in that order.
-
-	For the second part of the assignment, you have to copy the gPositions,
-	gNormals, and gTriangles arrays into GPU memory.
-*/
-
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <GL/gl.h>
@@ -34,123 +12,14 @@
 #include <fstream>
 #include <float.h>
 
-struct Vector3
-{
-	float			x, y, z;
-};
+// GLM
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-struct Triangle
-{
-	unsigned int 	indices[3];
-};
+#include "Mesh.hpp"
 
-std::vector<Vector3>	gPositions;
-std::vector<Vector3>	gNormals;
-std::vector<Triangle>	gTriangles;
-
-void tokenize(char* string, std::vector<std::string>& tokens, const char* delimiter)
-{
-	char* token = strtok(string, delimiter);
-	while (token != NULL)
-	{
-		tokens.push_back(std::string(token));
-		token = strtok(NULL, delimiter);
-	}
-}
-
-int face_index(const char* string)
-{
-	int length = strlen(string);
-	char* copy = new char[length + 1];
-	memset(copy, 0, length+1);
-	strcpy(copy, string);
-
-	std::vector<std::string> tokens;
-	tokenize(copy, tokens, "/");
-	delete[] copy;
-	if (tokens.front().length() > 0 && tokens.back().length() > 0 && atoi(tokens.front().c_str()) == atoi(tokens.back().c_str()))
-	{
-		return atoi(tokens.front().c_str());
-	}
-	else
-	{
-		printf("ERROR: Bad face specifier!\n");
-		exit(0);
-	}
-}
-
-void load_mesh(std::string fileName)
-{
-	std::ifstream fin(fileName.c_str());
-	if (!fin.is_open())
-	{
-		printf("ERROR: Unable to load mesh from %s!\n", fileName.c_str());
-		exit(0);
-	}
-
-	float xmin = FLT_MAX;
-	float xmax = -FLT_MAX;
-	float ymin = FLT_MAX;
-	float ymax = -FLT_MAX;
-	float zmin = FLT_MAX;
-	float zmax = -FLT_MAX;
-
-	while (true)
-	{
-		char line[1024] = {0};
-		fin.getline(line, 1024);
-
-		if (fin.eof())
-			break;
-
-		if (strlen(line) <= 1)
-			continue;
-
-		std::vector<std::string> tokens;
-		tokenize(line, tokens, " ");
-
-		if (tokens[0] == "v")
-		{
-			float x = atof(tokens[1].c_str());
-			float y = atof(tokens[2].c_str());
-			float z = atof(tokens[3].c_str());
-
-			xmin = std::min(x, xmin);
-			xmax = std::max(x, xmax);
-			ymin = std::min(y, ymin);
-			ymax = std::max(y, ymax);
-			zmin = std::min(z, zmin);
-			zmax = std::max(z, zmax);
-
-			Vector3 position = {x, y, z};
-			gPositions.push_back(position);
-		}
-		else if (tokens[0] == "vn")
-		{
-			float x = atof(tokens[1].c_str());
-			float y = atof(tokens[2].c_str());
-			float z = atof(tokens[3].c_str());
-			Vector3 normal = {x, y, z};
-			gNormals.push_back(normal);
-		}
-		else if (tokens[0] == "f")
-		{
-			unsigned int a = face_index(tokens[1].c_str());
-			unsigned int b = face_index(tokens[2].c_str());
-			unsigned int c = face_index(tokens[3].c_str());
-			Triangle triangle;
-			triangle.indices[0] = a - 1;
-			triangle.indices[1] = b - 1;
-			triangle.indices[2] = c - 1;
-			gTriangles.push_back(triangle);
-		}
-	}
-
-	fin.close();
-
-	printf("Loaded mesh from %s. (%lu vertices, %lu normals, %lu triangles)\n", fileName.c_str(), gPositions.size(), gNormals.size(), gTriangles.size());
-	printf("Mesh bounding box is: (%0.4f, %0.4f, %0.4f) to (%0.4f, %0.4f, %0.4f)\n", xmin, ymin, zmin, xmax, ymax, zmax);
-}
+#define CALL_MEMBER_FN(object, ptrToMember)  ((object).*(ptrToMember))
 
 /*
 	How to use this code:
@@ -160,12 +29,24 @@ void load_mesh(std::string fileName)
 	roughly as the example below.
 */
 
+// Bunny
+Mesh bunny("./bunny.obj");
+
+// Lighting
+static GLfloat lightPos[] = {2.0f, 1.0f, 1.0f, 0.0f};
+static GLfloat ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
+static GLfloat white[] = 	 {1.0f, 1.0f, 1.0f, 1.0f};
+static GLfloat black[] = 	 {0.0f, 0.0f, 0.0f, 0.0f};
+static glm::vec3 lightDir = glm::normalize(glm::vec3(-1.0f));
+
+// Timing
 float  					gTotalTimeElapsed 	= 0;
-int 					gTotalFrames		= 0;
-GLuint 					gTimer;
+int 					 gTotalFrames		= 0;
+GLuint 				 gTimer;
 
 void init_timer()
 {
+	printf("Initializing Timer\n");
 	glGenQueries(1, &gTimer);
 }
 
@@ -189,43 +70,46 @@ float stop_timing()
 	return timeElapsed;
 }
 
-/*
-	Your display function should look roughly like the following.
+void MouseFunc(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		printf("Mouse left pressed: x: %d, y: %d\n", x, y);
+	}
+}
+
+void KeyboardFunc(unsigned char key, int x, int y)
+{
+	if (key == 116)
+	{
+		bunny.ToggleRenderMethod();
+	}
+}
+
+void SetLighting()
+{
+	// GL default: Initial ambient is 0.2 0.2 0.2 1.0
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+
+    // Add directed light here
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, white);   			// Default diffuse is 1
+	glLightfv(GL_LIGHT0, GL_AMBIENT, black); 			  // Default ambient is 0
+	glLightfv(GL_LIGHT0, GL_SPECULAR, black); 			 // Default for light0 is 1 so set to 0
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, glm::value_ptr(lightDir));
+}
+
+/**
+ *  Your display function should look roughly like the following.
 */
 void display()
 {
-	// TODO: Clear the screen and depth buffer.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
  	start_timing();
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+	SetLighting();
 
-    //glTrasnlatef();
-
-    // Set the ambient light
-    GLfloat ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-
-    // Add directed light here
-
-    // TODO: Draw the bunny.
-    glBegin(GL_TRIANGLES);
-        for (Triangle t : gTriangles)
-        {
-            int k0 = t.indices[0];
-            int k1 = t.indices[1];
-            int k2 = t.indices[2];
-
-            glNormal3f(gNormals[k0].x, gNormals[k0].y, gNormals[k0].z);
-            glVertex3f(gPositions[k0].x, gPositions[k0].y, gPositions[k0].z);
-            glNormal3f(gNormals[k1].x, gNormals[k1].y, gNormals[k1].z);
-            glVertex3f(gPositions[k1].x, gPositions[k1].y, gPositions[k1].z);
-            glNormal3f(gNormals[k2].x, gNormals[k2].y, gNormals[k2].z);
-            glVertex3f(gPositions[k2].x, gPositions[k2].y, gPositions[k2].z);
-        }
-    glEnd();
+	CALL_MEMBER_FN(bunny, bunny.render)();
 
 	float timeElapsed = stop_timing();
   	gTotalFrames++;
@@ -239,17 +123,65 @@ void display()
   	glutSwapBuffers();
 }
 
+void display_buffer_object()
+{
+
+}
+
+void initGL()
+{
+	// Setup depth buffer, shading, and culling
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDepthFunc(GL_LESS);
+	glShadeModel(GL_SMOOTH);
+	//glCullFace(GL_BACK);
+
+	// Setup lightings
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	// Load view matrices onto initial projection stack.
+	glViewport(0.0f, 0.0f, 512.0f, 512.0f);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
+
+	// set matrix mode back to model
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	// Set eye
+	gluLookAt(0.0f, 0.0f, 0.0f,					// eye position
+					 0.0f, 0.0f, -1.0f,				   // Target
+				     0.0f, 1.0f, 0.0f);				   // Up vector
+}
+
 int main(int argc, char* argv[])
 {
+	// Glut initialization
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(512, 512);
     glutCreateWindow("GL");
 
-    load_mesh("bunny.obj");
+	// Glew initialization
+	glewExperimental = GL_TRUE;
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		/* Problem: glewInit failed, something is seriously wrong. */
+  		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+		exit(EXIT_FAILURE);
+	}
+	printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+
+	initGL();
+	init_timer();
 
     glutDisplayFunc(display);
+	glutKeyboardFunc(KeyboardFunc);
+	glutMouseFunc(MouseFunc);
 
     glutMainLoop();
 
