@@ -35,10 +35,10 @@
 Mesh bunny("bunny.obj");
 
 // Lighting
-static GLfloat lightPos[] = {2.0f, 1.0f, 1.0f, 0.0f};
+static GLfloat lightPos[] = {0.0f, 0.0f, 0.0f, 0.0f};
 static GLfloat ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
 static GLfloat white[] = 	 {1.0f, 1.0f, 1.0f, 1.0f};
-static GLfloat black[] = 	 {0.0f, 0.0f, 0.0f, 0.0f};
+static GLfloat black[] = 	 {0.0f, 0.0f, 0.0f, 1.0f};
 static glm::vec3 lightDir = glm::normalize(glm::vec3(-1.0f));
 
 // Timing
@@ -103,20 +103,13 @@ float stop_timing()
 void Resize(int w, int h) {
 
 	// Prevent a divide by zero, when window is too short
-	// (you cant make a window of zero width).
-	if(h == 0)
-		h = 1;
-	float ratio = 1.0* w / h;
-
-	// Use the Projection Matrix
-	glMatrixMode(GL_PROJECTION);
-    // Reset Matrix
-	glLoadIdentity();
+	if(h == 0) h = 1;
 
 	// Set the viewport to be the entire window
 	glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+	// Use the Projection Matrix
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
     glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
 
 	// set matrix mode back to model
@@ -137,6 +130,36 @@ void KeyboardFunc(unsigned char key, int x, int y)
 	{
 		bunny.ToggleRenderMethod();
 	}
+	else if(key  == 119)	// W
+	{
+		lightPos[1] += 1.0f;
+		printf("W pressed %f\n", lightPos[1]);
+	}
+	else if(key == 115)
+	{
+		lightPos[1] -= 1.0f;
+		printf("Light pos y changed: %f\n", lightPos[1]);
+	}
+	else if(key == 97)
+	{
+		lightPos[0] -= 1.0f;
+		printf("Light pos x: %f\n", lightPos[0]);
+	}
+	else if(key == 100) // d
+	{
+		lightPos[0] += 1.0f;
+		printf("Light pos x: %f\n", lightPos[0]);
+	}
+	else if( key == 101) // e
+	{
+		lightPos[2] += 1.0f;
+		printf("Light pos z: %f\n", lightPos[2]);
+	}
+	else if(key == 112) // q
+	{
+		lightPos[2] -= 1.0f;
+		printf("Light pos z: %f\n", lightPos[2]);
+	}
 }
 
 void SetLighting()
@@ -146,8 +169,8 @@ void SetLighting()
 
     // Add directed light here
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, black	); 			  // Default ambient is 0
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, white);   			// Default diffuse is 1
-	glLightfv(GL_LIGHT0, GL_AMBIENT, black); 			  // Default ambient is 0
 	glLightfv(GL_LIGHT0, GL_SPECULAR, black); 			 // Default for light0 is 1 so set to 0
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, glm::value_ptr(lightDir));
 }
@@ -181,7 +204,7 @@ int main(int argc, char* argv[])
 {
 	// Glut initialization
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(512, 512);
     glutCreateWindow("GL");
@@ -196,11 +219,6 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 	printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-
-	if (glewIsSupported("GL_VERSION_2_0 GL_VERSION_3_2"))
-	{
-  		printf("GL 2.0, 3.2\n");
-	}
 
 	initGL();
 	init_timer();
