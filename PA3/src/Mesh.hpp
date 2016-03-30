@@ -1,30 +1,8 @@
-/*
-	How to use this code:
+/**
+ *  filename : Mesh.hpp
+ *  content   : Mesh class
+ */
 
-	Call load_mesh("bunny.obj") after creating the window using GLUT. This will
-	read the mesh data from bunny.obj and populate the arrays gPositions,
-	gNormals, and gTriangles.
-
-	When rendering, we use a similar convention to the sphere from PA2. In other
-	words, for triangle i, define:
-
-		k0 = gTriangles[i].indices[0];
-		k1 = gTriangles[i].indices[1];
-		k2 = gTriangles[i].indices[2];
-
-	Then the vertices of the triangle are at gPositions[k0], gPositions[k1], and
-	gPositions[k2], in that order. The normals of the corresponding vertices are
-	at gNormals[k0], gNormals[k1], and gNormals[k2], in that order.
-
-	For the second part of the assignment, you have to copy the gPositions,
-	gNormals, and gTriangles arrays into GPU memory.
-*/
-
-#include <GL/glew.h>
-#include <GL/glut.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -89,35 +67,39 @@ public:
 		render(&Mesh::RenderImmediate)
 	{
 		load_mesh(filename);
-		SetupMesh();
 	}
 
 	~Mesh()
-	{}
+	{
+		glDeleteBuffers(2, vbo);
+		glDeleteBuffers(1, &ebo);
+	}
 
 	void SetupMesh()
 	{
-    	glGenVertexArrays(1, &this->vao);
-    	glGenBuffers(1, &this->vbo[0]);
-		glGenBuffers(1, &vbo[1]);
+    	glGenVertexArrays(1, &vao);
+    	glGenBuffers(2, vbo);
     	glGenBuffers(1, &ebo);
 
 		printf("Bind vao and buffer\n");
     	glBindVertexArray(vao);
+			// Bind index buffer
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, gTriangles.size() * sizeof(Triangle), gTriangles.data(), GL_STATIC_DRAW);
+			// Bind position buffer
     		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-			glBufferData(GL_ARRAY_BUFFER, gPositions.size() * sizeof(Vector3), &gPositions[0], GL_STATIC_DRAW);
-
-    		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    		glBufferData(GL_ELEMENT_ARRAY_BUFFER, gTriangles.size() * sizeof(Triangle), &gTriangles[0], GL_STATIC_DRAW);
-
-    		// Vertex Positions
-    		glEnableVertexAttribArray(0);
-    		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3), (GLvoid*) 0);
-
+			glBufferData(GL_ARRAY_BUFFER, gPositions.size() * sizeof(Vector3), gPositions.data(), GL_STATIC_DRAW);
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glVertexPointer(3, GL_FLOAT, 0, 0);
+			//glEnableVertexAttribArray(0);
+    		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
+			// Bind normal buffer
 			glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-			glBufferData(GL_ARRAY_BUFFER, gNormals.size() * sizeof(Vector3), &gNormals[0], GL_STATIC_DRAW);
-			glEnableVertexAttribArray(1);
-    		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3), (GLvoid*) 0);
+			glBufferData(GL_ARRAY_BUFFER, gNormals.size() * sizeof(Vector3), gNormals.data(), GL_STATIC_DRAW);
+			glEnableClientState(GL_NORMAL_ARRAY);
+			glNormalPointer(GL_FLOAT, 0, 0);
+			//glEnableVertexAttribArray(1);
+    		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 		glBindVertexArray(0);
 	}
 
@@ -127,10 +109,12 @@ public:
 		if (Immediate)
 		{
 			render = &Mesh::RenderImmediate;
+			printf("Rendering in immediate mode\n");
 		}
 		else
 		{
 			render = &Mesh::RenderBuffer;
+			printf("Rendering using vertex buffer object\n");
 		}
 	}
 
@@ -186,9 +170,8 @@ public:
 		glColor4fv(glm::value_ptr(ambient));
 
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, gTriangles.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, gTriangles.size() * sizeof(Triangle), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-
 		glPopMatrix();
 	}
 private:

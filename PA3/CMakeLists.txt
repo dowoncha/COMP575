@@ -34,6 +34,8 @@ include_directories(${GLEW_INCLUDE_DIR})
 include_directories(lib/glm)
 include_directories(src)
 
+#set(ASSETS src/bunny.obj)
+
 #add_library(RAST_LIBRARY glew freeglut)
 
 add_executable(rasterizer src/main.cpp)

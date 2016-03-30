@@ -1,8 +1,10 @@
+#define GLEW_STATIC
+
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <GL/glext.h>
+//#include <GL/glext.h>
 
 #include <cstdio>
 #include <cstring>
@@ -30,7 +32,7 @@
 */
 
 // Bunny
-Mesh bunny("./bunny.obj");
+Mesh bunny("bunny.obj");
 
 // Lighting
 static GLfloat lightPos[] = {2.0f, 1.0f, 1.0f, 0.0f};
@@ -43,6 +45,34 @@ static glm::vec3 lightDir = glm::normalize(glm::vec3(-1.0f));
 float  					gTotalTimeElapsed 	= 0;
 int 					 gTotalFrames		= 0;
 GLuint 				 gTimer;
+
+void initGL()
+{
+	// Setup depth buffer, shading, and culling
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDepthFunc(GL_LESS);
+	glShadeModel(GL_SMOOTH);
+	//glCullFace(GL_BACK);
+
+	// Setup lightings
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	// Load view matrices onto initial projection stack.
+	glViewport(0.0f, 0.0f, 512.0f, 512.0f);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
+
+	// set matrix mode back to model
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	// Set eye
+	gluLookAt(0.0f, 0.0f, 0.0f,					// eye position
+					 0.0f, 0.0f, -1.0f,				   // Target
+				     0.0f, 1.0f, 0.0f);				   // Up vector
+}
 
 void init_timer()
 {
@@ -68,6 +98,29 @@ float stop_timing()
 
 	float timeElapsed = result / (1000.0f * 1000.0f * 1000.0f);
 	return timeElapsed;
+}
+
+void Resize(int w, int h) {
+
+	// Prevent a divide by zero, when window is too short
+	// (you cant make a window of zero width).
+	if(h == 0)
+		h = 1;
+	float ratio = 1.0* w / h;
+
+	// Use the Projection Matrix
+	glMatrixMode(GL_PROJECTION);
+    // Reset Matrix
+	glLoadIdentity();
+
+	// Set the viewport to be the entire window
+	glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
+
+	// set matrix mode back to model
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void MouseFunc(int button, int state, int x, int y)
@@ -99,6 +152,7 @@ void SetLighting()
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, glm::value_ptr(lightDir));
 }
 
+
 /**
  *  Your display function should look roughly like the following.
 */
@@ -123,39 +177,6 @@ void display()
   	glutSwapBuffers();
 }
 
-void display_buffer_object()
-{
-
-}
-
-void initGL()
-{
-	// Setup depth buffer, shading, and culling
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	glDepthFunc(GL_LESS);
-	glShadeModel(GL_SMOOTH);
-	//glCullFace(GL_BACK);
-
-	// Setup lightings
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
-	// Load view matrices onto initial projection stack.
-	glViewport(0.0f, 0.0f, 512.0f, 512.0f);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
-
-	// set matrix mode back to model
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	// Set eye
-	gluLookAt(0.0f, 0.0f, 0.0f,					// eye position
-					 0.0f, 0.0f, -1.0f,				   // Target
-				     0.0f, 1.0f, 0.0f);				   // Up vector
-}
-
 int main(int argc, char* argv[])
 {
 	// Glut initialization
@@ -176,9 +197,17 @@ int main(int argc, char* argv[])
 	}
 	printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
+	if (glewIsSupported("GL_VERSION_2_0 GL_VERSION_3_2"))
+	{
+  		printf("GL 2.0, 3.2\n");
+	}
+
 	initGL();
 	init_timer();
 
+	bunny.SetupMesh();
+
+	glutReshapeFunc(Resize);
     glutDisplayFunc(display);
 	glutKeyboardFunc(KeyboardFunc);
 	glutMouseFunc(MouseFunc);
