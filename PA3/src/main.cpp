@@ -39,7 +39,7 @@ static GLfloat lightPos[] = {0.0f, 0.0f, 0.0f, 0.0f};
 static GLfloat ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
 static GLfloat white[] = 	 {1.0f, 1.0f, 1.0f, 1.0f};
 static GLfloat black[] = 	 {0.0f, 0.0f, 0.0f, 1.0f};
-static glm::vec3 lightDir = glm::normalize(glm::vec3(-1.0f));
+static glm::vec3 lightDir = glm::vec3(-1.0f);//glm::normalize(glm::vec3(-1.0f));
 
 // Timing
 float  					gTotalTimeElapsed 	= 0;
@@ -53,6 +53,7 @@ void initGL()
 	glDisable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
 	glShadeModel(GL_SMOOTH);
+	glEnable(GL_NORMALIZE);
 	//glCullFace(GL_BACK);
 
 	// Setup lightings
@@ -155,7 +156,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		lightPos[2] += 1.0f;
 		printf("Light pos z: %f\n", lightPos[2]);
 	}
-	else if(key == 112) // q
+	else if(key == 113) // q
 	{
 		lightPos[2] -= 1.0f;
 		printf("Light pos z: %f\n", lightPos[2]);
