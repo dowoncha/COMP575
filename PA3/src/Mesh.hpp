@@ -1,12 +1,14 @@
 /**
  *  filename : Mesh.hpp
- *  content   : Mesh class
+ *  author   : Do Won Cha
+ *  content  : Mesh class
  */
 
 #include <cstdio>
 #include <cstring>
 #include <string>
 #include <vector>
+#include <array>
 #include <queue>
 #include <fstream>
 #include <float.h>
@@ -22,30 +24,25 @@ struct Vector3
 	float x, y, z;
 };
 
-struct Vertex
-{
-	glm::vec3 pos, normal;
-};
-
 struct Triangle
 {
 	unsigned int indices[3];
 };
 
+// This is to define a member function pointer type
 typedef void (Mesh::*RenderFunction)();
 
 class Mesh
 {
 public:
-    std::vector<Vector3>	gPositions;
-    std::vector<Vector3>	gNormals;
-    std::vector<Triangle>	 gTriangles;
-	std::vector<Vertex> 	  gVertices;
+  std::vector<Vector3>	gPositions;
+  std::vector<Vector3>	gNormals;
+  std::vector<Triangle>	 gTriangles;
 
 	// Transforms
 	glm::vec3 pos, scale;
 
-	// Materials
+	// Material
 	glm::vec4 ambient, diffuse, specular;
 	float specPower;
 
@@ -71,6 +68,7 @@ public:
 
 	~Mesh()
 	{
+		glDeleteVertexArrays(1, &vao);
 		glDeleteBuffers(2, vbo);
 		glDeleteBuffers(1, &ebo);
 	}
@@ -78,29 +76,27 @@ public:
 	void SetupMesh()
 	{
     	glGenVertexArrays(1, &vao);
-    	glGenBuffers(2, vbo);
+			glGenBuffers(2, vbo);
     	glGenBuffers(1, &ebo);
 
-		printf("Bind vao and buffer\n");
-    	glBindVertexArray(vao);
-			// Bind index buffer
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, gTriangles.size() * sizeof(Triangle), gTriangles.data(), GL_STATIC_DRAW);
-			// Bind position buffer
-    		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-			glBufferData(GL_ARRAY_BUFFER, gPositions.size() * sizeof(Vector3), gPositions.data(), GL_STATIC_DRAW);
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glVertexPointer(3, GL_FLOAT, 0, 0);
-			//glEnableVertexAttribArray(0);
-    		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
-			// Bind normal buffer
-			glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-			glBufferData(GL_ARRAY_BUFFER, gNormals.size() * sizeof(Vector3), gNormals.data(), GL_STATIC_DRAW);
-			glEnableClientState(GL_NORMAL_ARRAY);
-			glNormalPointer(GL_FLOAT, 0, 0);
-			//glEnableVertexAttribArray(1);
-    		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
-		glBindVertexArray(0);
+			glBindVertexArray(vao);
+				// Bind, describe, enable position buffer
+	    	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+				glBufferData(GL_ARRAY_BUFFER, gPositions.size() * sizeof(Vector3), gPositions.data(), GL_STATIC_DRAW);
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glVertexPointer(3, GL_FLOAT, 0, 0);	// # of components, type, stride, offset
+
+				// Bind normal buffer
+				glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+				glBufferData(GL_ARRAY_BUFFER, gNormals.size() * sizeof(Vector3), gNormals.data(), GL_STATIC_DRAW);
+				glEnableClientState(GL_NORMAL_ARRAY);
+				glNormalPointer(GL_FLOAT, 0, 0);
+
+				// Bind and describe index buffer
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, gTriangles.size() * sizeof(Triangle), gTriangles.data(), GL_STATIC_DRAW);
+
+			glBindVertexArray(0);
 	}
 
 	void ToggleRenderMethod()
@@ -110,6 +106,8 @@ public:
 		{
 			render = &Mesh::RenderImmediate;
 			printf("Rendering in immediate mode\n");
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_NORMAL_ARRAY);
 		}
 		else
 		{
@@ -138,7 +136,7 @@ public:
 	        for (const Triangle& t : gTriangles)
 	        {
 	            int k0 = t.indices[0];
-				int k1 = t.indices[1];
+							int k1 = t.indices[1];
 	            int k2 = t.indices[2];
 
 	            glNormal3f(gNormals[k0].x, gNormals[k0].y, gNormals[k0].z);
@@ -170,11 +168,21 @@ public:
 		glColor4fv(glm::value_ptr(ambient));
 
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, gTriangles.size() * sizeof(Triangle), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, gTriangles.size() * 3, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+
 		glPopMatrix();
 	}
 private:
+	void PrintGLError()
+	{
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+		{
+			fprintf(stderr, "GL error: %s\n", glewGetErrorString(err));
+		}
+	}
+
 	void load_mesh(std::string fileName)
 	{
 		std::ifstream fin(fileName.c_str());

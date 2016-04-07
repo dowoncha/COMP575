@@ -4,16 +4,6 @@ project(Rasterizer)
 add_definitions("-std=c++11")
 
 #########################################################
-# FIND GLUT
-#########################################################
-find_package(GLUT REQUIRED)
-include_directories(${GLUT_INCLUDE_DIRS})
-link_directories(${GLUT_LIBRARY_DIRS})
-add_definitions(${GLUT_DEFINITIONS})
-if(NOT GLUT_FOUND)
-    message(ERROR " GLUT not found!")
-endif(NOT GLUT_FOUND)
-#########################################################
 # FIND OPENGL
 #########################################################
 find_package(OpenGL REQUIRED)
@@ -24,20 +14,15 @@ if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
 
-# find glew
-INCLUDE(FindGLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIR})
-
-########################################################
-# Linking & stuff
-#########################################################
+# link freeglut, glew, glm
+include_directories(lib/freeglut/include)
+add_subdirectory(lib/freeglut)
+include_directories(lib/glew/include)
 include_directories(lib/glm)
-include_directories(src)
 
-#set(ASSETS src/bunny.obj)
+include_directories(src)
 
 #add_library(RAST_LIBRARY glew freeglut)
 
 add_executable(rasterizer src/main.cpp)
-target_link_libraries(rasterizer ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES})
-#target_link_libraries(rasterizer RAST_LIBRARY)
+target_link_libraries(rasterizer ${OPENGL_LIBRARIES} ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so)

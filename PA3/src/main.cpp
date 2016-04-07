@@ -1,10 +1,13 @@
-#define GLEW_STATIC
+/**
+ * filename: main.cpp
+ * author : Do Won Cha
+ * content : Start point to render a bunny. Handles all gl initialization
+ */
 
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-//#include <GL/glext.h>
 
 #include <cstdio>
 #include <cstring>
@@ -21,6 +24,7 @@
 
 #include "Mesh.hpp"
 
+// This is to call a member function pointer, dirty but quick
 #define CALL_MEMBER_FN(object, ptrToMember)  ((object).*(ptrToMember))
 
 /*
@@ -35,11 +39,11 @@
 Mesh bunny("bunny.obj");
 
 // Lighting
-static GLfloat lightPos[] = {0.0f, 0.0f, 0.0f, 0.0f};
+static GLfloat lightPos[] = {30.0f, 0.0f, 20.0f, 0.0f};
 static GLfloat ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
 static GLfloat white[] = 	 {1.0f, 1.0f, 1.0f, 1.0f};
 static GLfloat black[] = 	 {0.0f, 0.0f, 0.0f, 1.0f};
-static glm::vec3 lightDir = glm::vec3(-1.0f);//glm::normalize(glm::vec3(-1.0f));
+static GLfloat lightDir[] = {-1.0f, -1.0f, -1.0f};
 
 // Timing
 float  					gTotalTimeElapsed 	= 0;
@@ -50,11 +54,11 @@ void initGL()
 {
 	// Setup depth buffer, shading, and culling
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
+	//glDisable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
 	glShadeModel(GL_SMOOTH);
-	glEnable(GL_NORMALIZE);
-	//glCullFace(GL_BACK);
+	glEnable(GL_RESCALE_NORMAL);
 
 	// Setup lightings
 	glEnable(GL_LIGHTING);
@@ -62,17 +66,17 @@ void initGL()
 
 	// Load view matrices onto initial projection stack.
 	glViewport(0.0f, 0.0f, 512.0f, 512.0f);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
 
 	// set matrix mode back to model
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	// Set eye
 	gluLookAt(0.0f, 0.0f, 0.0f,					// eye position
-					 0.0f, 0.0f, -1.0f,				   // Target
-				     0.0f, 1.0f, 0.0f);				   // Up vector
+					 	0.0f, 0.0f, -1.0f,				   // Target
+				    0.0f, 1.0f, 0.0f);				   // Up vector
 }
 
 void init_timer()
@@ -173,13 +177,9 @@ void SetLighting()
 	glLightfv(GL_LIGHT0, GL_AMBIENT, black	); 			  // Default ambient is 0
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, white);   			// Default diffuse is 1
 	glLightfv(GL_LIGHT0, GL_SPECULAR, black); 			 // Default for light0 is 1 so set to 0
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, glm::value_ptr(lightDir));
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDir);
 }
 
-
-/**
- *  Your display function should look roughly like the following.
-*/
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -203,33 +203,33 @@ void display()
 
 int main(int argc, char* argv[])
 {
-	// Glut initialization
+		// Glut initialization
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(512, 512);
     glutCreateWindow("GL");
 
-	// Glew initialization
-	glewExperimental = GL_TRUE;
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		/* Problem: glewInit failed, something is seriously wrong. */
-  		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-	printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+		// Glew initialization
+		glewExperimental = GL_TRUE;
+		GLenum err = glewInit();
+		if (err != GLEW_OK)
+		{
+			/* Problem: glewInit failed, something is seriously wrong. */
+	  		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+			exit(EXIT_FAILURE);
+		}
+		printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-	initGL();
-	init_timer();
+		initGL();
+		init_timer();
 
-	bunny.SetupMesh();
+		bunny.SetupMesh();
 
-	glutReshapeFunc(Resize);
-    glutDisplayFunc(display);
-	glutKeyboardFunc(KeyboardFunc);
-	glutMouseFunc(MouseFunc);
+		glutReshapeFunc(Resize);
+	  glutDisplayFunc(display);
+		glutKeyboardFunc(KeyboardFunc);
+		glutMouseFunc(MouseFunc);
 
     glutMainLoop();
 
