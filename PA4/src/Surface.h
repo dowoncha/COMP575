@@ -19,12 +19,15 @@ class Node
 {
 public:
   Node() { }
+
+  Node(Vector3f position) : pos(position) { }
+
   virtual ~Node() { }
 
-  glm::vec3 GetPosition() const         { return Position; }
-  void SetPosition(const glm::vec3& p) { Position = p; }
+  Vector3f position() const         { return pos; }
+  void position(const Vector3f& p) { pos = p; }
 protected:
-  glm::vec3 Position;
+  Vector3f pos;
 };
 
 class Surface : public Node
@@ -34,11 +37,11 @@ public:
 
   virtual ~Surface() { }
 
-  virtual bool Intersect(const Ray& ray, float tMax, float& t, glm::vec3& Point) const = 0;
+  virtual bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const = 0;
   virtual bool Intersect(const Ray& ray, float tMax, float& t) const = 0;
   virtual bool Intersect(const Ray& ray, float tMax) const = 0;
 
-  virtual glm::vec3 GetNormal(const glm::vec3& p) const = 0;
+  virtual Vector3f GetNormal(const Vector3f& point) const = 0;
 
   Material Mat() const { return mMaterial; }
 protected:
@@ -49,14 +52,14 @@ class Sphere : public Surface
 {
 public:
   //Sphere();
-  Sphere(const glm::vec3& center, float radius, const Material& mat);
+  Sphere(const Vector3f& center, float radius, const Material& mat);
 
   ~Sphere();
 
-  bool Intersect(const Ray& ray, float tMax, float& t, glm::vec3& Point) const override;
+  bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
   bool Intersect(const Ray& ray, float tMax, float& t) const override;
   bool Intersect(const Ray& ray, float tMax) const override;
-  glm::vec3 GetNormal(const glm::vec3& p) const override;
+  Vector3f GetNormal(const Vector3f& p) const override;
 private:
   float Radius, Radius2;
 };
@@ -65,17 +68,22 @@ class Plane : public Surface
 {
 public:
   //Plane();
-  Plane(const glm::vec3& pos, const glm::vec3& normal, Material const & mat);
+  Plane(const Vector3f& pos, const Vector3f& normal, Material const & mat);
   ~Plane();
 
-  bool Intersect(const Ray& ray, float tMax, float& t, glm::vec3& Point) const override;
+  bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
   bool Intersect(const Ray& ray, float tMax, float& t) const override;
   bool Intersect(const Ray& ray, float tMax) const override;
 
-  glm::vec3 GetNormal() const;
-  glm::vec3 GetNormal(const glm::vec3& p) const override;
+  Vector3f GetNormal() const;
+  Vector3f GetNormal(const Vector3f& p) const override;
 private:
-  glm::vec3 Normal;
+  Vector3f Normal;
 };
+
+class Triangle : public Surface
+{
+
+}
 
 #endif // RAY_SURFACES end

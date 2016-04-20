@@ -29,60 +29,69 @@
 #include "Image.h"
 #include "easylogging++.h"
 
+// Types for which sampling to use
+enum PostProcess
+{
+    UniformSampling,
+    RandomSampling
+} SamplingType;
+
 class RayTracer
 {
 public:
-    RayTracer(const Scene& scene, int sWidth, int sHeight);
+    /**
+     *  Takes a scene and the screen width and height
+     */
+    RayTracer(int& argc, char** argv);
 
     ~RayTracer();
-
+    /**
+     *  Resize the window
+     *  @param w width
+     *  @param h height
+     */
     void Resize(int w, int h);
 
-    void Render(Image& image) const;
+    /**
+     *  [Render description]
+     *  @param image [description]
+     */
+    void Trace();
 
-    std::vector<Pixel> Render() const;
+    void Render() const;
 
-    glm::vec3 Trace(const Ray& ray, int depth) const;
-
-    glm::vec3 Shade(const Ray& ray, const HitData& Data) const;
+    Vector3f Trace(const Ray& ray, int depth) const;
+private:
+    Vector3f Shade(const Ray& ray, const HitData& Data) const;
 
     // Check whether shadow ray is blocked by any surface
     bool ShadowTrace(const HitData& Data) const;
 
-    glm::vec3 CalculateDiffuse(const HitData& data, Light* light) const;
+    Vector3f CalculateDiffuse(const HitData& data, Light* light) const;
 
-    glm::vec3 CalculateSpecular(const Ray& ray, const HitData& data, Light* light) const;
+    Vector3f CalculateSpecular(const Ray& ray, const HitData& data, Light* light) const;
 
     // These are for rendering the black and white trace images.
     // Might be useful for debugging, mostly for assignment though.
     void BWRender(Image& image) const;
-    glm::vec3 BWTrace(const Ray& ray) const;
-
-    // Types for which sampling to use
-    enum PostProcess
-    {
-        UniformSampling,
-        RandomSampling
-    } SamplingType;
+    Vector3f BWTrace(const Ray& ray) const;
 
     void SetSampleRate(int s);
 
-    glm::vec3 Sampler(int x, int y) const;
+    Vector3f Sampler(int x, int y) const;
 
     // Uses evenly spaced ray's in the pixel. Uses sample * sample.
-    glm::vec3 UniformSampler(int x, int y) const;
+    Vector3f UniformSampler(int x, int y) const;
 
     // Uses a random number generator in the [0,1] space to perturb original ray
     // sample x sample rays.
-    glm::vec3 RandomSampler(int x, int y) const;
+    Vector3f RandomSampler(int x, int y) const;
 private:
     // Main scene to draw
     const Scene& mScene;
 
+    std::vector<Vector4f> frameBuffer;
     Camera MainCamera;
-
-    int ScreenWidth;
-    int ScreenHeight;
 
     // These should be camera variables. Will use eventually
     float fov, angle;

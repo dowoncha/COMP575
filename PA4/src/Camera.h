@@ -23,12 +23,12 @@ class Camera
 public:
   Camera();
 
-  Camera(glm::vec3 const & position,
-         glm::vec3 const & target);
+  Camera(const Vector3f& position,
+         Vector3f const & target);
 
-  Camera(glm::vec3 const & position,
-         glm::vec3 const & target,
-         glm::vec3 const & up);
+  Camera(Vector3f const & position,
+         Vector3f const & target,
+         Vector3f const & up);
 
   ~Camera();
 
@@ -36,15 +36,16 @@ public:
 
   // Make a ray from the x, y coordinate passed
   Ray GetRay(int x, int y) const;
+
   Ray GetRay(int x, int y, float offsetx, float offsety) const;
 public:
-  glm::vec3 Position;
-  glm::vec3 Target;
-  glm::vec3 Forward;
-  glm::vec3 Up;
-  glm::vec3 Right;
-  float l, r, t, b, d;
-  int ScreenWidth, ScreenHeight;
+  Vector3f Position;                // Position vector
+  Vector3f Target;                  // What are we looking at
+  Vector3f Forward;                 // Forward vector
+  Vector3f Up;                      // Up vector, typically y-axis
+  Vector3f Right;                   // Right vector
+  float l, r, t, b, d;              // Viewport constants
+  int ScreenWidth, ScreenHeight;    // Resolution of camera
 };
 
 #endif // _RAY_CAMERA_

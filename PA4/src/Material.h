@@ -16,8 +16,8 @@ class Material
 {
 public:
   Material();
-  Material(const glm::vec3& ambient, const glm::vec3& diff, const glm::vec3& spec, float specPower);
-  Material(const glm::vec3& ambient, const glm::vec3& diff, const glm::vec3& spec, float specPower, float Reflection);
+  Material(const Vector3f& ambient, const Vector3f& diffuse, const Vector3f& specular, float specPower);
+  Material(const Vector3f& ambient, const Vector3f& diffuse, const Vector3f& specular, float specPower, float Reflection);
 
   // Factory functions for creating specific color materials
   static Material CreateRedMat();
@@ -25,16 +25,26 @@ public:
   static Material CreateBlueMat();
   static Material CreateWhiteMat();
 
-  glm::vec3 Ambient()       { return mAmbient;   }
-  glm::vec3 Diffuse()       { return mDiffuse;   }
-  glm::vec3 Specular()      { return mSpecular;  }
-  float     SpecularPower() { return SpecPower; }
-  float     Reflection()    { return ReflectionCoef; }
+  Vector3f ambient()           { return amb;   }
+  void ambient(Vector3f _amb)   { amb = _amb; }
+
+  Vector3f diffuse()       { return diff;   }
+  void diffuse(Vector3f _diff) { diff = _diff };
+
+  Vector3f specular()      { return spec;  }
+  void specular(Vector3f _spec) { spec = _spec};
+
+  float specularPower() { return specPower; }
+  void  specPower(Vector3f _specPower) { specPower = _specPower; }
+
+  float reflection() { return reflectivity; }
+  void  reflection(float _reflect) { reflectivity = _reflect; }
+
 private:
-  glm::vec3 mAmbient;
-  glm::vec3 mDiffuse;
-  glm::vec3 mSpecular;
-  float SpecPower, ReflectionCoef;
+  Vector3f amb;
+  Vector3f diff;
+  Vector3f spec;
+  float specPower, reflectivity;
 };
 
 #endif    // RAY_MATERIAL Header guard

@@ -4,48 +4,48 @@ Material::Material()
 {
 }
 
-Material::Material(glm::vec3 const & ambient,
-                   glm::vec3 const & diff,
-                   glm::vec3 const & spec,
+Material::Material(Vector3f ambient,
+                   Vector3f diffuse,
+                   Vector3f specular,
                    float specPower) :
-  mAmbient(ambient),
-  mDiffuse(diff),
-  mSpecular(spec),
+  amb(ambient),
+  diff(diffuse),
+  spec(specular),
   SpecPower(specPower),
   ReflectionCoef(0.0f)
 {
 }
 
-Material::Material(glm::vec3 const & ambient,
-                   glm::vec3 const & diff,
-                   glm::vec3 const & spec,
+Material::Material(Vector3f ambient,
+                   Vector3f diffuse,
+                   Vector3f specular,
                    float specPower,
                    float reflection) :
-mAmbient(ambient),
-mDiffuse(diff),
-mSpecular(spec),
-SpecPower(specPower),
-ReflectionCoef(reflection)
+amb(ambient),
+diff(diffuse),
+spec(specular),
+specPower(specPower),
+reflectivity(reflection)
 {
 }
 
 // Factory functions for creating specific color materials
 Material Material::CreateRedMat()
 {
-  return Material(glm::vec3(0.2f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0);
+  return Material(Vector3f(0.2f, 0.0f, 0.0f), Vector3f(1.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f), 0);
 }
 
 Material Material::CreateGreenMat()
 {
-  return Material(glm::vec3(0.0f, 0.2f, 0.0f), glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), 32.0f, 0.8f);
+  return Material(Vector3f(0.0f, 0.2f, 0.0f), Vector3f(0.0f, 0.5f, 0.0f), Vector3f(0.5f, 0.5f, 0.5f), 32.0f, 0.8f);
 }
 
 Material Material::CreateBlueMat()
 {
-  return Material(glm::vec3(0.0f, 0.0f, 0.2f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f);
+  return Material(Vector3f(0.0f, 0.0f, 0.2f), Vector3f(0.0f, 0.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 0.0f);
 }
 
 Material Material::CreateWhiteMat()
 {
-  return Material(glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), 8.0f, 0.8f);
+  return Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), 8.0f, 0.8f);
 }

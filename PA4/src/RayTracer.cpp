@@ -1,10 +1,7 @@
 #include "RayTracer.h"
 
-RayTracer::RayTracer(Scene const & scene, int sWidth, int sHeight) :
-  ScreenWidth(sWidth),
-  ScreenHeight(sHeight),
+RayTracer::RayTracer(Scene const & scene) :
   mScene(scene),
-  fov(30.0f),
   AspectRatio((float)(ScreenWidth/ScreenHeight)),
   MainCamera(),
   SampleRate(1),
@@ -52,20 +49,19 @@ void RayTracer::Render(Image& image) const
     LOG(INFO) << "Starting rendering to image";
 
     // Buffer to hold color values, reserve size of the window.
-    std::vector<glm::vec3> buffer;
+    std::vector<glm::vec3> buffer();
 
     // Most expensive thing ive ever seen.
     for (int y = 0; y < ScreenHeight; ++y)
     {
         for (int x = 0; x < ScreenWidth; ++x)
         {
+
             Ray ray = MainCamera.GetRay(x, y);
-			      glm::vec3 result = Sampler(x, y);
+			      Vector3f result = Sampler(x, y);
             buffer.push_back(result);
         }
     }
-
-    image.SetBuffer(buffer);
 }
 
 std::vector<Pixel> RayTracer::Render() const
@@ -88,20 +84,14 @@ std::vector<Pixel> RayTracer::Render() const
     return buffer;
 }
 
-glm::vec3 RayTracer::BWTrace(const Ray& ray) const
-{
-    HitData data;
-    bool result = mScene.IntersectSurfaces(ray, 1000.0f, data);
-    if (data.HitSurface == nullptr) return glm::vec3(0.0f);
-
-    return glm::vec3(1.0f);
-}
-
 glm::vec3 RayTracer::Trace(const Ray& ray, int depth) const
 {
+    // Trace recursion base case
+    // depth should stop if bigger than the max trace depth
     if (depth > MaxTraceDepth)
         return glm::vec3(0.0f);        //If max depth has been reached return 0
 
+    // Hit data from the ray trace
     HitData data;
     bool result = mScene.IntersectSurfaces(ray, 10000.0f, data);
 
@@ -129,21 +119,24 @@ glm::vec3 RayTracer::Trace(const Ray& ray, int depth) const
 
 glm::vec3 RayTracer::Shade(const Ray& ray, const HitData& data) const
 {
-    // Initial color is ambient of the hit material
-    glm::vec3 result = data.HitSurface->Mat().Ambient();
-
+    /**
+     *  For each light in the scene
+     *  Calculate the vector from hit point -> light.
+     *  Make the shadow ray using the vector
+     */
     for (Light* light : mScene.Lights)
     {
         // Trace for shadows here
-        glm::vec3 shadowDir = light->GetPosition() - data.Point;
-        float len = glm::length(shadowDir);
-        shadowDir = glm::normalize(shadowDir);
-        Ray shadowRay(data.Point + shadowDir, shadowDir);
+        Vector3f hitToLight = light->GetPosition() - data.Point;
+        Vector3f hitDirection = hitToLight.normalized();
+        Ray shadowRay(data.Point + hitDirection, hitDirection);
 
         // Check for shadows
         if ( !mScene.IntersectSurfaces(shadowRay, len, data.HitSurface))
         {
-            result += CalculateDiffuse(data, light) + CalculateSpecular(ray, data, light);
+          Vector3f Diffuse = caculateDiffuse(data, light);
+          Vector3f specular = calculateSpecular(ray, data, light);
+          result  CalculateDiffuse(data, light) + CalculateSpecular(ray, data, light);
         }
     }
 
@@ -171,8 +164,8 @@ glm::vec3 RayTracer::CalculateSpecular(const Ray& ray, const HitData& data, Ligh
     glm::vec3 half = glm::normalize(lightdir - ray.Direction);
     float ndoth = glm::dot(data.Normal, half);
 
-    // I might be cheating here using auto, but not sure if i can get a reference
-    // rather than the entire object.
+    // NOTE: I might be cheating here using auto, but not sure if i can get a reference
+    // rather than the entire object?
     auto mat = data.HitSurface->Mat();
     glm::vec3 Lspec = mat.Specular() * light->Intensity * std::pow(std::max(0.0f, ndoth), mat.SpecularPower());
 
