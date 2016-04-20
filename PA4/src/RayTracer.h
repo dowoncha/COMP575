@@ -39,66 +39,66 @@ enum PostProcess
 class RayTracer
 {
 public:
-    /**
-     *  Takes a scene and the screen width and height
-     */
-    RayTracer(int& argc, char** argv);
+  /**
+   *  Takes a scene and the screen width and height
+   */
+  RayTracer(int& argc, char** argv);
 
-    ~RayTracer();
-    /**
-     *  Resize the window
-     *  @param w width
-     *  @param h height
-     */
-    void Resize(int w, int h);
+  ~RayTracer();
 
-    /**
-     *  [Render description]
-     *  @param image [description]
-     */
-    void Trace();
+  void init();
+  /**
+   *  Resize the window
+   *  @param w width
+   *  @param h height
+   */
+  void resize(int w, int h);
 
-    void Render() const;
+  void run();
 
-    Vector3f Trace(const Ray& ray, int depth) const;
+  // Set anti-aliasing sample rate, 1x, 2x, 4x, 8x, 16x
+  void sampleRate(int s);
 private:
-    Vector3f Shade(const Ray& ray, const HitData& Data) const;
+  /**
+   *  [Render description]
+   *  @param image [description]
+   */
+  void render();
 
-    // Check whether shadow ray is blocked by any surface
-    bool ShadowTrace(const HitData& Data) const;
+  /**
+   *  Trace a ray through the scene recursively.
+   *  @param ray Ray to shoot through scene.
+   *  @param depth should alwyas be 0, else used recursively.
+   *  @return HitData information on the ray trace
+   */
+  Vector3f trace(const Ray& ray, int depth) const;
 
-    Vector3f CalculateDiffuse(const HitData& data, Light* light) const;
+  // Use ray and hit data to calculate the color at the point.
+  Vector3f shade(const Ray& ray, const HitData& Data) const;
 
-    Vector3f CalculateSpecular(const Ray& ray, const HitData& data, Light* light) const;
+  Vector3f sampler(int x, int y) const;
 
-    // These are for rendering the black and white trace images.
-    // Might be useful for debugging, mostly for assignment though.
-    void BWRender(Image& image) const;
-    Vector3f BWTrace(const Ray& ray) const;
+  // Uses evenly spaced ray's in the pixel. Uses sample * sample.
+  Vector3f UniformSampler(int x, int y) const;
 
-    void SetSampleRate(int s);
+  // Uses a random number generator in the [0,1] space to perturb original ray
+  // sample x sample rays.
+  Vector3f RandomSampler(int x, int y) const;
 
-    Vector3f Sampler(int x, int y) const;
+  // Main scene to draw
+  const Scene& mScene;
 
-    // Uses evenly spaced ray's in the pixel. Uses sample * sample.
-    Vector3f UniformSampler(int x, int y) const;
+  size_t frameBufferSize;
 
-    // Uses a random number generator in the [0,1] space to perturb original ray
-    // sample x sample rays.
-    Vector3f RandomSampler(int x, int y) const;
-private:
-    // Main scene to draw
-    const Scene& mScene;
+  std::vector<Vector4f> frameBuffer;
+  Camera MainCamera;
 
-    std::vector<Vector4f> frameBuffer;
-    Camera MainCamera;
+  // These should be camera variables. Will use eventually
+  float fov, angle;
+  float AspectRatio;
 
-    // These should be camera variables. Will use eventually
-    float fov, angle;
-    float AspectRatio;
-
-    int SampleRate;
-    int MaxTraceDepth;
+  int SampleRate;
+  int MaxTraceDepth;
 };
 
 #endif /* end of include guard: _RAY_TRACER_ */

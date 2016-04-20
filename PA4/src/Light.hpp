@@ -14,55 +14,35 @@
 
 #include "Light.h"
 
-Light::Light() :
-  Node()
-{
-}
-
-Light::Light(Vector3f const & pos,
-             Vector3f const & ambient,
-             Vector3f const & diffuse) :
-  Node(),
-  Ambient(ambient),
-  Diffuse(diffuse),
-  Intensity(1.0f)
-{
-  Position = pos;
-}
-
-Light::~Light()
-{
-}
-
-void Light::SetIntensity(float i)
-{
-  Intensity = i;
-}
-
-
 class Light : public Node
 {
 public:
   Vecotr3f pos;
   Vector3f amb, diff;
   float intensity;
-
 public:
   Light() : Node() { }
 
-  Light(const Vector3f& position,
-        const Vector3f& ambient,
-        const Vector3f& diffuse) :
-  Node(pos),
-  amb(ambient),
-  diff(diffuse),
-  intensity(1.0f)
+  Light::Light(Vector3f position,
+               Vector3f ambient,
+               Vector3f diffuse) :
+    Node(),
+    pos(position)
+    amb(ambient),
+    diff(diffuse),
+    intensity(1.0f)
+  {
+    Position = pos;
+  }
+
+  Light::~Light()
   {
   }
 
-  ~Light();
-
-  void SetIntensity(float i);
+  void intensity(float i)
+  {
+    intensity = i;
+  }
 };
 
 #endif //_RAY_LIGHT guard
