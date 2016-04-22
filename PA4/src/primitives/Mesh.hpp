@@ -23,156 +23,70 @@ struct Triangle
 	unsigned int indices[3];
 };
 
-class Mesh
+class KdMesh: public Surface
 {
-public:
-  std::vector<Vector3>	gPositions;
+private:
+	// Bounding box
+	struct AABB
+	{
+		Vector3f min;
+		Vector3f max;
+
+		bool hit(const Ray& ray)
+		{
+			float tx1 = (min(0) - ray.pos(0)) * ray.direction.inverse();
+			float tx2 = (max(0) - ray.pos(0)) * ray.direction.inverse();
+
+			double tmin = min(tx1, tx2);
+	    double tmax = max(tx1, tx2);
+
+	    double ty1 = (b.min.y - r.x0.y)*r.n_inv.y;
+	    double ty2 = (b.max.y - r.x0.y)*r.n_inv.y;
+
+	    tmin = max(tmin, min(ty1, ty2));
+	    tmax = min(tmax, max(ty1, ty2));
+
+	    return tmax >= tmin;
+		}
+	};
+
+	// kd-tree nodes
+	struct KdNode
+	{
+		int nodeId;
+		AABB boundingBox;
+		int leftChildId;
+		int rightChildId;
+		int splitAxis;
+		float splitPosition;
+		bool isLeaf;
+		std::vector<int> triIndex;
+	};
+
+	std::vector<KdNode>	 kdTree;
+	std::vector<Vector3>	gPositions;
   std::vector<Vector3>	gNormals;
   std::vector<Triangle>	gTriangles;
 
-	// Transforms
-	glm::vec3 pos, scale;
-
-	// Material
-	glm::vec4 ambient, diffuse, specular;
-	float specPower;
-
-	RenderFunction render;
-private:
-	GLuint vao, ebo;
-	GLuint vbo[2];
-
-	bool Immediate;
-public:
-	Mesh(std::string filename) :
-		pos(0.1f, -1.0f, -1.5f),
-		scale(10.0f),
-		ambient(1.0f),
-		diffuse(1.0f),
-		specular(0.0f),
-		specPower(0.0f),
-		Immediate(true),
-		render(&Mesh::RenderImmediate)
+	KdMesh(const Material& mat) :
+		surface(mat)
 	{
-		load_mesh(filename);
 	}
 
-	~Mesh()
+	~KdMesh()
 	{
-		glDeleteVertexArrays(1, &vao);
-		glDeleteBuffers(2, vbo);
-		glDeleteBuffers(1, &ebo);
+
 	}
 
-	void SetupMesh()
-	{
-    	glGenVertexArrays(1, &vao);
-			glGenBuffers(2, vbo);
-    	glGenBuffers(1, &ebo);
-
-			glBindVertexArray(vao);
-				// Bind, describe, enable position buffer
-	    	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-				glBufferData(GL_ARRAY_BUFFER, gPositions.size() * sizeof(Vector3), gPositions.data(), GL_STATIC_DRAW);
-				glEnableClientState(GL_VERTEX_ARRAY);
-				glVertexPointer(3, GL_FLOAT, 0, 0);	// # of components, type, stride, offset
-
-				// Bind normal buffer
-				glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-				glBufferData(GL_ARRAY_BUFFER, gNormals.size() * sizeof(Vector3), gNormals.data(), GL_STATIC_DRAW);
-				glEnableClientState(GL_NORMAL_ARRAY);
-				glNormalPointer(GL_FLOAT, 0, 0);
-
-				// Bind and describe index buffer
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, gTriangles.size() * sizeof(Triangle), gTriangles.data(), GL_STATIC_DRAW);
-
-			glBindVertexArray(0);
-	}
-
-	void ToggleRenderMethod()
-	{
-		Immediate = !Immediate;
-		if (Immediate)
+	bool hit(KdNode* node, const Ray& ray, float t, float& tmin) const {
+		if (node->boundingBox.hit(ray))
 		{
-			render = &Mesh::RenderImmediate;
-			printf("Rendering in immediate mode\n");
-			glDisableClientState(GL_VERTEX_ARRAY);
-			glDisableClientState(GL_NORMAL_ARRAY);
-		}
-		else
-		{
-			render = &Mesh::RenderBuffer;
-			printf("Rendering using vertex buffer object\n");
+
 		}
 	}
 
-	void RenderImmediate()
-	{
-		glPushMatrix();
-
-		// Set transforms and materials of mesh
-		glTranslatef(pos.x, pos.y, pos.z);
-		glScalef(scale.x, scale.y, scale.z);
-
-		// Set material values
-		glMaterialfv(GL_FRONT, GL_AMBIENT, glm::value_ptr(ambient));
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, glm::value_ptr(diffuse));
-		glMaterialfv(GL_FRONT, GL_SPECULAR, glm::value_ptr(specular));
-		glMaterialfv(GL_FRONT, GL_SHININESS, &specPower);
-		glColor4fv(glm::value_ptr(ambient));
-
-	    // Load vertices into gpu
-	    glBegin(GL_TRIANGLES);
-	        for (const Triangle& t : gTriangles)
-	        {
-	            int k0 = t.indices[0];
-							int k1 = t.indices[1];
-	            int k2 = t.indices[2];
-
-	            glNormal3f(gNormals[k0].x, gNormals[k0].y, gNormals[k0].z);
-	            glVertex3f(gPositions[k0].x, gPositions[k0].y, gPositions[k0].z);
-
-	            glNormal3f(gNormals[k1].x, gNormals[k1].y, gNormals[k1].z);
-	            glVertex3f(gPositions[k1].x, gPositions[k1].y, gPositions[k1].z);
-
-	            glNormal3f(gNormals[k2].x, gNormals[k2].y, gNormals[k2].z);
-	            glVertex3f(gPositions[k2].x, gPositions[k2].y, gPositions[k2].z);
-	        }
-	    glEnd();
-		glPopMatrix();
-	}
-
-	void RenderBuffer()
-	{
-		glPushMatrix();
-
-		// Set transforms and materials of mesh
-		glTranslatef(pos.x, pos.y, pos.z);
-		glScalef(scale.x, scale.y, scale.z);
-
-		// Set material values
-		glMaterialfv(GL_FRONT, GL_AMBIENT, glm::value_ptr(ambient));
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, glm::value_ptr(diffuse));
-		glMaterialfv(GL_FRONT, GL_SPECULAR, glm::value_ptr(specular));
-		glMaterialfv(GL_FRONT, GL_SHININESS, &specPower);
-		glColor4fv(glm::value_ptr(ambient));
-
-		glBindVertexArray(vao);
-			glDrawElements(GL_TRIANGLES, gTriangles.size() * 3, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-
-		glPopMatrix();
-	}
-private:
-	void PrintGLError()
-	{
-		GLenum err = glGetError();
-		if (err != GL_NO_ERROR)
-		{
-			fprintf(stderr, "GL error: %s\n", glewGetErrorString(err));
-		}
-	}
+  bool Intersect(const Ray& ray, float tMax, float& t) const override;
+  bool Intersect(const Ray& ray, float tMax) const override;
 
 	void load_mesh(std::string fileName)
 	{
@@ -247,6 +161,53 @@ private:
 		printf("Mesh bounding box is: (%0.4f, %0.4f, %0.4f) to (%0.4f, %0.4f, %0.4f)\n", xmin, ymin, zmin, xmax, ymax, zmax);
 	}
 
+
+	bool loadKdTree(const char* fileName)
+	{
+		FILE* fp;
+		char temp[256];
+		fp = fopen(fileName, "r+");
+		if (!fp)
+			return false;
+		int nodeId = -1;
+		while (true)
+		{
+			nodeId++;
+			*temp = NULL;
+			fscanf(fp, "%s{ ", temp);
+			if (strcmp(temp, "inner{") == 0)
+			{
+				KdNode kd;
+				kd.nodeId = nodeId;
+				kd.isLeaf = false;
+				fscanf(fp, "%f %f %f %f %f %f ; %d %d %d %f }", &kd.boundingBox.min.x, &kd.boundingBox.min.y, &kd.boundingBox.min.z, &kd.boundingBox.max.x, &kd.boundingBox.max.y, &kd.boundingBox.max.z, &kd.leftChildId, &kd.rightChildId, &kd.splitAxis, &kd.splitPosition);
+				kdTree.push_back(kd);
+			}
+			else if (strcmp(temp, "leaf{") == 0)
+			{
+				KdNode kd;
+				kd.nodeId = nodeId;
+				kd.isLeaf = true;
+				fscanf(fp, "%f %f %f %f %f %f ;", &kd.boundingBox.min.x, &kd.boundingBox.min.y, &kd.boundingBox.min.z, &kd.boundingBox.max.x, &kd.boundingBox.max.y, &kd.boundingBox.max.z);
+				char token[256];
+				while (true)
+				{
+					fscanf(fp, " %s", token);
+					if (strcmp(token, "}") == 0)
+						break;
+					int triIndex = atoi(token);
+					kd.triIndex.push_back(triIndex);
+				}
+				kdTree.push_back(kd);
+			}
+			else
+				break;
+		}
+		printf("Kd file parsed succesfully.\n");
+		return true;
+	}
+
+private:
 	static void tokenize(char* string, std::vector<std::string>& tokens, const char* delimiter)
 	{
 		char* token = strtok(string, delimiter);
@@ -277,4 +238,4 @@ private:
 			exit(0);
 		}
 	}
-};
+}

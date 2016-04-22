@@ -10,6 +10,10 @@
 #ifndef _RAY_RAY_
 #define _RAY_RAY_
 
+#include <Eigen/Core>
+#include <iostream>
+#include "Ray.hpp"
+
 class Ray
 {
 public:

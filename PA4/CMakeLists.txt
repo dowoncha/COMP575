@@ -18,11 +18,16 @@ endif(NOT OPENGL_FOUND)
 include_directories(lib/freeglut/include)
 add_subdirectory(lib/freeglut)
 include_directories(lib/glew/include)
-include_directories(lib/glm)
+
+add_subdirectory(lib/eigen)
+include_directories(lib/eigen)
 
 include_directories(src)
+include_directories(src/primitives)
 
-add_executable(rasterizer src/main.cpp)
-target_link_libraries(rasterizer ${OPENGL_LIBRARIES}
+add_executable(spheres apps/spheres.cpp)
+link_libraries(${OPENGL_LIBRARIES}
                                  ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
                                  ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so)
+
+add_executable(sibenik apps/sibenik.cpp)

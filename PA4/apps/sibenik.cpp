@@ -11,8 +11,8 @@
 #include <fstream>
 #include <float.h>
 
-#include "Surface.h"
-#include "Material.h"
+#include "primitives/Surface.hpp"
+#include "Material.hpp"
 #include "Mesh.hpp"
 #include "RayTracer.h"
 

@@ -10,8 +10,26 @@
 #define _RAY_SURFACES_
 
 #include <Eigen/Core>
-#include "Ray.h"
-#include "Material.h"
+#include "Ray.hpp"
+#include "Material.hpp"
+
+/**
+ *	Hit data is returned upon call to IntersectSurfaces.
+ */
+struct HitData
+{
+public:
+  Vector3f hitPoint, hitTime;
+  Vector3f normal;
+  float t, tMax;
+  Surface* HitSurface;
+public:
+  HitData() :
+    tMax(100000.0f),
+    t(0),
+    HitSurface(nullptr)
+  { }
+};
 
 class Node
 {
@@ -31,7 +49,9 @@ protected:
 class Surface : public Node
 {
 public:
-  Surface(const Material & mat);
+  Surface(const Material& mat) :
+    Node(), mMaterial(mat)
+  { }
 
   virtual ~Surface() { }
 
@@ -45,53 +65,5 @@ public:
 protected:
   const Material& matRef;
 };
-
-class Sphere : public Surface
-{
-public:
-  //Sphere();
-  Sphere(const Vector3f& center, float radius, const Material& mat);
-
-  ~Sphere();
-
-  bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
-  bool Intersect(const Ray& ray, float tMax, float& t) const override;
-  bool Intersect(const Ray& ray, float tMax) const override;
-  Vector3f GetNormal(const Vector3f& p) const override;
-private:
-  float Radius, Radius2;
-};
-
-class Plane : public Surface
-{
-public:
-  //Plane();
-  Plane(const Vector3f& pos, const Vector3f& normal, Material const & mat);
-  ~Plane();
-
-  bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
-  bool Intersect(const Ray& ray, float tMax, float& t) const override;
-  bool Intersect(const Ray& ray, float tMax) const override;
-
-  Vector3f GetNormal() const;
-  Vector3f GetNormal(const Vector3f& p) const override;
-private:
-  Vector3f Normal;
-};
-
-class Triangle : public Surface
-{
-public:
-  Triangle();
-
-  ~Triangle();
-
-  bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
-  bool Intersect(const Ray& ray, float tMax, float& t) const override;
-  bool Intersect(const Ray& ray, float tMax) const override;
-
-  Vector3f GetNormal() const;
-  Vector3f GetNormal(const Vector3f& p) const override;
-}
 
 #endif // RAY_SURFACES end

@@ -20,13 +20,11 @@
 #include <vector>
 #include <random>
 
-#include <glm/vec3.hpp>
-#include <glm/geometric.hpp>
+#include <Eigen/Core>
 
-#include "Scene.h"
-#include "Camera.h"
-#include "Light.h"
-#include "Image.h"
+#include "Scene.hpp"
+#include "Camera.hpp"
+#include "Light.hpp"
 #include "easylogging++.h"
 
 // Types for which sampling to use
