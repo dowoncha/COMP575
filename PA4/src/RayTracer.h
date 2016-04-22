@@ -27,6 +27,8 @@
 #include "Light.hpp"
 #include "easylogging++.h"
 
+using namespace Eigen;
+
 // Types for which sampling to use
 enum PostProcess
 {
@@ -40,11 +42,11 @@ public:
   /**
    *  Takes a scene and the screen width and height
    */
-  RayTracer(int& argc, char** argv);
+  RayTracer(int* argc, char** argv);
 
   ~RayTracer();
 
-  void init();
+  void init(Scene* _scene);
   /**
    *  Resize the window
    *  @param w width
@@ -57,12 +59,11 @@ public:
   // Set anti-aliasing sample rate, 1x, 2x, 4x, 8x, 16x
   void sampleRate(int s);
 private:
-  /**
-   *  [Render description]
-   *  @param image [description]
-   */
-  void render();
 
+  /**
+   *  gl display function
+   */
+  void display();
   /**
    *  Trace a ray through the scene recursively.
    *  @param ray Ray to shoot through scene.
@@ -84,7 +85,7 @@ private:
   Vector3f RandomSampler(int x, int y) const;
 
   // Main scene to draw
-  const Scene& mScene;
+  Scene* scene;
 
   size_t frameBufferSize;
 

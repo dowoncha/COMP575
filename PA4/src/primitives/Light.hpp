@@ -10,9 +10,10 @@
 #ifndef _RAY_LIGHT_
 #define _RAY_LIGHT_
 
-#include "Surface.h"
+#include <Eigen/Core>
+#include "primitives/Surface.hpp"
 
-#include "Light.h"
+using namespace Eigen;
 
 class Light : public Node
 {
@@ -23,9 +24,9 @@ public:
 public:
   Light() : Node() { }
 
-  Light::Light(Vector3f position,
-               Vector3f ambient,
-               Vector3f diffuse) :
+  Light(Vector3f position,
+        Vector3f ambient,
+        Vector3f diffuse) :
     Node(),
     pos(position)
     amb(ambient),

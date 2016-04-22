@@ -1,6 +1,8 @@
 #include "RayTracer.h"
 
-RayTracer::RayTracer(const Scene& scene) :
+using namespace Vector3f;
+
+RayTracer::RayTracer(int* argc, char** argv) :
   mScene(scene),
   AspectRatio((float)(ScreenWidth/ScreenHeight)),
   MainCamera(512, 512),
@@ -28,22 +30,17 @@ RayTracer::RayTracer(const Scene& scene) :
      exit(EXIT_FAILURE);
    }
    printf("Status: GLEW %s\n", glewGetString(GLEW_VERSION));
+
+   // glut funcs
+   glutReshapeFunc(resize);
+   glutDisplayFunc(render);
 }
 
 RayTracer::~RayTracer() { }
 
-void RayTracer::init()
+void RayTracer::init(Scene* scene)
 {
-  // Setup depth buffer, shading, and culling
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  //glDisable(GL_CULL_FACE);
-  glDepthFunc(GL_LESS);
-  glShadeModel(GL_SMOOTH);
-  glEnable(GL_RESCALE_NORMAL);
 
-  glutReshapeFunc(resize);
-  glutDisplayFunc(render);
 }
 
 void RayTracer::resize(int w, int h)
@@ -59,11 +56,19 @@ void RayTracer::run()
   glutMainLoop();
 }
 
+void RayTracer::display()
+{
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+  render();
+  //glDrawPixels();
+
+  glutSwapBuffers();
+  glutPostRedisplay();
+}
+
 void RayTracer::render() const
 {
-  lClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-  start_timing();
-
   LOG(INFO) << "Starting rendering to image";
 
   // Most expensive thing ive ever seen.
@@ -76,19 +81,6 @@ void RayTracer::render() const
           buffer.at(result);
       }
   }
-
-  // glDrawPixels here
-
-  float timeElapsed = stop_timing();
-  gTotalFrames++;
-  gTotalTimeElapsed += timeElapsed;
-  float fps = gTotalFrames / gTotalTimeElapsed;
-  char string[1024] = {0};
-  sprintf(string, "Ray tracer FPS: %0.2f", fps);
-  glutSetWindowTitle(string);
-
-  glutPostRedisplay();
-  glutSwapBuffers();
 }
 
 Vector3f RayTracer::trace(const Ray& ray, int depth, int tMax) const
@@ -99,7 +91,7 @@ Vector3f RayTracer::trace(const Ray& ray, int depth, int tMax) const
         return Vector4f(0.0f);        //If max depth has been reached return 0
 
     // Hit data from the ray trace, don't ignore any surfaces
-    HitData data = mScene.IntersectSurfaces(ray, tMax);
+    HitData data = scene_.IntersectSurfaces(ray, tMax);
 
     // If nothing was hit return color black
     if (data.HitSurface == nullptr)

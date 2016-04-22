@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 2.8)
 project(RayTracer)
 
 add_definitions("-std=c++11")
@@ -30,4 +30,4 @@ link_libraries(${OPENGL_LIBRARIES}
                                  ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
                                  ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so)
 
-add_executable(sibenik apps/sibenik.cpp)
+#add_executable(sibenik apps/sibenik.cpp)

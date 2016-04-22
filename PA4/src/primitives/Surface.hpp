@@ -13,17 +13,18 @@
 #include "Ray.hpp"
 #include "Material.hpp"
 
+using namespace Eigen;
+
 /**
  *	Hit data is returned upon call to IntersectSurfaces.
  */
 struct HitData
 {
-public:
-  Vector3f hitPoint, hitTime;
+  Vector3f hit_point, hit_time;
   Vector3f normal;
   float t, tMax;
-  Surface* HitSurface;
-public:
+  Surface* hit_surface;
+
   HitData() :
     tMax(100000.0f),
     t(0),
@@ -31,27 +32,38 @@ public:
   { }
 };
 
+/**
+ *  Object's that have a position.
+ */
 class Node
 {
 public:
   Node() { }
 
-  Node(Vector3f position) : pos(position) { }
+  Node(Vector3f position) : position_(position) { }
 
   virtual ~Node() { }
 
-  Vector3f position() const         { return pos; }
-  void position(Vector3f p) { pos = p; }
+  Vector3f position() const         { return position_; }
+  void set_position(Vector3f p) { position_ = position; }
 protected:
-  Vector3f pos;
+  Vector3f position_;
 };
 
+/**
+ *  Abstract class for objects that require a position and a material.
+ */
 class Surface : public Node
 {
 public:
-  Surface(const Material& mat) :
-    Node(), mMaterial(mat)
+  Surface() :
+    Node(),
   { }
+
+  void surface()
+  {
+
+  }
 
   virtual ~Surface() { }
 
@@ -61,9 +73,14 @@ public:
 
   virtual Vector3f GetNormal(const Vector3f& point) const = 0;
 
-  Material material() const { return mMaterial; }
+  void SetMaterial(Material* newMat)
+  {
+    material_ = newMat;
+  }
+
+  Material material() const { return *matRef; }
 protected:
-  const Material& matRef;
+  Material* material_;
 };
 
 #endif // RAY_SURFACES end

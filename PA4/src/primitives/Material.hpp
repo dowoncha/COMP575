@@ -12,10 +12,17 @@
 
 #include <Eigen/Core>
 
+using namespace Eigen;
+
 class Material
 {
+private:
+  Vector3f amb;
+  Vector3f diff;
+  Vector3f spec;
+  float specPow, reflectivity;
 public:
-  Material::Material()
+  Material()
   {
   }
 
@@ -25,18 +32,18 @@ public:
     amb(ambient),
     diff(diffuse),
     spec(specular),
-    specPower(0.0f),
+    specPow(0.0f),
     reflectivity(0.0f)
   { }
 
   Material(Vector3f ambient,
            Vector3f diffuse,
            Vector3f specular,
-           float specPow) :
+           float specPower) :
     amb(ambient),
     diff(diffuse),
     spec(specular),
-    specPower(specPow),
+    specPow(specPower),
     reflectivity(0.0f)
   { }
 
@@ -48,26 +55,30 @@ public:
   amb(ambient),
   diff(diffuse),
   spec(specular),
-  specPower(specPower),
+  specPow(specPower),
   reflectivity(reflection)
   {
   }
 
-
+  // Ambient getter and setter
   Vector3f ambient() const { return amb; }
-  void ambient(Vector3f _amb)   { amb = _amb; }
+  void ambient(Vector3f amb)   { this->amb = amb; }
 
+  // Diffuse getter and setter
   Vector3f diffuse() const { return diff; }
   void diffuse(Vector3f _diff) { diff = _diff };
 
+  // Specular getter and setter
   Vector3f specular() const { return spec; }
   void specular(Vector3f _spec) { spec = _spec};
 
-  float specPower() const { return specPower; }
-  void  specPower(Vector3f _specPower) { specPower = _specPower; }
+  // Specular power getter and setters
+  float specularPower() const { return specPow; }
+  void  specularPower(Vector3f _specPower) { specPow = _specPower; }
 
+  // Reflection getter and setters
   float reflection() const { return reflectivity; }
-  void  reflection(float _reflect) { reflectivity = _reflect; }
+  void  reflection(float reflect) { reflectivity = reflect; }
 
   // Factory functions for creating specific color materials
   static Material CreateRedMat()
@@ -89,12 +100,6 @@ public:
   {
     return Material(Vector3f(0.2f, 0.2f, 0.2f), Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f));
   }
-
-private:
-  Vector3f amb;
-  Vector3f diff;
-  Vector3f spec;
-  float specPower, reflectivity;
 };
 
 #endif    // RAY_MATERIAL Header guard

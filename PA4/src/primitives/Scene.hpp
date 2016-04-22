@@ -14,9 +14,9 @@
 #include <algorithm>
 #include <Eigen/Core>
 
-#include "KDNode.hpp"
-#include "Surface.h"
-#include "Light.h"
+#include "primitives/Mesh.hpp"
+#include "primitives/Surface.hpp"
+#include "Light.hpp"
 
 struct HitData;
 
@@ -30,7 +30,7 @@ public:
 
   Scene::~Scene()
   {
-      for (Surface* s : Surfaces)
+      for (Surface* s : surfaces)
       {
           delete s;
       }
@@ -43,7 +43,7 @@ public:
 
   void addSurface(Surface* s)
   {
-      Surfaces.push_back(s);
+      surfaces.push_back(s);
   }
 
   void addLight(Light* l)
@@ -51,12 +51,12 @@ public:
       Lights.push_back(l);
   }
 
-  HitData Scene::IntersectSurfaces(const Ray& ray, float tMax, Surface* ignore = nullptr) const
+  HitData intersectSurfaces(const Ray& ray, float tMax, Surface* ignore = nullptr) const
   {
     // Intersect all surfaces using view ray
     // float tMin = tMax;
     HitData data;
-    for (Surface* s : Surfaces)
+    for (Surface* s : surfaces)
     {
       if (s == ignore)
         continue;

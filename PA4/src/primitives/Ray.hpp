@@ -12,7 +12,8 @@
 
 #include <Eigen/Core>
 #include <iostream>
-#include "Ray.hpp"
+
+using namespace Eigen;
 
 class Ray
 {
@@ -29,14 +30,24 @@ public:
 
   Vector3f evaluate(float t) const { return Position + Direction * t; }
 
+  Vector3f position()
+  {
+    return pos;
+  }
+
+  Vector3f direction()
+  {
+    return dir;
+  }
+
   friend std::ostream& operator << (std::ostream& s, Ray const & ray)
   {
 	  return s << "";
   }
 
-public:
+private:
   Vector3f pos;
-  Vector3f direction;
+  Vector3f dir;
 };
 
 #endif // _RAY_RAY_

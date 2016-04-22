@@ -1,42 +1,53 @@
-#include "Surface.hpp"
+#pragma once
+#ifndef _RAY_SPHERE_
+#define _RAY_SPHERE_
+
+#include <Eigen/Core>
+#include "Material.hpp"
+
+using namespace Eigen;
 
 class Sphere : public Surface
 {
 public:
-  Surface(const Material& mat) :
-    Node(), mMaterial(mat)
-  { }
-
-  Sphere(const Vector3f& center, float radius, const Material& mat) :
-    Surface(mat),
-    Radius(radius),
-    Radius2(radius * radius)
+  Sphere(Vector3f center, float _radius) :
+    Surface(),
+    radius(_radius),
+    radius2(radius * radius)
   {
-    Position = center;
+    pos = center;
+  }
+
+  Sphere(Vector3f center, float _radius, Material* mat) :
+    Surface(mat),
+    radius(_radius),
+    radius2(radius * radius)
+  {
+    pos = center;
   }
 
   ~Sphere()
   {
   }
 
-  bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const
+  bool intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override
   {
     // Calculate ray-sphere intersection using geometric approach
-    glm::vec3 len = Position - ray.Position;
-    float s = glm::dot(len, ray.Direction);
-    float len2 = glm::length(len) * glm::length(len);
+    Vector3f len = Position - ray.pos;
+    float s = len.dot(ray.direction());
+    float len2 = len.length() * len.length();
 
     if (s > 0.0f)
     {
       float m2 = len2 - s * s;
 
-      if (m2 < Radius2)
+      if (m2 < radius2)
       {
-        float q = std::sqrt(Radius2 - m2);
+        float q = std::sqrt(radius2 - m2);
 
-        t = (len2 > Radius2) ? s - q : s + q;
+        t = (len2 > radius2) ? s - q : s + q;
 
-        Point = ray.Evaluate(t);
+        Point = ray.evaluate(t);
 
         return (t > 0.0f && tMax);
       }
@@ -45,13 +56,14 @@ public:
     return false;
   }
 
-  bool Intersect(const Ray& ray, float tMax, float& t) const
+  bool intersect(const Ray& ray, float tMax, float& t) const override
   {
     // Calculate ray-sphere intersection using geometric approach
-    glm::vec3 len = Position - ray.Position;
-    float s = glm::dot(len, ray.Direction);
-    float len2 = glm::length(len) * glm::length(len);
+    Vector3f len = Position - ray.Position;
+    float s = len.dot(ray.Direction);
+    float len2 = len.length(); * len.length();
 
+    // If the angle between the ray and the direction is less than 90
     if (s > 0.0f)
     {
       float m2 = len2 - s * s;
@@ -69,21 +81,21 @@ public:
     return false;
   }
 
-  bool Intersect(const Ray& ray, float tMax) const
+  bool intersect(const Ray& ray, float tMax) const override
   {
     // Calculate ray-sphere intersection using geometric approach
-    glm::vec3 len = Position - ray.Position;
-    float s = glm::dot(len, ray.Direction);
-    float len2 = glm::length(len) * glm::length(len);
+    Vector3f len = Position - ray.Position;
+    float s = len.dot(ray.direction());
+    float len2 = len.length() * len.length();
 
     if (s > 0.0f)
     {
       float m2 = len2 - s * s;
 
-      if (m2 < Radius2)
+      if (m2 < radius2)
       {
-        float q = std::sqrt(Radius2 - m2);
-        float t = (len2 > Radius2) ? s - q : s + q;
+        float q = std::sqrt(radius2 - m2);
+        float t = (len2 > radius) ? s - q : s + q;
 
         return (t > 0.0f && t < tMax);
       }
@@ -92,10 +104,12 @@ public:
     return false;
   }
 
-  Vector3f GetNormal(const glm::vec3& Point) const
+  Vector3f normal(const Vector3f& point) const overall
   {
-    return (Point - Position).normalized();
+    return (point - pos).normalized();
   }
 private:
-  float Radius, Radius2;
+  float radius, radius2;
 };
+
+#endif /* end of include guard: _RAY_SPHERE_ */

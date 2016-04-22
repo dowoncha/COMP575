@@ -11,10 +11,12 @@
 #define _RAY_CAMERA_
 
 #include <cassert>
-#inclde <Eigen/Core>
+#include <Eigen/Core>
 
-#include "Ray.h"
+#include "Ray.hpp"
 #include "Utility.h"
+
+using namespace Eigen;
 
 class Camera
 {

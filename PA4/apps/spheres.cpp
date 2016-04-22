@@ -3,24 +3,28 @@
  *  author   : Do Won Cha
  */
 
+#include <Eigen/Core>
 #include <cstdio>
 #include <cstring>
 #include <string>
 #include <vector>
 #include <queue>
 #include <fstream>
-#include <float.h>
 
-#include "Surface.h"
-#include "Material.h"
-#include "Mesh.hpp"
+#include "Material.hpp"
 #include "RayTracer.h"
+#include "primitives/Sphere.hpp"
+#include "Light.hpp"
+#include "Plane.hpp"
+#include "Scene.hpp"
 
 // This is to call a member function pointer, dirty but quick
 #define CALL_MEMBER_FN(object, ptrToMember)  ((object).*(ptrToMember))
 
 int main(int argc, char* argv[])
 {
+	using namespace Eigen;
+
 	Material red = Material::CreateRedMat();
 	Material green = Material::CreateWhiteMat();
 	green.specPower(32.0f);
@@ -44,14 +48,13 @@ int main(int argc, char* argv[])
   light.intensity(1.0f);
 
   Scene scene;
-  scene.AddLight(&light1);
-  scene.AddSurface(&plane);
-  scene.AddSurface(&sphere1);
-  scene.AddSurface(&sphere2);
-  scene.AddSurface(&sphere3);
+  scene.addLight(&light);
+  scene.addSurface(&plane);
+  scene.addSurface(&sphere1);
+  scene.addSurface(&sphere2);
+  scene.addSurface(&sphere3);
 
   RayTracer ray(&argc, argv);
-	ray.init(scene);
   ray.run();
 
   exit(EXIT_SUCCESS);
