@@ -1,6 +1,7 @@
-#include "RayTracer.h"
+#include "ray_tracer.h"
 
 using namespace Eigen;
+using namespace raytracer;
 
 RayTracer::RayTracer(int* argc, char** argv) :
   scene_(nullptr),
@@ -9,12 +10,12 @@ RayTracer::RayTracer(int* argc, char** argv) :
   frame_buffer_(size_),
   sample_rate_(1),
   max_trace_depth_(2),
-  sampler(&NoSampler)
+  sampler(&RayTracer::NoSampling)
 {
    //angle_ = std::tan(M_PI * 0.5f * fov_ / 180.0f);
 
    // Glut initialization
-   glutInit(&argc, argv);
+   glutInit(argc, argv);
    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
    glutInitWindowPosition(100, 100);
    glutInitWindowSize(512, 512);
@@ -32,9 +33,9 @@ RayTracer::RayTracer(int* argc, char** argv) :
    printf("Status: GLEW %s\n", glewGetString(GLEW_VERSION));
 
    // glut funcs
-   glutIdleFunc(idle);
+   glutIdleFunc(Idle);
    glutReshapeFunc(resize);
-   glutDisplayFunc(render);
+   glutDisplayFunc(Display);
 }
 
 RayTracer::~RayTracer()
@@ -50,18 +51,18 @@ void RayTracer::resize(int width, int height)
     LOG(INFO) << "Resize called with width: " << width << ", height: " << height;
 
     // Resize the camera
-    camera->resize(width, height);
+    camera_->resize(width, height);
 
     // Compare the new frame buffer size to the old one and allocate as neccessary
     frame_buffer_size_t oldsize = size_;
     size_ = width * height;
-    if (size_ < oldsize_)
+    if (size_ < oldsize)
     {
-      frame_buffer.resize(size_);
+      frame_buffer_.resize(size_);
     }
-    else if (size_ > oldsize_)
+    else if (size_ > oldsize)
     {
-      frame_buffer.reserve(size)
+      frame_buffer_.reserve(size_);
     }
 }
 
@@ -70,42 +71,42 @@ void RayTracer::run()
   glutMainLoop();
 }
 
-void RayTracer::display()
+void RayTracer::Display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-  glDrawPixels(camera.screen_width(),
-               camera.screen_height(),
+  glDrawPixels(camera_->screen_width(),
+               camera_->screen_height(),
                GL_RGBA,
                GL_FLOAT,
-               frame_buffer.data());
+               frame_buffer_.data());
 
   glutSwapBuffers();
   glutPostRedisplay();
 }
 
-void RayTracer::idle()
+void RayTracer::Idle()
 {
-  render();
+  Render();
 }
 
-void RayTracer::Render() const
+void RayTracer::Render()
  {
   LOG(INFO) << "Starting rendering to image";
 
   // Most expensive thing ive ever seen.
   int index = 0;
-  for (int y = 0; y < screen_height_; ++y)
+  for (int y = 0; y < camera_->screen_height(); ++y)
   {
-    for (int x = 0; x < screen_width_; ++x, ++index)
+    for (int x = 0; x < camera_->screen_width(); ++x, ++index)
     {
-      Vector4f result = (*sampling)(x, y);
+      Vector4f result = ((*this).*(sampler))(x, y);
       frame_buffer_.at(index);
     }
   }
 }
 
-Vector4f RayTracer::Trace(const Ray& ray, int depth, int tMax) const
+Vector4f RayTracer::Trace(const Ray& ray, int depth) const
 {
     // Trace recursion base case
     // depth should stop if bigger than the max trace depth
@@ -114,7 +115,7 @@ Vector4f RayTracer::Trace(const Ray& ray, int depth, int tMax) const
 
     // Hit data from the ray trace
     HitData data;
-    bool bHit = scene_.IntersectSurfaces(ray, data);
+    bool bHit = scene_->IntersectSurfaces(ray, data);
 
     // If nothing was hit return black
     if (bHit)
@@ -126,15 +127,15 @@ Vector4f RayTracer::Trace(const Ray& ray, int depth, int tMax) const
 
     // If the surface material has a reflection value
     // Do another ray trace for reflection surface
-    float reflectionCoef = data.hit_surface->material().reflection();
+    float reflectionCoef = scene_->materials_.at(data.hit_surface->material())->reflectivity();
     if (reflectionCoef > 0.0f)
     {
         // Calculate the reflection ray
-        Vector3f incident = -ray.direction;
+        Vector3f incident = -ray.direction();
         Vector3f dir = incident - data.normal * (2.0f * data.normal.dot(incident));
-        Ray reflectionRay(data.point, dir.normalized());
+        Ray reflectionRay(data.hit_point, dir.normalized());
 
-        Vector3f reflect = Trace(reflectionRay, depth + 1, tMax);
+        Vector4f reflect = Trace(reflectionRay, depth + 1);
 
         local = Utility::lerp(local, reflect, reflectionCoef);
     }
@@ -146,7 +147,7 @@ Vector4f RayTracer::LocalShading(const Ray& ray, const HitData& data) const
 {
   using namespace std;
 
-  Material* material = materials.at(data.hit_surface->material());
+  Material* material = scene_->materials_.at(data.hit_surface->material()).get();
 
   Vector4f out = material->ambient();
 
@@ -155,39 +156,34 @@ Vector4f RayTracer::LocalShading(const Ray& ray, const HitData& data) const
    *  Calculate the vector from hit point -> light.
    *  Make the shadow ray using the vector
    */
-  for (Light* light : scene_.lights_)
+  for (const std::unique_ptr<Light>& uLight : scene_->lights_)
   {
-    // Trace for shadows here
-    Vector3f hit_direction = (light->position() - data.hit_point).normalized();
-    Ray shadowray(data.hit_point + hit_direction, hit_direction);
+    Light* light = uLight.get();
 
-    // Check intersection data for shadows
-    bool shadowhit = scene_.IntersectSurfaces(shadowRay, len, data.hitSurface);
+    // Trace for shadows here
+    Vector3f hitToLight = light->position() - data.hit_point;
+    Ray shadowray(data.hit_point + hitToLight.normalized(), hitToLight);
+    HitData shadowhit;
+
+    // Check intersection data for shadows, ignore data.hit_surface
+    bool bShadow = scene_->IntersectSurfaces(shadowray, shadowhit, data.hit_surface);
     if ( shadowhit.hit_surface != nullptr)
     {
-      float ndoth = data.normal.dot(half);
-
-      Vector3f Lspec = material->specular() * light->intensity_ * pow(max(0.0f, ndoth), material.specular_power());
-      Vector3f normal = data.hit_surface->normal();
-
-      // Get vector from hit point to the light
-      Vector3f lightdir = (light->position() - data.hit_point).normalized();
-
       // Calculate the diffuse lighting color
-      float ndotl = normal.dot(lightdir);
-      Vector3f Ldiff = material->diffuse() * light->intensity() * max(0.0f, ndotl);
+      float ndotl = data.normal.dot(hitToLight.normalized());
+      Vector4f Ldiff = material->diffuse() * light->intensity_ * max(0.0f, ndotl);
 
       // Specular Light calculations
       // Subtract the ray direction instead of add to reverse direction
-      Vector3f halfdir = (lightdir - ray.direction()).normalized();
-      float ndoth = normal.dot(half);
-
-      Vector3f Lspec = mat.specular() * light->intensity_ * pow(max(0.0f, ndoth), material->specular_power());
+      Vector3f halfdir = (hitToLight.normalized() - ray.direction()).normalized();
+      float ndoth = data.normal.dot(halfdir);
+      Vector4f Lspec = material->specular() * light->intensity_ * pow(max(0.0f, ndoth), material->specular_power());
 
       out += Ldiff + Lspec;
     }
+  }
 
-    return out;
+  return out;
 }
 
 void RayTracer::set_sampling_type(PostProcess type)
@@ -195,16 +191,16 @@ void RayTracer::set_sampling_type(PostProcess type)
   switch(type)
   {
     case PostProcess::NoSampling:
-      sampler = &NoSampling;
+      sampler = &RayTracer::NoSampling;
       break;
     case PostProcess::UniformSampling:
-      sampler = &UniformSampling;
+      sampler = &RayTracer::UniformSampling;
       break;
     case PostProcess::RandomSampling:
-      sampler = &RandomSampling;
+      sampler = &RayTracer::RandomSampling;
       break;
     default:
-      sampler = &NoSampling;
+      sampler = &RayTracer::NoSampling;
       break;
   }
 }
@@ -220,13 +216,13 @@ Vector4f RayTracer::NoSampling(int x, int y)
   return Trace(ray, max_trace_time_);
 }
 
-Vector4f RayTracer::UniformSampling(int x, int y) const
+Vector4f RayTracer::UniformSampling(int x, int y)
 {
     Vector4f result;
     float coef = 1.0f / sample_rate_;
     for (float dy = 0.0f; dy < 1.0f; dy += coef)
     {
-        for (float dy = 0.0f; dy < 1.0f; dy += coef)
+        for (float dx = 0.0f; dx < 1.0f; dx += coef)
         {
             Ray ray = camera_->GetRayFromEye(x, y, dx, dy);
             result += Trace(ray, max_trace_time_);
@@ -235,7 +231,7 @@ Vector4f RayTracer::UniformSampling(int x, int y) const
     return result * coef * coef;
 }
 
-Vector4f RayTracer::RandomSampling(int x, int y) const
+Vector4f RayTracer::RandomSampling(int x, int y)
 {
   // Random number generator for ray random sampling
   std::default_random_engine generator;

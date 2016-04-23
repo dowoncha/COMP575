@@ -12,6 +12,8 @@
 
 #define NOMINMAX
 
+#include <GL/glew.h>
+#include <GL/glut.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -24,15 +26,15 @@
 #include <Eigen/Core>
 
 #include "easylogging++.h"
+#include "scene.hpp"
+#include "primitives/material.hpp"
+#include "primitives/camera.hpp"
+#include "utility.h"
 
 namespace raytracer
 {
 
 using namespace Eigen;
-
-class Scene;
-class Light;
-class Camera;
 
 // Types for which sampling to use
 enum PostProcess
@@ -45,7 +47,7 @@ enum PostProcess
 class RayTracer
 {
   // This is to define a member function pointer type
-  typedef void (RayTracer::*SamplingFunction)(int x, int y);
+  typedef Vector4f (RayTracer::*SamplingFunction)(int x, int y);
   typedef size_t frame_buffer_size_t;
 public:
   /**
@@ -71,10 +73,16 @@ public:
   // Set anti-aliasing sample rate, 1x, 2x, 4x, 8x, 16x
   void set_sample_rate(int sample_rate);
 private:
+  void Idle();
   /**
    *  gl display function
    */
   void Display();
+
+  /**
+   *  Ray trace render function called by idle function
+   */
+  void Render();
   /**
    *  Trace a ray through the scene recursively.
    *  @param ray Ray to shoot through scene.
@@ -84,17 +92,17 @@ private:
   Vector4f Trace(const Ray& ray, int depth) const;
 
   // Use ray and hit data to calculate the color at the point.
-  Vector4f Shade(const Ray& ray, const HitData& Data) const;
+  Vector4f LocalShading(const Ray& ray, const HitData& Data) const;
 
   // Simply shoots a ray.
-  Vector4f NoSampling(int x, int y) const;
+  Vector4f NoSampling(int x, int y);
 
   // Uses evenly spaced ray's in the pixel. Uses sample * sample.
-  Vector4f UniformSampling(int x, int y) const;
+  Vector4f UniformSampling(int x, int y);
 
   // Uses a random number generator in the [0,1] space to perturb original ray
   // sample * sample rays.
-  Vector4f RandomSampling(int x, int y) const;
+  Vector4f RandomSampling(int x, int y);
 private:
   // Main scene to draw
   std::unique_ptr<Scene> scene_;

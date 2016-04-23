@@ -23,10 +23,6 @@ public:
   {
   }
 
-  ~Triangle()
-  {
-  }
-
   bool Intersect(const Ray& ray, HitData& data) override
   {
     // Vertices
