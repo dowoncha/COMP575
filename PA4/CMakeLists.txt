@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(RayTracer)
 
-add_definitions("-w -std=c++14")
+add_definitions("-w -std=c++1y")
 
 #########################################################
 # FIND OPENGL

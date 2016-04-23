@@ -12,30 +12,6 @@ RayTracer::RayTracer(int* argc, char** argv) :
   max_trace_depth_(2),
   sampler(&RayTracer::NoSampling)
 {
-   //angle_ = std::tan(M_PI * 0.5f * fov_ / 180.0f);
-
-   // Glut initialization
-   glutInit(argc, argv);
-   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-   glutInitWindowPosition(100, 100);
-   glutInitWindowSize(512, 512);
-   glutCreateWindow("Ray Tracer");
-
-   // Glew initialization
-   glewExperimental = GL_TRUE;
-   GLenum err = glewInit();
-   if (err != GLEW_OK)
-   {
-     /* Problem: glewInit failed, something is seriously wrong. */
-     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-     exit(EXIT_FAILURE);
-   }
-   printf("Status: GLEW %s\n", glewGetString(GLEW_VERSION));
-
-   // glut funcs
-   glutIdleFunc(Idle);
-   glutReshapeFunc(resize);
-   glutDisplayFunc(Display);
 }
 
 RayTracer::~RayTracer()
@@ -64,30 +40,6 @@ void RayTracer::resize(int width, int height)
     {
       frame_buffer_.reserve(size_);
     }
-}
-
-void RayTracer::run()
-{
-  glutMainLoop();
-}
-
-void RayTracer::Display()
-{
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-  glDrawPixels(camera_->screen_width(),
-               camera_->screen_height(),
-               GL_RGBA,
-               GL_FLOAT,
-               frame_buffer_.data());
-
-  glutSwapBuffers();
-  glutPostRedisplay();
-}
-
-void RayTracer::Idle()
-{
-  Render();
 }
 
 void RayTracer::Render()
