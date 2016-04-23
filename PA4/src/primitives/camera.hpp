@@ -13,8 +13,8 @@
 #include <cassert>
 #include <Eigen/Core>
 
-#include "Ray.hpp"
-#include "Utility.h"
+#include "ray.hpp"
+#include "../utility.h"
 
 using namespace Eigen;
 
@@ -22,21 +22,21 @@ class Camera
 {
 public:
   Camera() :
-    Position  (0.0f, 0.0f, 0.0f),
-    Target    (0.0f, 0.0f, -1.0f),
-    Right     (1.0f, 0.0f, 0.0f),
-    Up        (0.0f, 1.0f, 0.0f),
-    Forward   (0.0f, 0.0f, 1.0f),
+    position  (0.0f, 0.0f, 0.0f),
+    target_    (0.0f, 0.0f, -1.0f),
+    right_     (1.0f, 0.0f, 0.0f),
+    up_        (0.0f, 1.0f, 0.0f),
+    forward_   (0.0f, 0.0f, 1.0f),
     l(-0.1f), r(0.1f), t(0.1f), b(-0.1f), d(0.1f)
   {
   }
 
   Camera(int width, int height) :
-    Position  (0.0f, 0.0f, 0.0f),
-    Target    (0.0f, 0.0f, -1.0f),
-    Right     (1.0f, 0.0f, 0.0f),
-    Up        (0.0f, 1.0f, 0.0f),
-    Forward   (0.0f, 0.0f, 1.0f),
+    position  (0.0f, 0.0f, 0.0f),
+    target_    (0.0f, 0.0f, -1.0f),
+    right_     (1.0f, 0.0f, 0.0f),
+    up_        (0.0f, 1.0f, 0.0f),
+    forward_   (0.0f, 0.0f, 1.0f),
     l(-0.1f), r(0.1f), t(0.1f), b(-0.1f), d(0.1f),
     ScreenWidth(width),
     ScreenHeight(height)
@@ -44,20 +44,20 @@ public:
 
   Camera(Vector3f position,
          Vector3f target) :
-    Position(position),
-    Target(target),
-    Forward(Position - Target),
-    Up(0.0f, 1.0f, 0.0f),
+    position(position),
+    target_(target),
+    forward_(position - target_),
+    up_(0.0f, 1.0f, 0.0f),
     l(-0.1f), r(0.1f), t(0.1f), b(-0.1f), d(0.1f)
   { }
 
   Camera(Vector3f position,
          Vector3f target,
          Vector3f up) :
-    Position(position),
-    Target(target),
-    Forward(Position - Target),
-    Up(up),
+    position(position),
+    target_(target),
+    forward_(position - target_),
+    up_(up),
     l(-0.1f), r(0.1f), t(0.1f), b(-0.1f), d(0.1f)
   { }
 
@@ -65,7 +65,7 @@ public:
   { }
 
   // default offset is to the center of the pixel
-  Ray getRay(int x, int y) const
+  Ray GetRayFromEye(int x, int y) const
   {
     assert(x < ScreenWidth);
     assert(y < ScreenHeight);
@@ -77,18 +77,17 @@ public:
   	float v = b + (t - b) * ((float)y + 0.5f) * invH;
 
     // NOTE: Had to change up calculation to negative to set y to bottom?
-    // Forward is also negative
-  	Vector3f dir = ((Right * u) - (Up * v) - (Forward * d)).normalized());
+    // forward_ is also negative
+  	Vector3f dir = ((right_ * u) - (up_ * v) - (forward_ * d)).normalized());
 
-  	return Ray(Position, dir);
+  	return Ray(position, dir);
   }
 
-  Ray getRay(int x, int y, float offsetx, float offsety) const
+  //
+  Ray GetRayFromEye(int x, int y, float offsetx, float offsety) const
   {
     assert( x < ScreenWidth );
     assert( y < ScreenHeight );
-    assert( offsetx <= 1.0f);
-    assert( offsety <= 1.0f);
 
     offsetx = Utility::clamp(0.0f, offsetx, 1.0f);
     offsety = Utility::clamp(0.0f, offsety, 1.0f);
@@ -99,9 +98,9 @@ public:
     float u = l + (r - l) * (x + offsetx) * invW;
   	float v = b + (t - b) * (y + offsety) * invH;
 
-    Vector3f dir = ((Right * u) - (Up * v) - (Forward * d)).normalized();
+    Vector3f dir = ((right_ * u) - (up_ * v) - (forward_ * d)).normalized();
 
-  	return Ray(Position, dir);
+  	return Ray(position, dir);
   }
 
   void resize(int width, int height)
@@ -109,14 +108,18 @@ public:
       ScreenWidth = width;
       ScreenHeight = height;
   }
-public:
-  Vector3f Position;                // Position vector
-  Vector3f Target;                  // What are we looking at
-  Vector3f Forward;                 // Forward vector
-  Vector3f Up;                      // Up vector, typically y-axis
-  Vector3f Right;                   // Right vector
+
+  int screen_width() const { return screen_width_; }
+  int screen_height() const {return screen_height_; }
+
+private:
+  Vector3f position;                // position vector
+  Vector3f target_;                  // What are we looking at
+  Vector3f forward_;                 // forward_ vector
+  Vector3f up_;                      // up_ vector, typically y-axis
+  Vector3f right_;                   // right_ vector
   float l, r, t, b, d;              // Viewport constants
-  int ScreenWidth, ScreenHeight;    // Resolution of camera
+  int screen_width_, screen_height_;    // Resolution of camera
 };
 
 #endif // _RAY_CAMERA_

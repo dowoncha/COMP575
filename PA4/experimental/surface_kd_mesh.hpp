@@ -20,74 +20,18 @@
 
 using namespace Eigen;
 
-
-class Triangle : public Surface
+namespace raytracer
 {
-public:
-  typedef Matrix<unsigned int, 3, 1> Vector3u;
-
-  Triangle();
-
-  ~Triangle();
-
-  bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const override;
-  bool Intersect(const Ray& ray, float tMax, float& t) const override;
-  bool Intersect(const Ray& ray, float tMax) const override;
-
-  Vector3f GetNormal() const;
-  Vector3f GetNormal(const Vector3f& p) const override;
-private:
-  Vector3u indices;
-};
 
 class KdMesh: public Surface
 {
-private:
-	// Bounding box
-	struct AABB
+public:
+	KdMesh(std::string meshfile, std::string kdfile, std::string material_name) :
+		Surface(material_name)
 	{
-		Vector3f min;
-		Vector3f max;
-
-		bool hit(const Ray& ray)
-		{
-			float tx1 = (min(0) - ray.pos(0)) * ray.direction.inverse();
-			float tx2 = (max(0) - ray.pos(0)) * ray.direction.inverse();
-
-			double tmin = min(tx1, tx2);
-	    double tmax = max(tx1, tx2);
-
-	    double ty1 = (b.min.y - r.x0.y)*r.n_inv.y;
-	    double ty2 = (b.max.y - r.x0.y)*r.n_inv.y;
-
-	    tmin = max(tmin, min(ty1, ty2));
-	    tmax = min(tmax, max(ty1, ty2));
-
-	    return tmax >= tmin;
-		}
-	};
-
-	// kd-tree nodes
-	struct KdNode
-	{
-		int nodeId;
-		AABB boundingBox;
-		int leftChildId;
-		int rightChildId;
-		int splitAxis;
-		float splitPosition;
-		bool isLeaf;
-		std::vector<int> triIndex;
-	};
-
-	std::vector<KdNode>	 kdTree;
-	std::vector<Vector3>	gPositions;
-  std::vector<Vector3>	gNormals;
-  std::vector<Triangle>	gTriangles;
-
-	KdMesh(const Material& mat) :
-		surface(mat)
-	{
+    // Load the mesh and the kd tree from file
+    load_mesh(meshfile);
+    load_kd_tree(kdfile);
 	}
 
 	~KdMesh()
@@ -95,22 +39,61 @@ private:
 
 	}
 
-	bool hit(KdNode* node, const Ray& ray, float t, float& tmin) const {
-		if (node->boundingBox.hit(ray))
-		{
-
-		}
+	bool Intersect(const Ray& ray, HitData& hit) const
+	{
+		//Intersect(kd_tree_.at(0), ray, );
 	}
 
-  bool Intersect(const Ray& ray, float tMax, float& t) const override;
-  bool Intersect(const Ray& ray, float tMax) const override;
+	bool Intersect(const KdNode& node, const Ray& ray, float t, float& tmin) const
+  {
+		/*
+    // If the node's bounding box is hit
+		if (node->boundingBox.Intersect(ray))
+		{
+      Vector3f normal;
+      bool bTriHit = false;
+      Vector3f hit_point, local_hit_point;
 
-	void load_mesh(std::string fileName)
+      const KdNode& left = kd_tree_.at(node.leftChildId);
+      const KdNode& right = kd_tree_.at(node.rightChildId);
+
+      // Recursive case: if children still have triangles go deeper
+      if (left.triangles_.size() > 0 || right.triangles_.size() > 0)
+      {
+        bool hitLeft = Intersect(left, ray, t, tmin);
+        bool hitRight = Intersect(right, ray, t ,tmin);
+        return hitLeft || hitRight;
+      }
+      else  // Leaf of kd-tree reached
+      {
+        // For each triangle intersect
+        for (const Triangle& tri: node.triangles)
+        {
+          if (tri.Intersect(ray, t, tmin))
+          {
+            bTriHit = true;
+            tmin = t;
+          }
+        }
+
+        if (bTriHit)
+        {
+
+        }
+      }
+		}
+
+		*/
+	}
+
+private:
+  // Load the mesh from the filename
+	void load_mesh(const std::string& filename)
 	{
-		std::ifstream fin(fileName.c_str());
+		std::ifstream fin(filename);
 		if (!fin.is_open())
 		{
-			printf("ERROR: Unable to load mesh from %s!\n", fileName.c_str());
+			printf("ERROR: Unable to load mesh from %s!\n", filename);
 			exit(0);
 		}
 
@@ -148,8 +131,7 @@ private:
 				zmin = std::min(z, zmin);
 				zmax = std::max(z, zmax);
 
-				Vector3 position = {x, y, z};
-				gPositions.push_back(position);
+				gPositions.emplace_back(x, y, z);
 			}
 			else if (tokens[0] == "vn")
 			{
@@ -178,12 +160,11 @@ private:
 		printf("Mesh bounding box is: (%0.4f, %0.4f, %0.4f) to (%0.4f, %0.4f, %0.4f)\n", xmin, ymin, zmin, xmax, ymax, zmax);
 	}
 
-
-	bool loadKdTree(const char* fileName)
+	bool load_kd_tree(const std::string& filename)
 	{
 		FILE* fp;
 		char temp[256];
-		fp = fopen(fileName, "r+");
+		fp = fopen(filename, "r+");
 		if (!fp)
 			return false;
 		int nodeId = -1;
@@ -224,7 +205,6 @@ private:
 		return true;
 	}
 
-private:
 	static void tokenize(char* string, std::vector<std::string>& tokens, const char* delimiter)
 	{
 		char* token = strtok(string, delimiter);
@@ -255,6 +235,50 @@ private:
 			exit(0);
 		}
 	}
+
+private:
+  // Bounding box
+  struct AABB
+  {
+    Vector3f min;
+    Vector3f max;
+
+    // Bounding box & ray hit test
+    bool hit(const Ray& ray)
+    {
+      float tx1 = (min(0) - ray.pos(0)) * ray.direction.inverse();
+      float tx2 = (max(0) - ray.pos(0)) * ray.direction.inverse();
+
+      double tmin = min(tx1, tx2);
+      double tmax = max(tx1, tx2);
+
+      double ty1 = (b.min.y - r.x0.y)*r.n_inv.y;
+      double ty2 = (b.max.y - r.x0.y)*r.n_inv.y;
+
+      tmin = max(tmin, min(ty1, ty2));
+      tmax = min(tmax, max(ty1, ty2));
+
+      return tmax >= tmin;
+    }
+  };
+
+  // kd-tree nodes struct
+  struct KdNode
+  {
+    int nodeId;
+    AABB boundingBox;
+    int leftChildId;
+    int rightChildId;
+    int splitAxis;
+    float splitPosition;
+    bool isLeaf;
+    std::vector<int> triIndex;
+  };
+
+  std::vector<KdNode>	  kd_tree_;
+  std::vector<Vector3f>	vertices_;
+  std::vector<Vector3f>	vertex_normals_;
+  std::vector<Triangle>	triangles_;
 };
 
 #endif // _RAY_MESH_

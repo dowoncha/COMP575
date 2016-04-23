@@ -10,10 +10,15 @@
 #define _RAY_SURFACES_
 
 #include <Eigen/Core>
-#include "Ray.hpp"
-#include "Material.hpp"
+#include <string>
+
+namespace raytracer
+{
 
 using namespace Eigen;
+
+class Surface;
+class Ray;
 
 /**
  *	Hit data is returned upon call to IntersectSurfaces.
@@ -26,9 +31,9 @@ struct HitData
   Surface* hit_surface;
 
   HitData() :
-    tMax(100000.0f),
     t(0),
-    HitSurface(nullptr)
+    tMax(10000.0f),
+    hit_surface(nullptr)
   { }
 };
 
@@ -38,14 +43,14 @@ struct HitData
 class Node
 {
 public:
-  Node() { }
 
+  Node() : position_(0.0f) { }
   Node(Vector3f position) : position_(position) { }
 
   virtual ~Node() { }
 
   Vector3f position() const         { return position_; }
-  void set_position(Vector3f p) { position_ = position; }
+  void set_position(Vector3f position) { position_ = position; }
 protected:
   Vector3f position_;
 };
@@ -56,31 +61,23 @@ protected:
 class Surface : public Node
 {
 public:
-  Surface() :
-    Node(),
+  Surface(Vector3f position, std::string material_name = "") :
+    Node(position),
+    material_name_(material_name)
   { }
-
-  void surface()
-  {
-
-  }
 
   virtual ~Surface() { }
 
-  virtual bool Intersect(const Ray& ray, float tMax, float& t, Vector3f& Point) const = 0;
-  virtual bool Intersect(const Ray& ray, float tMax, float& t) const = 0;
-  virtual bool Intersect(const Ray& ray, float tMax) const = 0;
+  virtual bool Intersect(const Ray& ray, HitData& hit) = 0;
 
-  virtual Vector3f GetNormal(const Vector3f& point) const = 0;
+  virtual Vector3f normal() const;
 
-  void SetMaterial(Material* newMat)
-  {
-    material_ = newMat;
-  }
-
-  Material material() const { return *matRef; }
+  void set_material(std::string material_name) { material_name_ = material_name; }
+  std::string material() const { return material_name_; }
 protected:
-  Material* material_;
+  std::string material_name_;
 };
+
+} // end of namespace raytracer
 
 #endif // RAY_SURFACES end

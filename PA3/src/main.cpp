@@ -24,9 +24,6 @@
 
 #include "Mesh.hpp"
 
-// This is to call a member function pointer, dirty but quick
-#define CALL_MEMBER_FN(object, ptrToMember)  ((object).*(ptrToMember))
-
 /*
 	How to use this code:
 

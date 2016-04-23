@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(RayTracer)
 
-add_definitions("-std=c++11")
+add_definitions("-std=c++14")
 
 #########################################################
 # FIND OPENGL
@@ -26,8 +26,8 @@ include_directories(src)
 include_directories(src/primitives)
 
 add_executable(spheres apps/spheres.cpp)
-link_libraries(${OPENGL_LIBRARIES}
-                                 ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
-                                 ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so)
+target_link_libraries(spheres ${OPENGL_LIBRARIES}
+                              ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
+                              ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so)
 
 #add_executable(sibenik apps/sibenik.cpp)
