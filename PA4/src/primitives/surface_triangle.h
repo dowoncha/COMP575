@@ -17,11 +17,14 @@ public:
   // Triangle indices
   typedef Matrix<unsigned int, 3, 1> Vector3u;
 
-  Triangle(unsigned int a, unsigned int b, unsigned int c, const Surface& owner) :
-    indices_(a, b, c),
-    owner_(owner);
+  Triangle(unsigned int a, unsigned int b, unsigned int c) :
+    indices_(a, b, c)
   {
   }
+
+  Vector3u indices() { return indices_; }
+
+  
 
   bool Intersect(const Ray& ray, HitData& data) override
   {
@@ -75,10 +78,11 @@ public:
   {
     return normal_;
   }
+
 private:
   Vector3u indices_;
-  const Surface& owner_;
   Vector3f normal_;
+  std::shared_ptr<Surface> owner_;
 };
 
 }     // end of namespace raytracer

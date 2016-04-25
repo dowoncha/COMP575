@@ -3,205 +3,144 @@
 using namespace Eigen;
 using namespace raytracer;
 
-RayTracer::RayTracer(int* argc, char** argv) :
-  scene_(nullptr),
+RayTracer::RayTracer() :
   camera_(new Camera(512, 512)),
   size_(512 * 512),
-  frame_buffer_(size_),
-  sample_rate_(1),
-  max_trace_depth_(2),
-  sampler(&RayTracer::NoSampling)
+  max_trace_depth_(2)
 {
 }
 
 RayTracer::~RayTracer()
 {}
 
-void RayTracer::initialize(std::unique_ptr<Scene>& scene)
+void RayTracer::render(Scene* scene)
 {
-  scene_ = std::move(scene);
-}
+  printf("Rendering buffer size: %lu\n", frame_buffer_.size());
 
-void RayTracer::resize(int width, int height)
-{
-    LOG(INFO) << "Resize called with width: " << width << ", height: " << height;
-
-    // Resize the camera
-    camera_->resize(width, height);
-
-    // Compare the new frame buffer size to the old one and allocate as neccessary
-    frame_buffer_size_t oldsize = size_;
-    size_ = width * height;
-    if (size_ < oldsize)
-    {
-      frame_buffer_.resize(size_);
-    }
-    else if (size_ > oldsize)
-    {
-      frame_buffer_.reserve(size_);
-    }
-}
-
-void RayTracer::Render()
- {
-  LOG(INFO) << "Starting rendering to image";
-
-  // Most expensive thing ive ever seen.
   int index = 0;
   for (int y = 0; y < camera_->screen_height(); ++y)
   {
     for (int x = 0; x < camera_->screen_width(); ++x, ++index)
     {
-      Vector4f result = ((*this).*(sampler))(x, y);
-      frame_buffer_.at(index);
+      if (index > size_)
+      {
+        fprintf(stderr, "x and y are past the buffer size, x: %d, y: %d, size: %lu\n", x, y, size_);
+        return;
+      }
+
+      Ray ray = camera_->GetRayFromEye(x, y);
+      frame_buffer_.push_back(trace(scene, ray, 0));
     }
   }
+
+  printf("Fb size: %lu, size_: %lu\n", frame_buffer_.size(), size_);
+  assert(frame_buffer_.size() == size_);
 }
 
-Vector4f RayTracer::Trace(const Ray& ray, int depth) const
+Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
 {
-    // Trace recursion base case
-    // depth should stop if bigger than the max trace depth
-    if (depth > max_trace_depth_)
-        return Vector4f(0.0f);
+  assert(scene != nullptr);
 
-    // Hit data from the ray trace
-    HitData data;
-    bool bHit = scene_->IntersectSurfaces(ray, data);
+  // Trace recursion base case
+  // depth should stop if bigger than the max trace depth
+  if (depth > max_trace_depth_)
+    return Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
 
-    // If nothing was hit return black
-    if (bHit)
-      return Vector4f(0.0f);
-
-    // Local illumination calculation (ambient, specular, diffuse)
-    // Additionally calculates shadows
-    Vector4f local = LocalShading(ray, data);
-
-    // If the surface material has a reflection value
-    // Do another ray trace for reflection surface
-    float reflectionCoef = scene_->materials_.at(data.hit_surface->material())->reflectivity();
-    if (reflectionCoef > 0.0f)
+  // Intersect ray against all surfaces and return hit data of closest hit
+  HitData hit;
+  Vector3f point, normal;
+  float min_distance = 100000.0f;
+  for (const surface_t& surface : scene->surfaces_)
+  {
+    if (surface->Intersect(ray, point, normal))
     {
-        // Calculate the reflection ray
-        Vector3f incident = -ray.direction();
-        Vector3f dir = incident - data.normal * (2.0f * data.normal.dot(incident));
-        Ray reflectionRay(data.hit_point, dir.normalized());
-
-        Vector4f reflect = Trace(reflectionRay, depth + 1);
-
-        local = Utility::lerp(local, reflect, reflectionCoef);
+      float distance = (hit.point - ray.position()).norm();
+      if (distance < min_distance)
+      {
+        hit.surface = surface.get();
+        hit.point = point;
+        hit.normal = normal;
+        min_distance = distance;
+      }
     }
+  }
 
-    return local;
+  //printf("After hit check\n");
+
+  // If nothing was hit return black, base case
+  if (hit.surface == nullptr)
+  {
+    //printf("Recursion depth: %d\n", depth);
+    return Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
+  }
+
+  //printf("Before local shading\m");
+
+  // Calculate ambient, diffuse, and specular, and shadows
+  Vector4f local = local_shading(scene, ray, hit);
+
+  // If the surface material has a reflection value
+  // Recurisve ray trace for reflection surface
+  float reflectionCoef = hit.surface->material()->reflectivity();
+  if (reflectionCoef > 0.0f && depth < max_trace_depth_)
+  {
+      // Calculate the reflection ray
+      Vector3f incident = -ray.direction();
+      Vector3f dir = -incident - hit.normal * (2.0f * hit.normal.dot(incident));
+      Ray reflectionRay(hit.point, dir.normalized());
+
+      Vector4f reflect = trace(scene, reflectionRay, depth + 1);
+      // Lerp
+      local = Utility::lerp(local, reflect, reflectionCoef);
+  }
+
+  //printf("Finished tracing\n");
+
+  return local;
 }
 
-Vector4f RayTracer::LocalShading(const Ray& ray, const HitData& data) const
+Vector4f RayTracer::local_shading(Scene* scene, const Ray& ray, const HitData& hit) const
 {
+  //printf("Local shading\n");
+
   using namespace std;
 
-  Material* material = scene_->materials_.at(data.hit_surface->material()).get();
+  Material* material = hit.surface->material();
 
   Vector4f out = material->ambient();
 
   /**
    *  For each light in the scene
-   *  Calculate the vector from hit point -> light.
-   *  Make the shadow ray using the vector
+   *  Calculate the shadow ray (vvector) from hit point -> light.
    */
-  for (const std::unique_ptr<Light>& uLight : scene_->lights_)
+  for (const light_t& light : scene->lights_)
   {
-    Light* light = uLight.get();
-
     // Trace for shadows here
-    Vector3f hitToLight = light->position() - data.hit_point;
-    Ray shadowray(data.hit_point + hitToLight.normalized(), hitToLight);
-    HitData shadowhit;
+    Vector3f hit_to_light = light->position() - hit.point;
+    Vector3f shadow_dir = hit_to_light.normalized();
+    Ray shadowray(hit.point + shadow_dir, shadow_dir);
 
     // Check intersection data for shadows, ignore data.hit_surface
-    bool bShadow = scene_->IntersectSurfaces(shadowray, shadowhit, data.hit_surface);
-    if ( shadowhit.hit_surface != nullptr)
+    for (const surface_t& surface : scene->surfaces_)
     {
-      // Calculate the diffuse lighting color
-      float ndotl = data.normal.dot(hitToLight.normalized());
-      Vector4f Ldiff = material->diffuse() * light->intensity_ * max(0.0f, ndotl);
+      if ( surface->Intersect(ray))
+      {
+        // Calculate the diffuse lighting color
+        float ndotl = hit.normal.dot(shadow_dir);
+        Vector4f Ldiff = material->diffuse() * light->intensity() * max(0.0f, ndotl);
 
-      // Specular Light calculations
-      // Subtract the ray direction instead of add to reverse direction
-      Vector3f halfdir = (hitToLight.normalized() - ray.direction()).normalized();
-      float ndoth = data.normal.dot(halfdir);
-      Vector4f Lspec = material->specular() * light->intensity_ * pow(max(0.0f, ndoth), material->specular_power());
+        // Specular Light calculations
+        // Subtract the ray direction instead of add to reverse direction
+        Vector3f half = (hit_to_light - ray.direction()).normalized();
+        float ndoth = hit.normal.dot(half);
+        Vector4f Lspec = material->specular() * light->intensity() * pow(max(0.0f, ndoth), material->specular_power());
 
-      out += Ldiff + Lspec;
+        out += Ldiff + Lspec;
+      }
     }
   }
+
+  //printf("Local shading end\n");
 
   return out;
-}
-
-void RayTracer::set_sampling_type(PostProcess type)
-{
-  switch(type)
-  {
-    case PostProcess::NoSampling:
-      sampler = &RayTracer::NoSampling;
-      break;
-    case PostProcess::UniformSampling:
-      sampler = &RayTracer::UniformSampling;
-      break;
-    case PostProcess::RandomSampling:
-      sampler = &RayTracer::RandomSampling;
-      break;
-    default:
-      sampler = &RayTracer::NoSampling;
-      break;
-  }
-}
-
-void RayTracer::set_sample_rate(int sample_rate)
-{
-    sample_rate_ = sample_rate;
-}
-
-Vector4f RayTracer::NoSampling(int x, int y)
-{
-  Ray ray = camera_->GetRayFromEye(x, y);
-  return Trace(ray, max_trace_time_);
-}
-
-Vector4f RayTracer::UniformSampling(int x, int y)
-{
-    Vector4f result;
-    float coef = 1.0f / sample_rate_;
-    for (float dy = 0.0f; dy < 1.0f; dy += coef)
-    {
-        for (float dx = 0.0f; dx < 1.0f; dx += coef)
-        {
-            Ray ray = camera_->GetRayFromEye(x, y, dx, dy);
-            result += Trace(ray, max_trace_time_);
-        }
-    }
-    return result * coef * coef;
-}
-
-Vector4f RayTracer::RandomSampling(int x, int y)
-{
-  // Random number generator for ray random sampling
-  std::default_random_engine generator;
-  std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
-
-  // NOTE: this could be cheaper by avoiding the conversion
-  // from int to float, make sampling rate a float.
-  Vector4f result;
-  float s2 = sample_rate_ * sample_rate_;
-  for (int i = 0; i < s2; ++i)
-  {
-    float dx = distribution(generator);
-    float dy = distribution(generator);
-
-    Ray ray = camera_->GetRayFromEye(x, y, dx, dy);
-    result += Trace(ray, max_trace_time_);
-  }
-
-  // Return the total result divided by the sampling rate^2
-  return result / s2;
 }

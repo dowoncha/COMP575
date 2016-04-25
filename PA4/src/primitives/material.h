@@ -11,6 +11,8 @@
 #define _RAY_MATERIAL_
 
 #include <Eigen/Core>
+#include <string>
+#include <memory>
 
 using namespace Eigen;
 
@@ -61,6 +63,8 @@ private:
   Vector4f specular_;
   float specular_power_, reflectivity_;
 };
+
+using material_t      = std::shared_ptr<raytracer::Material>;
 
 } // end of namespace raytracer
 
