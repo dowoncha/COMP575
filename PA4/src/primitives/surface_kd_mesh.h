@@ -16,6 +16,8 @@
 #include <vector>
 #include <array>
 #include <queue>
+#include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <float.h>
 
@@ -38,6 +40,7 @@ struct AABB
   {
     float d_inv_x = 1.0f / ray.direction()(0);
     float d_inv_y = 1.0f / ray.direction()(1);
+    float d_inv_z = 1.0f / ray.direction()(2);
 
     float tx1 = (min(0) - ray.position()(0)) * d_inv_x;
     float tx2 = (max(0) - ray.position()(0)) * d_inv_x;
@@ -51,7 +54,13 @@ struct AABB
     tmin = std::max(tmin, std::min(ty1, ty2));
     tmax = std::min(tmax, std::max(ty1, ty2));
 
-    return tmax >= tmin;
+    float tz1 = (min(2) - ray.position()(2)) * d_inv_z;
+    float tz2 = (max(2) - ray.position()(2)) * d_inv_z;
+
+    tmin = std::max(tmin, std::min(tz1, tz2));
+    tmax = std::min(tmax, std::max(tz1, tz2));
+
+    return (tmax >= tmin && tmax > 0);
   }
 };
 
@@ -66,6 +75,16 @@ struct KdNode
   float splitPosition;
   bool isLeaf;
   std::vector<int> triIndex;
+
+  KdNode() :
+    leftChildId(-1),
+    rightChildId(-1)
+  {}
+
+  void print() const
+  {
+    printf("Node: %d, left: %d, right %d: isLeaf: %d, trisize: %lu\n", nodeId, leftChildId, rightChildId, isLeaf, triIndex.size());
+  }
 };
 
 class KdMesh: public Surface
@@ -85,13 +104,23 @@ public:
   bool Intersect(
   	const KdNode& node,
   	const Ray& ray,
-  	float& t,
-  	float& tmin,
   	HitData& hit) const;
 
-  bool intersect_tri(const Ray& ray, const triangle_t& triangle, float& t) const;
+  bool intersect_tri(const Ray& ray, const triangle_t& triangle, Vector3f& hit_point) const;
 
   Vector3f normal_tri(triangle_t tri) const;
+
+  void postorder(const KdNode& node, int indent=0)
+  {
+    if(!node.isLeaf) {
+        postorder(kd_tree_.at(node.leftChildId), indent + 2);
+        postorder(kd_tree_.at(node.rightChildId), indent + 2);
+        if (indent) {
+            std::cout << std::setw(indent) << ' ';
+        }
+        std::cout<< node.nodeId << "\n ";
+    }
+  }
 private:
   // Load the mesh from the filename
 	void load_mesh(const std::string& filename);

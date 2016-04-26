@@ -13,7 +13,7 @@ void Scene::add_surface(const surface_t& surface)
   surfaces_.push_back(std::move(surface));
 }
 
-void Scene::add_light(const light_t& light)
+void Scene::add_light(const light_t& light) 
 {
   // Move unique pointer into vector
   lights_.push_back(std::move(light));

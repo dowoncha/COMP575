@@ -13,14 +13,12 @@ KdMesh::KdMesh(std::string meshfile, std::string kdfile, material_t material) :
 KdMesh::~KdMesh()
 {}
 
+// Return the closest hit point from ray
 bool KdMesh::Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const
 {
 	HitData hit;
-	float hit_time;
-	float tMin = 10000.0f;
-	if (Intersect(kd_tree_.front(), ray, hit_time, tMin, hit))
+	if (Intersect(kd_tree_.front(), ray, hit))
 	{
-		printf("Kd mesh hit\n");
 		hit_point = hit.point;
 		hit_normal = hit.normal;
 		return true;
@@ -33,67 +31,88 @@ bool KdMesh::Intersect(const Ray& ray) const
 {
 	HitData data;
 	float hit_time;
-	float tMin = 100000.0f;
-	if (Intersect(kd_tree_.front(), ray, hit_time, tMin, data))
-	{
-		return true;
-	}
+	float tMin;
 
-	return false;
+	return Intersect(kd_tree_.front(), ray, data);
 }
 
 bool KdMesh::Intersect(
 	const KdNode& node,
 	const Ray& ray,
-	float& t,
-	float& tmin,
 	HitData& hit) const
 {
-	if (!node.boundingBox.Intersect(ray)) return false;
-
-  bool bTriHit = false;
-  Vector3f hit_point, local_hit_point, normal;
-
-	// Get left and right child of intersected node
-  const KdNode& left = kd_tree_.at(node.leftChildId);
-  const KdNode& right = kd_tree_.at(node.rightChildId);
-
-  // Recurse through any children nodes if they have triangles
-  if (left.triIndex.size() > 0 || right.triIndex.size() > 0)
-  {
-    return Intersect(left, ray, t, tmin, hit) || Intersect(right, ray, t, tmin, hit);
-  }
-  else
-  {
-    // For each triangle in leaf node intersect and find the closest triangle
-    for (int triangle_index : node.triIndex)
+	// Kd tree traversal
+	// Start at root
+	// Intersect ray with bounding box
+	// If root's children has no triangle's then it is an inner node and traverse children
+	// Ray must intersect current node
+	if (node.boundingBox.Intersect(ray))
+	{
+		//node.print();
+		// Recurse through any children nodes if they have triangles
+		//if (left.leftChildId != -1 || right.rightChildId != -1)
+		if (!node.isLeaf)
 		{
-			printf("Leaf node with %lu triangles\n", node.triIndex.size());
-			if (intersect_tri(ray, triangles_.at(triangle_index), t))
-			{
-				bTriHit = true;
-				tmin = t;
-				hit_point = ray.evaluate(t);
-				normal = normal_tri(triangles_.at(triangle_index));
-			}
-		}
+			const KdNode& left = kd_tree_.at(node.leftChildId);
+			const KdNode& right = kd_tree_.at(node.rightChildId);
 
-		// If a triangle was found at all return true;
-    if (bTriHit)
-    {
-			t = tmin;
-			hit.point = hit_point;
-			hit.normal = normal;
-			return true;
-    }
+		  return Intersect(left, ray, hit) || Intersect(right, ray, hit);
+		}
+		else // Leaf node reached
+		{
+			bool bTriHit = false;
+			Vector3f hit_point, normal;
+		  float min_distance = 100000.0f;
+		  for (int tri_index : node.triIndex)
+		  {
+		    if (intersect_tri(ray, triangles_.at(tri_index), hit_point))
+		    {
+		      float distance = (hit_point - ray.position()).norm();
+		      if (distance < min_distance)
+		      {
+						bTriHit = true;
+						hit.surface = dynamic_cast<Surface*>(const_cast<KdMesh*>(this));
+		        //hit.surface = std::dynathis; // cast here
+		        hit.point = hit_point;
+		        hit.normal = normal_tri(triangles_.at(tri_index));
+		        min_distance = distance;
+		      }
+		    }
+			}
+
+			// Leaf node should have
+			//printf("tri size: %lu\n", node.triIndex.size());
+		  // For each triangle in leaf node intersect and find the closest triangle
+		  /*
+		  for (int triangle_index : node.triIndex)
+			{
+				if (intersect_tri(ray, triangles_.at(triangle_index), hit_point))
+				{
+					bTriHit = true;
+					float newdist = (hit_point - ray.position()).norm();
+					if (newdist < distance)
+					{
+						hitTri = triangle_index;
+						hit.point = hit_point;
+						hit.normal = normal_tri(triangles_.at(triangle_index));
+					}
+				}
+			}
+			*/
+
+			// If a triangle was found at all return true and set hit point/normal to closest triangle
+		  if (bTriHit)
+				return true;
+
+			// No trianlges hit in node
+			return false;
+		}
 	}
 	return false;
 }
 
-bool KdMesh::intersect_tri(const Ray& ray, const triangle_t& triangle, float& t) const
+bool KdMesh::intersect_tri(const Ray& ray, const triangle_t& triangle, Vector3f& hit_point) const
 {
-	printf("intersecting triangles\n");
-
 	// Get vertices of the trianlge
 	const Vector3f& v0 = vertices_.at(triangle(0));
 	const Vector3f& v1 = vertices_.at(triangle(1));
@@ -127,10 +146,11 @@ bool KdMesh::intersect_tri(const Ray& ray, const triangle_t& triangle, float& t)
  	//The intersection lies outside of the triangle
  	if(v < 0.0f || u + v  > 1.0f) return false;
 
- 	float tin = edge2.dot(ray_cross_edge) * inv_det;
+ 	float t = edge2.dot(ray_cross_edge) * inv_det;
 
- 	if(tin > 1e-6) { //ray intersection
-	 t = tin;
+ 	if(t > 1e-6)
+	{ //ray intersection
+	 hit_point = ray.evaluate(t);
 	 return true;
  }
 
@@ -233,6 +253,8 @@ bool KdMesh::load_kd_tree(const std::string& filename)
 	if (!fp)
 		return false;
 	int nodeId = -1;
+	int inner = 0;
+	int leaf = 0;
 	while (true)
 	{
 		nodeId++;
@@ -249,6 +271,7 @@ bool KdMesh::load_kd_tree(const std::string& filename)
 			kd.boundingBox.min = boxMin;
 			kd.boundingBox.max = boxMax;
 			kd_tree_.push_back(kd);
+			inner++;
 		}
 		else if (strcmp(temp, "leaf{") == 0)
 		{
@@ -270,11 +293,12 @@ bool KdMesh::load_kd_tree(const std::string& filename)
 				kd.triIndex.push_back(triIndex);
 			}
 			kd_tree_.push_back(kd);
+			leaf++;
 		}
 		else
 			break;
 	}
-	printf("Kd file parsed succesfully.\n");
+	printf("Kd file parsed succesfully. With %d inner nodes and %d leaves\n", inner, leaf);
 	return true;
 }
 

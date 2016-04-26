@@ -4,8 +4,8 @@ using namespace Eigen;
 using namespace raytracer;
 
 RayTracer::RayTracer() :
-  camera_(new Camera(512, 512)),
-  size_(512 * 512),
+  camera_(new Camera(256, 256)),
+  size_(256 * 256),
   max_trace_depth_(2)
 {
 }
@@ -33,6 +33,8 @@ void RayTracer::bwrender(Scene* scene)
         return;
       }
 
+      printf("Pixel (%d, %d)\n", x, y);
+
       Ray ray = camera_->GetRayFromEye(x, y);
       HitData hit;
       if (!scene->intersect_surfaces(ray, hit)) buffer.push_back(Vector4f(0.0f, 0.0f, 0.0f, 1.0f));
@@ -45,11 +47,10 @@ void RayTracer::bwrender(Scene* scene)
 
 void RayTracer::render(Scene* scene)
 {
-  printf("Rendering buffer size: %lu\n", frame_buffer_.size());
-
   std::vector<Vector4f> buffer;
 
   int index = 0;
+  int counter = 0;
   for (int y = 0; y < camera_->screen_height(); ++y)
   {
     for (int x = 0; x < camera_->screen_width(); ++x, ++index)
@@ -59,6 +60,8 @@ void RayTracer::render(Scene* scene)
         fprintf(stderr, "x and y are past the buffer size, x: %d, y: %d, size: %lu\n", x, y, size_);
         return;
       }
+
+      printf("Pixel (%d, %d)\r", x, y);
 
       Ray ray = camera_->GetRayFromEye(x, y);
       buffer.push_back(trace(scene, ray, 0));
@@ -89,11 +92,14 @@ Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
     return Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
   }
 
+  assert(hit.surface != nullptr);
+
   // Calculate ambient, diffuse, and specular, and shadows
   Vector4f local = local_shading(scene, ray, hit);
 
   // If the surface material has a reflection value
   // Recurisve ray trace for reflection surface
+  /*
   float reflectionCoef = hit.surface->material()->reflectivity();
   if (reflectionCoef > 0.0f && depth <= max_trace_depth_)
   {
@@ -106,6 +112,7 @@ Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
       // Lerp
       local = Utility::lerp(local, reflect, reflectionCoef);
   }
+  */
 
   //printf("Finished tracing\n");
 
@@ -114,11 +121,14 @@ Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
 
 Vector4f RayTracer::local_shading(Scene* scene, const Ray& ray, const HitData& hit) const
 {
-  //printf("Local shading\n");
+  assert(hit.surface != nullptr);
+    //printf("Local shading\n");
 
   using namespace std;
 
   Material* material = hit.surface->material();
+
+  assert(material != nullptr);
 
   Vector4f out = material->ambient();
 

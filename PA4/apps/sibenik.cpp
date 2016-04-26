@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(512, 512);
+	glutInitWindowSize(256, 256);
 	glutCreateWindow("Sibenik");
 
 	// Glew initialization
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 		"../assets/sibenik.kd",
 		white_mat
 	));
-	ray.set_max_trace_depth(1);
+	ray.set_max_trace_depth(0);
 
 	// glut funcs
 	ray.bwrender(scene.get());
@@ -81,8 +81,8 @@ void display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-  glDrawPixels(512,
-               512,
+  glDrawPixels(256,
+               256,
                GL_RGBA,
                GL_FLOAT,
                ray.frame_buffer_.data());
