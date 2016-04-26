@@ -11,14 +11,8 @@ KdMesh::KdMesh(std::string meshfile, std::string kdfile, std::string material_na
 KdMesh::~KdMesh()
 {}
 
-bool KdMesh::Intersect(const Ray& ray, HitData& hit) const
-{
-	//Intersect(kd_tree_.at(0), ray, );
-}
-
 bool KdMesh::Intersect(const KdNode& node, const Ray& ray, float t, float& tmin) const
 {
-	/*
   // If the node's bounding box is hit
 	if (node->boundingBox.Intersect(ray))
 	{
@@ -41,7 +35,7 @@ bool KdMesh::Intersect(const KdNode& node, const Ray& ray, float t, float& tmin)
       // For each triangle intersect
       for (const Triangle& tri: node.triangles)
       {
-        if (tri.Intersect(ray, t, tmin))
+        if (tri.IntersectTri(ray, t, tmin))
         {
           bTriHit = true;
           tmin = t;
@@ -56,6 +50,11 @@ bool KdMesh::Intersect(const KdNode& node, const Ray& ray, float t, float& tmin)
 	}
 
 	*/
+}
+
+bool KdMesh::IntersectTri(const Ray& ray, const Vector3u& triangle)
+{
+
 }
 
 // Load the mesh from the filename

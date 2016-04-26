@@ -11,13 +11,16 @@
 #include <fstream>
 #include <float.h>
 
-#include "primitives/Surface.hpp"
-#include "Material.hpp"
-#include "Mesh.hpp"
-#include "RayTracer.h"
+#include "primitives/surface.h"
+#include "primitives/material.h"
+#include "primitives/surface_kd_mesh.h"
+#include "ray_tracer.h"
+#include "scene.h"
 
-// This is to call a member function pointer, dirty but quick
-#define CALL_MEMBER_FN(object, ptrToMember)  ((object).*(ptrToMember))
+void display();
+
+static RayTracer ray;
+static std::unique_ptr<Scene> scene(new Scene());
 
 int main(int argc, char* argv[])
 {
@@ -27,17 +30,17 @@ int main(int argc, char* argv[])
 		Vector4f(0.0f, 0.0f, 0.0f, 1.0f),
 	));
 
-  // Make light
-  std::shared_ptr<Light> light(new Light(
+	scene->add_light(std::make_shared<Light>(
 		Vector3f(0.0f, 0.0f, 0.0f),   // position
     Vector3f(1.0f, 1.0f, 1.0f),			//
     Vector3f(1.0f, 1.0f, 1.0f)
-	);
+	));
 
-  Scene scene;
-  scene.AddLight(&light);
-  scene.loadMesh("../assets/sibenik2.obj");
-  scene.loadKdTree("../assets/kdtree2.simple");
+	scene->add_surface(std::make_shared<KdMesh>(
+		"../assets/sibenik.obj",
+		"../assets/sibenik.kd",
+		white_mat
+	));
 
 	// glut funcs
 	ray.render(scene.get());
@@ -48,7 +51,7 @@ int main(int argc, char* argv[])
   exit(EXIT_SUCCESS);
 }
 
-void Display()
+void display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 

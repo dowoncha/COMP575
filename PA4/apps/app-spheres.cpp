@@ -70,8 +70,8 @@ int main(int argc, char* argv[])
 		Vector4f(0.0f, 0.0f, 0.2f, 1.0f),
 		Vector4f(0.0f, 0.0f, 1.0f, 1.0f),
 		Vector4f(0.0f, 0.0f, 0.0f, 1.0f),
-		0.0f,																		// specular power
-		32.0f																		// reflectivity
+		32.0f,																		// specular power
+		0.8f																		// reflectivity
 	));
 
 	std::shared_ptr<Material> white_mat(new Material(
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 	));
 
 	std::shared_ptr<Surface> sphere_red(new Sphere(Vector3f(-4.0f, 0.0f, -7.0f), 1.0f, red_mat));
-	std::shared_ptr<Sphere> sphere_blue(new Sphere(Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue_mat));
+	std::shared_ptr<Surface> sphere_blue(new Sphere(Vector3f(4.0f, 0.0f, -7.0f), 1.0f, blue_mat));
 	std::shared_ptr<Surface> sphere_green(new Sphere(Vector3f(0.0f, 0.0f, -7.0f), 2.0f, green_mat));
 
 	std::shared_ptr<Surface> plane_white(new Plane(Vector3f(0.0f, -2.0f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), white_mat));
@@ -108,9 +108,6 @@ int main(int argc, char* argv[])
     Vector3f(1.0f, 1.0f, 1.0f)  		// diffuse
 	));
 
-	//scene_ = std::move(scene);
-
-	// glut funcs
 	ray.render(scene.get());
 
 	glutDisplayFunc(Display);

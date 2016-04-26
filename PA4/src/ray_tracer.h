@@ -43,6 +43,9 @@ public:
   RayTracer();
 
   ~RayTracer();
+
+  void bwrender(Scene* scene);
+
   /**
    *  Ray trace render function called by idle function
    */

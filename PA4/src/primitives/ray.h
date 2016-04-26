@@ -26,7 +26,7 @@ public:
   Ray(Vector3f position,
       Vector3f direction) :
   position_(position),
-  direction_(direction)
+  direction_(direction.normalized())
   { }
 
   ~Ray() {}

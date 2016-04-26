@@ -41,6 +41,11 @@ public:
 
   // Add a new material for any surface to use
   void add_material(std::string material_name, const material_t& material);
+
+  bool intersect_surfaces(const Ray& ray, HitData& hit);
+
+  // ignore defaults to nullptr
+  bool intersect_surfaces(const Ray& ray, Surface* ignore);
 private:
   surfaces_list_t surfaces_;
   lights_list_t lights_;

@@ -32,26 +32,23 @@ public:
     Vector3f posray = position_ - ray.position();
     // Cos theta of hit point and ray
     float s = posray.dot(ray.direction());
-    float length2 = posray.squaredNorm();
+    if (s < 0.0f) return false;
 
-    // If the angle between the ray and the direction is less than 90
-    if (s > 0.0f)
-    {
-      float m2 = length2 - s * s;
+    float length2 = posray.dot(posray);
+    float m2 = length2 - s * s;
 
-      if (m2 < radius2_)
-      {
-        float q = std::sqrt(radius2_ - m2);
+    if (m2 > radius2_) return false;
 
-        float t = (length2 > radius2_) ? s - q : s + q;
-        hit_point = ray.evaluate(t);
-        hit_normal = normal(hit_point);
+    float q = std::sqrt(radius2_ - m2);
 
-        return (t > 0.0f);
-      }
-    }
+    float t = (length2 > radius2_) ? s - q : s + q;
 
-    return false;
+    if (t < 0.0f) return false;
+
+    hit_point = ray.evaluate(t);
+    hit_normal = normal(hit_point);
+
+    return true;
   }
 
   bool Intersect(const Ray& ray) const
@@ -60,23 +57,19 @@ public:
     Vector3f posray = position_ - ray.position();
     // Cos theta of hit point and ray
     float s = posray.dot(ray.direction());
-    float length2 = posray.squaredNorm();
+    if (s < 0.0f) return false;
 
-    // If the angle between the ray and the direction is less than 90
-    if (s > 0.0f)
-    {
-      float m2 = length2 - s * s;
+    float length2 = posray.dot(posray);
+    float m2 = length2 - s * s;
 
-      if (m2 < radius2_)
-      {
-        float q = std::sqrt(radius2_ - m2);
+    if (m2 > radius2_) return false;
 
-        float t = (length2 > radius2_) ? s - q : s + q;
-        return (t > 0.0f);
-      }
-    }
+    float q = std::sqrt(radius2_ - m2);
 
-    return false;
+    float t = (length2 > radius2_) ? s - q : s + q;
+    if (t < 0.0f) return false;
+
+    return true;
   }
 
   Vector3f normal(const Vector3f& point) const

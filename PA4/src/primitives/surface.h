@@ -56,8 +56,6 @@ public:
 
   virtual bool Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const = 0;
 
-  virtual Vector3f normal() const { printf("base surface normal"); return Vector3f(0.0f); }
-
   void set_material(material_t material) { material_ = material; }
   Material* material() const { return material_.get(); }
 protected:

@@ -20,9 +20,9 @@ using namespace Eigen;
 class Plane : public Surface
 {
 public:
-
   // @param position of the plane
   // @param normal of the plane
+  // @param material to apply to plane
   Plane(Vector3f position, Vector3f normal, material_t material) :
     Surface(position, material),
     normal_(normal.normalized())
@@ -36,15 +36,14 @@ public:
     // cos a between the normal and ray
     float denom = normal_.dot(ray.direction());
 
-    // Check against parallel rays
-    if (std::fabs(denom) > 1e-6)
+    if (std::fabs(denom) > .0001f)
     {
       // Time of intersection with the plane
-      float plane_hit_time = normal_.dot(position_ - ray.position()) / denom;
-      if (plane_hit_time >= 0.0f)
+      float t = (position_ - ray.position()).dot(normal_) / denom;
+      if (t > 0.0001f)
       {
-        hit_point = ray.evaluate(plane_hit_time);
-        hit_normal = normal_;
+        hit_point = ray.evaluate(t);
+        hit_normal = normal();
         return true;
       }
     }
@@ -60,7 +59,7 @@ public:
     {
       // Time of intersection with the plane
       float plane_hit_time = normal_.dot(position_ - ray.position()) / denom;
-      if (plane_hit_time >= 0.0f)
+      if (plane_hit_time > 0.0f)
       {
         return true;
       }
