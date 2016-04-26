@@ -24,10 +24,17 @@ include_directories(src)
 
 set(SRCS src/ray_tracer.cpp
          src/scene.cpp
-         src/primitives/camera.cpp)
+         src/primitives/camera.cpp
+       src/primitives/surface_kd_mesh.cpp)
+
+add_executable(sibenik apps/sibenik.cpp ${SRCS})
+target_link_libraries(sibenik ${OPENGL_LIBRARIES}
+              ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
+              ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so
+            -lstdc++ -lm)
 
 add_executable(app-spheres apps/app-spheres.cpp ${SRCS})
 target_link_libraries(app-spheres ${OPENGL_LIBRARIES}
-                              ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
-                              ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so
-                            -lstdc++ -lm)
+              ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
+              ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so
+            -lstdc++ -lm)

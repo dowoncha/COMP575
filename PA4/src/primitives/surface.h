@@ -24,7 +24,7 @@ using namespace Eigen;
 class Node
 {
 public:
-  Node() : position_(0.0f) { }
+  Node() : position_(0.0f, 0.0f, 0.0f) { }
   Node(Vector3f position) : position_(position) { }
 
   virtual ~Node() { }
@@ -43,6 +43,10 @@ class Surface : public Node
 public:
   Surface(Vector3f position) :
     Node(position)
+  {}
+
+  Surface(material_t material) :
+    Node()
   {}
 
   Surface(Vector3f position, material_t material) :

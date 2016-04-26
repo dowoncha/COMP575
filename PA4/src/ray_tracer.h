@@ -23,7 +23,6 @@
 
 #include <Eigen/Core>
 
-#include "easylogging++.h"
 #include "scene.h"
 #include "primitives/material.h"
 #include "primitives/camera.h"
@@ -50,6 +49,8 @@ public:
    *  Ray trace render function called by idle function
    */
   void render(Scene* scene);
+
+  void set_max_trace_depth(int new_depth);
 private:
   /**
    *  Trace a ray through the scene recursively.

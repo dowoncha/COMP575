@@ -13,6 +13,11 @@ RayTracer::RayTracer() :
 RayTracer::~RayTracer()
 {}
 
+void RayTracer::set_max_trace_depth(int new_depth)
+{
+  max_trace_depth_ = new_depth;
+}
+
 void RayTracer::bwrender(Scene* scene)
 {
   std::vector<Vector4f> buffer;

@@ -12,8 +12,10 @@
 #include <algorithm>
 #include <unordered_map>
 #include <list>
+#include <string>
 #include <memory>
 
+#include "primitives/ray.h"
 #include "primitives/surface.h"
 #include "primitives/light.h"
 #include "primitives/material.h"

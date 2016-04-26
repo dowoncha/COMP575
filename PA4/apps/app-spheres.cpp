@@ -10,9 +10,6 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
-#include <vector>
-#include <queue>
-#include <fstream>
 #include <memory>
 
 #include "scene.h"
