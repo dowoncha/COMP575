@@ -14,10 +14,10 @@
 #include <string>
 #include <memory>
 
-using namespace Eigen;
-
 namespace raytracer
 {
+
+using namespace Eigen;
 
 class Material
 {
@@ -57,7 +57,6 @@ public:
   std::string name() { return name_; }
   void set_name(std::string name) { name_ = name; }
 private:
-  std::string name_;
   Vector4f ambient_;
   Vector4f diffuse_;
   Vector4f specular_;

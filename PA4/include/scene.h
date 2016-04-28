@@ -36,13 +36,13 @@ public:
   ~Scene();
 
   // Add a new surface in the scene
-  void add_surface(const surface_t& surface);
+  void addSurfsce(const surface_t& surface);
 
   // Add a new light into the scene
-  void add_light(const light_t& light);
+  void addLight(const light_t& light);
 
   // Add a new material for any surface to use
-  void add_material(std::string material_name, const material_t& material);
+  void addMaterial(const std::string& material_name, const material_t& material);
 
   /**
    *  Intersect ray with each surface in the list

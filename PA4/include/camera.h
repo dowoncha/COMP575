@@ -29,10 +29,10 @@ public:
   Camera(int width, int height);
 
   // default offset is to the center of the pixel
-  Ray GetRayFromEye(int x, int y) const;
+  Ray getRay(int x, int y) const;
 
   // Get ray with a float offset.
-  Ray GetRayFromEye(int x, int y, float offsetx, float offsety) const;
+  Ray getRay(int x, int y, float offsetx, float offsety) const;
 
   void resize(int width, int height);
 

@@ -24,7 +24,7 @@ public:
 
   Vector3u indices() { return indices_; }
 
-  
+
 
   bool Intersect(const Ray& ray, HitData& data) override
   {

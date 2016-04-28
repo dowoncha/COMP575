@@ -15,51 +15,47 @@ RayTracer::RayTracer(int width, int height) :
   camera_(new Camera(width, height)),
   size_(width * height),
   max_trace_depth_(2),
-  bShadows_(true)
+  bShadows_(true),
+  frame_buffer_(size_)
 {
 }
 
 RayTracer::~RayTracer()
 {}
 
-void RayTracer::set_max_trace_depth(int new_depth)
+void RayTracer::setMaxTraceDepth(int new_depth)
 {
   max_trace_depth_ = new_depth;
 }
 
-void RayTracer::toggle_shadows()
+void RayTracer::enableShadows()
 {
-  bShadows_ = !bShadows_;
+  bShadows = true;
+}
+
+void RayTracer::disableShadows()
+{
+  bShadows = false;
 }
 
 void RayTracer::bwrender(Scene* scene)
 {
-  std::vector<Vector4f> buffer;
-
   int index = 0;
   for (int y = 0; y < camera_->screen_height(); ++y)
   {
     for (int x = 0; x < camera_->screen_width(); ++x, ++index)
     {
-      if (index > size_)
-      {
-        fprintf(stderr, "x and y are past the buffer size, x: %d, y: %d, size: %lu\n", x, y, size_);
-        return;
-      }
-
-      Ray ray = camera_->GetRayFromEye(x, y);
+      Ray ray = camera_->getRay(x, y);
       HitData hit;
       if (!scene->intersect_surfaces(ray, hit))
-        buffer.push_back(Vector4f(0.0f, 0.0f, 0.0f, 1.0f));
+        frame_buffer_.at(index) = Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
       else
       {
         printf("Pixel (%d, %d)\r", x, y);
-        buffer.push_back(Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+        frame_buffer_.at(i) = Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
       }
     }
   }
-
-  frame_buffer_ = buffer;
 }
 
 /**
@@ -68,26 +64,17 @@ void RayTracer::bwrender(Scene* scene)
  */
 void RayTracer::render(Scene* scene)
 {
-  std::vector<Vector4f> buffer;     // Temporary frame buffer
-
   int index = 0;
-  int counter = 0;
   for (int y = 0; y < camera_->screen_height(); ++y)
   {
     for (int x = 0; x < camera_->screen_width(); ++x, ++index)
     {
       printf("Pixel (%d, %d)\r", x, y);
 
-      Ray ray = camera_->GetRayFromEye(x, y);
-      Vector4f pixel = trace(scene, ray, 0);
-      buffer.push_back(GammaEncode(pixel));
+      Ray ray = camera_->getRay(x, y);
+      frame_buffer_.at(index) = gammaEncode(trace(scene, ray, 0));
     }
   }
-
-  frame_buffer_ = buffer;
-
-  printf("Fb size: %lu, size_: %lu\n", frame_buffer_.size(), size_);
-  assert(buffer.size() == size_);
 }
 
 Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
@@ -132,7 +119,7 @@ Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
   return local;
 }
 
-Vector4f RayTracer::local_shading(Scene* scene, const Ray& ray, const HitData& hit) const
+Vector4f RayTracer::localShading(Scene* scene, const Ray& ray, const HitData& hit) const
 {
   assert(scene != nullptr);
   assert(hit.surface != nullptr);
@@ -176,6 +163,25 @@ Vector4f RayTracer::local_shading(Scene* scene, const Ray& ray, const HitData& h
   }
 
   //printf("Local shading end\n");
+
+  return out;
+}
+
+Vector4f RayTracer::gammaEncode(const Vector4f& color)
+{
+  float gamma = 1.0f / 2.2f;
+
+  Vector4f out;
+
+  out(0) = std::pow(color(0), gamma);
+  out(1) = std::pow(color(1), gamma);
+  out(2) = std::pow(color(2), gamma);
+
+  out(0) = Utility::PinToUnit(out(0));
+  out(1) = Utility::PinToUnit(out(1));
+  out(2) = Utility::PinToUnit(out(2));
+
+  out(3) = 1.0f;
 
   return out;
 }
