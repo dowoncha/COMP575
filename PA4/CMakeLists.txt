@@ -27,8 +27,14 @@ set(SRCS src/ray_tracer.cpp
          src/primitives/camera.cpp
        src/primitives/surface_kd_mesh.cpp)
 
-add_executable(sibenik apps/sibenik.cpp ${SRCS})
-target_link_libraries(sibenik ${OPENGL_LIBRARIES}
+add_executable(sibenikshadow apps/sibenik_shadow.cpp ${SRCS})
+target_link_libraries(sibenikshadow ${OPENGL_LIBRARIES}
+              ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
+              ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so
+            -lstdc++ -lm)
+
+add_executable(sibeniknoshadow apps/sibenik_noshadow.cpp ${SRCS})
+target_link_libraries(sibeniknoshadow ${OPENGL_LIBRARIES}
               ${CMAKE_SOURCE_DIR}/lib/freeglut/lib/libglut.so
               ${CMAKE_SOURCE_DIR}/lib/glew/lib/libGLEW.so
             -lstdc++ -lm)

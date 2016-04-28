@@ -22,7 +22,7 @@
 using namespace Eigen;
 using namespace raytracer;
 
-static RayTracer ray;
+static RayTracer ray(512, 512);
 static std::unique_ptr<Scene> scene(new Scene());
 
 void Idle();
@@ -92,8 +92,8 @@ int main(int argc, char* argv[])
 
 	// add 3 spheres(position, radius, material name) to the scene
 	scene->add_surface(sphere_red);
-	scene->add_surface(sphere_blue);
 	scene->add_surface(sphere_green);
+	scene->add_surface(sphere_blue);
 
 	// Add flat white plane to the scene.
 	scene->add_surface(plane_white);
@@ -105,6 +105,7 @@ int main(int argc, char* argv[])
     Vector3f(1.0f, 1.0f, 1.0f)  		// diffuse
 	));
 
+	ray.set_max_trace_depth(3);
 	ray.render(scene.get());
 
 	glutDisplayFunc(Display);

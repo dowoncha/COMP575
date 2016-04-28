@@ -3,18 +3,18 @@
 using namespace raytracer;
 
 Camera::Camera() :
-  position  (0.0f, 0.0f, 0.0f),
-  target_    (0.0f, 0.0f, -1.0f),
+  position_  (0.0f, 0.0f, 0.0f),
   right_     (1.0f, 0.0f, 0.0f),
   up_        (0.0f, 1.0f, 0.0f),
   forward_   (0.0f, 0.0f, 1.0f),
-  l(-0.1f), r(0.1f), t(0.1f), b(-0.1f), d(0.1f)
+  l(-0.1f), r(0.1f), t(0.1f), b(-0.1f), d(0.1f),
+  screen_width_(512),
+  screen_height_(512)
 {
 }
 
 Camera::Camera(int width, int height) :
-  position  (0.0f, 0.0f, 0.0f),
-  target_    (0.0f, 0.0f, -1.0f),
+  position_  (0.0f, 0.0f, 0.0f),
   right_     (1.0f, 0.0f, 0.0f),
   up_        (0.0f, 1.0f, 0.0f),
   forward_   (0.0f, 0.0f, 1.0f),
@@ -25,7 +25,7 @@ Camera::Camera(int width, int height) :
 
 // default offset is to the center of the pixel
 Ray Camera::GetRayFromEye(int x, int y) const
-{
+{	
   assert(x < screen_width_);
   assert(y < screen_height_);
 
@@ -39,7 +39,7 @@ Ray Camera::GetRayFromEye(int x, int y) const
   // forward_ is also negative
 	Vector3f dir = ((right_ * u) + (up_ * v) - (forward_ * d)).normalized();
 
-	return Ray(position, dir);
+	return Ray(position_, dir);
 }
 
 void Camera::resize(int width, int height)

@@ -24,7 +24,6 @@ using namespace Eigen;
 class Camera
 {
 public:
-  // Initializes each vector to default 1,1,1
   Camera();
 
   Camera(int width, int height);
@@ -39,9 +38,13 @@ public:
 
   int screen_width()  const { return screen_width_; }
   int screen_height() const { return screen_height_; }
+
+  void set_position(const Vector3f& position) { position_ = position; }
+  void set_u(const Vector3f& u) { right_ = u; }
+  void set_v(const Vector3f& v) { up_ = v; }
+  void set_w(const Vector3f& w) { forward_ = w; }
 private:
-  Vector3f position;                // position vector
-  Vector3f target_;                  // What are we looking at
+  Vector3f position_;                // position vector
   Vector3f forward_;                 // forward_ vector
   Vector3f up_;                      // up_ vector, typically y-axis
   Vector3f right_;                   // right_ vector

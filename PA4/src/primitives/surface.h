@@ -46,7 +46,8 @@ public:
   {}
 
   Surface(material_t material) :
-    Node()
+    Node(),
+    material_(material)
   {}
 
   Surface(Vector3f position, material_t material) :
@@ -74,6 +75,7 @@ using surface_t = std::shared_ptr<raytracer::Surface>;
 struct HitData
 {
   Vector3f point;
+  float distance;
   Vector3f normal;
   Surface* surface;
 

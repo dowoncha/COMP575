@@ -44,10 +44,16 @@ public:
   // Add a new material for any surface to use
   void add_material(std::string material_name, const material_t& material);
 
-  bool intersect_surfaces(const Ray& ray, HitData& hit);
+  /**
+   *  Intersect ray with each surface in the list
+   *  @param  ray to inersect surfaces with
+   *  @param  hit data that returns info on the hit
+   *  @return     Whether or not a surface was hit
+   */
+  bool intersect_surfaces(const Ray& ray, HitData& hit) const;
 
-  // ignore defaults to nullptr
-  bool intersect_surfaces(const Ray& ray, Surface* ignore);
+  // Read above. Just checks if a surface was hit, while taking a pointer to a surface to ignore checks.
+  bool intersect_surfaces(const Ray& ray) const;
 private:
   surfaces_list_t surfaces_;
   lights_list_t lights_;

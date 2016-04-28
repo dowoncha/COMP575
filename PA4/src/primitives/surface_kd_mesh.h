@@ -97,19 +97,21 @@ public:
 
 	~KdMesh();
 
+  // Derived function for surface intersection
 	bool Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const;
-
   bool Intersect(const Ray& ray) const;
 
-  bool Intersect(
-  	const KdNode& node,
-  	const Ray& ray,
-  	HitData& hit) const;
+private:
+  // Recursively intersect starting at root node, hit data contains the hit point and normal
+  bool Intersect(const KdNode& node, const Ray& ray, HitData& hit) const;
 
+  // Calculate whether a ray intersects a triangle and return the hit point
   bool intersect_tri(const Ray& ray, const triangle_t& triangle, Vector3f& hit_point) const;
 
-  Vector3f normal_tri(triangle_t tri) const;
+  // Calculate the normal of the triangle
+  Vector3f normal_tri(const triangle_t& tri) const;
 
+  // Print kdtree in post order
   void postorder(const KdNode& node, int indent=0)
   {
     if(!node.isLeaf) {

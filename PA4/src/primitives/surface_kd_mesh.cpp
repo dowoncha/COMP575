@@ -17,6 +17,7 @@ KdMesh::~KdMesh()
 bool KdMesh::Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const
 {
 	HitData hit;
+	hit.distance = 100000.0f;
 	if (Intersect(kd_tree_.front(), ray, hit))
 	{
 		hit_point = hit.point;
@@ -30,9 +31,6 @@ bool KdMesh::Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal
 bool KdMesh::Intersect(const Ray& ray) const
 {
 	HitData data;
-	float hit_time;
-	float tMin;
-
 	return Intersect(kd_tree_.front(), ray, data);
 }
 
@@ -61,58 +59,43 @@ bool KdMesh::Intersect(
 		else // Leaf node reached
 		{
 			bool bTriHit = false;
-			Vector3f hit_point, normal;
-		  float min_distance = 100000.0f;
+			Vector3f hit_point;
+			// Intersect ray with each triangle in leaf node and find the closest one
 		  for (int tri_index : node.triIndex)
 		  {
+				// If ray intersects with triangle, check the distance between ray origin
+				// and triangle hit point, if closer than the current distance,
+				// set hit surface, point, distance, and normal
 		    if (intersect_tri(ray, triangles_.at(tri_index), hit_point))
 		    {
-		      float distance = (hit_point - ray.position()).norm();
-		      if (distance < min_distance)
+					float distance = (hit_point - ray.position()).norm();
+		      if (distance < hit.distance)
 		      {
 						bTriHit = true;
 						hit.surface = dynamic_cast<Surface*>(const_cast<KdMesh*>(this));
-		        //hit.surface = std::dynathis; // cast here
 		        hit.point = hit_point;
+						hit.distance = distance;
 		        hit.normal = normal_tri(triangles_.at(tri_index));
-		        min_distance = distance;
 		      }
 		    }
 			}
 
-			// Leaf node should have
-			//printf("tri size: %lu\n", node.triIndex.size());
-		  // For each triangle in leaf node intersect and find the closest triangle
-		  /*
-		  for (int triangle_index : node.triIndex)
-			{
-				if (intersect_tri(ray, triangles_.at(triangle_index), hit_point))
-				{
-					bTriHit = true;
-					float newdist = (hit_point - ray.position()).norm();
-					if (newdist < distance)
-					{
-						hitTri = triangle_index;
-						hit.point = hit_point;
-						hit.normal = normal_tri(triangles_.at(triangle_index));
-					}
-				}
-			}
-			*/
-
-			// If a triangle was found at all return true and set hit point/normal to closest triangle
+			// Triangle was hit in leaf node
 		  if (bTriHit)
 				return true;
 
-			// No trianlges hit in node
+			// No triangles hit in leaf node
 			return false;
 		}
 	}
+	// Ray did not intersect bounding box
 	return false;
 }
 
 bool KdMesh::intersect_tri(const Ray& ray, const triangle_t& triangle, Vector3f& hit_point) const
 {
+	const float EPSILON = 1e-6;
+
 	// Get vertices of the trianlge
 	const Vector3f& v0 = vertices_.at(triangle(0));
 	const Vector3f& v1 = vertices_.at(triangle(1));
@@ -127,38 +110,40 @@ bool KdMesh::intersect_tri(const Ray& ray, const triangle_t& triangle, Vector3f&
 	Vector3f ray_cross_edge = ray.direction().cross(edge2);
 	float det = edge1.dot(ray_cross_edge);
 
-	//NOT CULLING
- 	if(std::fabs(det) < 1e-6) return false;
+	// ray and triangle are parallel if det is close to 0, no backface culling
+ 	if(det < EPSILON) return false;
+
  	float inv_det = 1.0f / det;
 
-	Vector3f ray_to_v1 = ray.position() - v1;
+	Vector3f v0toray = ray.position() - v0;
 
-	float u = ray_to_v1.dot(ray_cross_edge) * inv_det;
+	float u = v0toray.dot(ray_cross_edge) * inv_det;
 
 	//The intersection lies outside of the triangle
 	if(u < 0.0f || u > 1.0f) return false;
 
  	//Prepare to test v parameter
- 	ray_cross_edge = ray_to_v1.cross(edge1);
+ 	Vector3f qvec = v0toray.cross(edge1);
 
-	float v = ray.direction().dot(ray_to_v1) * inv_det;
+	float v = ray.direction().dot(qvec) * inv_det;
 
  	//The intersection lies outside of the triangle
  	if(v < 0.0f || u + v  > 1.0f) return false;
 
- 	float t = edge2.dot(ray_cross_edge) * inv_det;
+ 	float t = edge2.dot(qvec) * inv_det;
 
- 	if(t > 1e-6)
-	{ //ray intersection
-	 hit_point = ray.evaluate(t);
-	 return true;
+	// If the triangle hit time is greater than the epsilon
+ 	if(t > EPSILON)
+	{
+		hit_point = ray.evaluate(t);
+	 	return true;
  }
 
  // No hit, no win
  return false;
 }
 
-Vector3f KdMesh::normal_tri(triangle_t tri) const
+Vector3f KdMesh::normal_tri(const triangle_t& tri) const
 {
 	// Get vertices of the trianlge
 	const Vector3f& v0 = vertices_.at(tri(0));
@@ -171,8 +156,7 @@ Vector3f KdMesh::normal_tri(triangle_t tri) const
 
 	// Calcluate cross product between ray direction and edge2
 	// The find determinant
-	Vector3f normal = edge1.cross(edge2);
-	return normal.normalized();
+	return edge1.cross(edge2).normalized();
 }
 
 // Load the mesh from the filename

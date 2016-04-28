@@ -13,7 +13,7 @@ void Scene::add_surface(const surface_t& surface)
   surfaces_.push_back(std::move(surface));
 }
 
-void Scene::add_light(const light_t& light) 
+void Scene::add_light(const light_t& light)
 {
   // Move unique pointer into vector
   lights_.push_back(std::move(light));
@@ -25,7 +25,7 @@ void Scene::add_material(std::string material_name, const material_t& material)
   materials_.insert({material_name, material});
 }
 
-bool Scene::intersect_surfaces(const Ray& ray, HitData& hit)
+bool Scene::intersect_surfaces(const Ray& ray, HitData& hit) const
 {
   Vector3f point, normal;
   float min_distance = 100000.0f;
@@ -48,13 +48,11 @@ bool Scene::intersect_surfaces(const Ray& ray, HitData& hit)
   return false;
 }
 
-bool Scene::intersect_surfaces(const Ray& ray, Surface* ignore = nullptr)
+bool Scene::intersect_surfaces(const Ray& ray) const
 {
   float min_distance = 100000.0f;
   for (const surface_t& surface : surfaces_)
   {
-    if (surface.get() == ignore) continue;
-
     if (surface->Intersect(ray))
     {
       return true;
