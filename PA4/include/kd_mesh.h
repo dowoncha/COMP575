@@ -29,6 +29,84 @@ namespace raytracer
 
 using namespace Eigen;
 
+class Triangle
+{
+  typedef Matrix<unsigned int, 3, 1> triangle_t;
+public:
+  Triangle(unsigned int a, unsigned int b, unsigned int c) :
+    indices(a, b, c)
+  {}
+
+  Triangle(const triangle_t& t_indices) :
+    indices(t_indices)
+  {}
+
+  bool intersect(const Ray& ray, HitData& hit) const
+  {
+    const float EPSILON = 1e-6;
+
+  	//Find vectors for two edges sharing V1
+  	Vector3f edge1 = indices_(1) - indices_(0);
+  	Vector3f edge2 = indices_(2) - indices_(0);
+
+  	// Calcluate cross product between ray direction and edge2
+  	// The find determinant
+  	Vector3f ray_cross_edge = ray.direction().cross(edge2);
+  	float det = edge1.dot(ray_cross_edge);
+
+  	// ray and triangle are parallel if det is close to 0, no backface culling
+   	if(det < EPSILON) return false;
+
+   	float inv_det = 1.0f / det;
+
+  	Vector3f v0toray = ray.position() - v0;
+
+  	float u = v0toray.dot(ray_cross_edge) * inv_det;
+
+  	//The intersection lies outside of the triangle
+  	if(u < 0.0f || u > 1.0f) return false;
+
+   	//Prepare to test v parameter
+   	Vector3f qvec = v0toray.cross(edge1);
+
+  	float v = ray.direction().dot(qvec) * inv_det;
+
+   	//The intersection lies outside of the triangle
+   	if(v < 0.0f || u + v  > 1.0f) return false;
+
+   	float calctime = edge2.dot(qvec) * inv_det;
+
+  	// If the triangle hit time is greater than the epsilon
+   	if(calctime > EPSILON)
+  	{
+      if (calctime < hit.t)
+      {
+        hit.t = calctime;
+        hit.point = ray.evaluate(hit.t);
+        hit.normal = normal();
+      }
+  	 	return true;
+   }
+
+   // No hit, no win
+   return false;
+  }
+
+  Vector3f normal() const
+  {
+    // Get vertices of the trianlge
+  	//Find vectors for two edges sharing V1
+  	Vector3f edge1 = indices(1) - indices(0);
+  	Vector3f edge2 = indices(2) - indices(0);
+
+  	// Calcluate cross product between ray direction and edge2
+  	// The find determinant
+  	return edge1.cross(edge2).normalized();
+  }
+private:
+  Matrix<unsigned int, 3, 1> indices;
+}
+
 // Bounding box
 struct AABB
 {
@@ -38,24 +116,25 @@ struct AABB
   // Bounding box & ray hit test
   bool Intersect(const Ray& ray) const
   {
-    float d_inv_x = 1.0f / ray.direction()(0);
-    float d_inv_y = 1.0f / ray.direction()(1);
-    float d_inv_z = 1.0f / ray.direction()(2);
+    Vector3f inv;
+    inv << 1.0f / ray.direction()(0)
+        << 1.0f / ray.direction()(1)
+        << 1.0f / ray.direction()(2);
 
-    float tx1 = (min(0) - ray.position()(0)) * d_inv_x;
-    float tx2 = (max(0) - ray.position()(0)) * d_inv_x;
+    float tx1 = (min(0) - ray.position()(0)) * inv(0);
+    float tx2 = (max(0) - ray.position()(0)) * inv(0);
 
     float tmin = std::min(tx1, tx2);
     float tmax = std::max(tx1, tx2);
 
-    float ty1 = (min(1) - ray.position()(1)) * d_inv_y;
-    float ty2 = (max(1) - ray.position()(1)) * d_inv_y;
+    float ty1 = (min(1) - ray.position()(1)) * inv(1);
+    float ty2 = (max(1) - ray.position()(1)) * inv(1);
 
     tmin = std::max(tmin, std::min(ty1, ty2));
     tmax = std::min(tmax, std::max(ty1, ty2));
 
-    float tz1 = (min(2) - ray.position()(2)) * d_inv_z;
-    float tz2 = (max(2) - ray.position()(2)) * d_inv_z;
+    float tz1 = (min(2) - ray.position()(2)) * inv(2);
+    float tz2 = (max(2) - ray.position()(2)) * inv(2);
 
     tmin = std::max(tmin, std::min(tz1, tz2));
     tmax = std::min(tmax, std::max(tz1, tz2));
@@ -67,6 +146,11 @@ struct AABB
 // kd-tree nodes struct
 struct KdNode
 {
+  KdNode() :
+    leftChildId(-1),
+    rightChildId(-1)
+  {}
+
   int nodeId;
   AABB boundingBox;
   int leftChildId;
@@ -76,11 +160,6 @@ struct KdNode
   bool isLeaf;
   std::vector<int> triIndex;
 
-  KdNode() :
-    leftChildId(-1),
-    rightChildId(-1)
-  {}
-
   void print() const
   {
     printf("Node: %d, left: %d, right %d: isLeaf: %d, trisize: %lu\n", nodeId, leftChildId, rightChildId, isLeaf, triIndex.size());
@@ -89,7 +168,6 @@ struct KdNode
 
 class KdMesh: public Surface
 {
-  typedef Matrix<unsigned int, 3, 1> triangle_t;
   typedef std::vector<KdNode> kd_tree_t;
   typedef std::vector<triangle_t> triangles_t;
 public:
@@ -98,31 +176,14 @@ public:
 	~KdMesh();
 
   // Derived function for surface intersection
-	bool Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const;
-  bool Intersect(const Ray& ray) const;
-
+	bool intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const;
+  bool intersect(const Ray& ray) const;
 private:
   // Recursively intersect starting at root node, hit data contains the hit point and normal
-  bool Intersect(const KdNode& node, const Ray& ray, HitData& hit) const;
-
-  // Calculate whether a ray intersects a triangle and return the hit point
-  bool intersect_tri(const Ray& ray, const triangle_t& triangle, Vector3f& hit_point) const;
-
-  // Calculate the normal of the triangle
-  Vector3f normal_tri(const triangle_t& tri) const;
+  bool intersect(const KdNode& node, const Ray& ray, HitData& hit) const;
 
   // Print kdtree in post order
-  void postorder(const KdNode& node, int indent=0)
-  {
-    if(!node.isLeaf) {
-        postorder(kd_tree_.at(node.leftChildId), indent + 2);
-        postorder(kd_tree_.at(node.rightChildId), indent + 2);
-        if (indent) {
-            std::cout << std::setw(indent) << ' ';
-        }
-        std::cout<< node.nodeId << "\n ";
-    }
-  }
+  void postOrder(const KdNode& node, int indent = 0);
 private:
   // Load the mesh from the filename
 	void load_mesh(const std::string& filename);

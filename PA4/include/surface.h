@@ -11,8 +11,11 @@
 
 #include <Eigen/Core>
 #include <string>
+#include <string>
 #include "material.h"
-#include "ray.h"
+
+class Ray;
+class Surface;
 
 namespace raytracer
 {
@@ -30,7 +33,7 @@ public:
   virtual ~Node() { }
 
   Vector3f position() const         { return position_; }
-  void set_position(Vector3f position) { position_ = position; }
+  void position(Vector3f position) { position_ = position; }
 protected:
   Vector3f position_;
 };
@@ -41,30 +44,22 @@ protected:
 class Surface : public Node
 {
 public:
-  Surface(Vector3f position) :
-    Node(position)
-  {}
-
-  Surface(material_t material) :
-    Node(),
-    material_(material)
-  {}
-
-  Surface(Vector3f position, material_t material) :
+  Surface(const Vector3f& position, std::string material = "") :
     Node(position),
     material_(material)
-  { }
+  {}
 
   virtual ~Surface() { }
 
-  virtual bool Intersect(const Ray& ray) const = 0;
+  virtual bool intersect(const Ray& ray) const = 0;
 
-  virtual bool Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const = 0;
+  virtual bool intersect(const Ray& ray, HitData& hit) const = 0;
 
-  void set_material(material_t material) { material_ = material; }
-  Material* material() const { return material_.get(); }
+  void material(std::string material) { material_ = material; }
+
+  std::string material() const { return material_.; }
 protected:
-  material_t material_;
+  std::string material_;
 };
 
 using surface_t = std::shared_ptr<raytracer::Surface>;
@@ -74,14 +69,15 @@ using surface_t = std::shared_ptr<raytracer::Surface>;
  */
 struct HitData
 {
+  HitData() :
+    surface(nullptr),
+    t(10000.0f)
+  {}
+
   Vector3f point;
-  float distance;
   Vector3f normal;
   Surface* surface;
-
-  HitData() :
-    surface(nullptr)
-  { }
+  float t;
 };
 
 } // end of namespace raytracer

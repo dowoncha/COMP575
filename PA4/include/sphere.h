@@ -15,59 +15,75 @@ namespace raytracer
 class Sphere : public Surface
 {
 public:
-  Sphere(Vector3f center, float radius, material_t material) :
+  Sphere(const Vector3f& center, float radius, const std::string& material) :
     Surface(center, material),
-    radius_(radius),
     radius2_(radius * radius)
   {
   }
 
-  ~Sphere()
-  {
-  }
+  virtual ~Sphere()
+  {}
 
-  bool Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const
+  bool intersect(const Ray& ray, HitData& hit) const
   {
+    // NOTE: this should have been normalized.
     // Calculate ray-sphere intersection using geometric approach
-    Vector3f posray = position_ - ray.position();
+    Vector3f ray_to_center = (position_ - ray.position()).normalized();
     // Cos theta of hit point and ray
-    float s = posray.dot(ray.direction());
-    if (s < 0.0f) return false;
-
-    float length2 = posray.dot(posray);
-    float m2 = length2 - s * s;
+    float s = ray_to_center.dot(ray.direction());
+    // Angle of ray misses sphere
+    //if (s < 0.0f) return false;
+    float m2 = ray_to_center.dot(ray_to_center) - s * s;
 
     if (m2 > radius2_) return false;
 
-    float q = std::sqrt(radius2_ - m2);
+    float thc = std::sqrt(radius2_ - m2);
 
-    float t = (length2 > radius2_) ? s - q : s + q;
+    float t0 = s - thc;
+    float t1 = s + thc;
 
-    if (t < 0.0f) return false;
+    if (t0 > t1) std::swap(t0, t1);
 
-    hit_point = ray.evaluate(t);
-    hit_normal = normal(hit_point);
+    if (t0 < 0) {
+        t0 = t1; // if t0 is negative, let's use t1 instead
+        if (t0 < 0) return false; // both t0 and t1 are negative
+    }
+
+    t = t0;
+    if (t < hit.t)
+    {
+      hit.t = t;
+      hit.point = ray.evaluate(t);
+      hit.normal = normal();
+    }
 
     return true;
   }
 
   bool Intersect(const Ray& ray) const
   {
+    // NOTE: this should have been normalized.
     // Calculate ray-sphere intersection using geometric approach
-    Vector3f posray = position_ - ray.position();
+    Vector3f ray_to_center = (position_ - ray.position()).normalized();
     // Cos theta of hit point and ray
-    float s = posray.dot(ray.direction());
-    if (s < 0.0f) return false;
-
-    float length2 = posray.dot(posray);
-    float m2 = length2 - s * s;
+    float s = ray_to_center.dot(ray.direction());
+    // Angle of ray misses sphere
+    //if (s < 0.0f) return false;
+    float m2 = ray_to_center.dot(ray_to_center) - s * s;
 
     if (m2 > radius2_) return false;
 
-    float q = std::sqrt(radius2_ - m2);
+    float thc = std::sqrt(radius2_ - m2);
 
-    float t = (length2 > radius2_) ? s - q : s + q;
-    if (t < 0.0f) return false;
+    float t0 = s - thc;
+    float t1 = s + thc;
+
+    if (t0 > t1) std::swap(t0, t1);
+
+    if (t0 < 0) {
+        t0 = t1; // if t0 is negative, let's use t1 instead
+        if (t0 < 0) return false; // both t0 and t1 are negative
+    }
 
     return true;
   }
@@ -77,7 +93,7 @@ public:
     return (point - position_).normalized();
   }
 private:
-  float radius_, radius2_;
+  float radius2_;
 };
 
 }

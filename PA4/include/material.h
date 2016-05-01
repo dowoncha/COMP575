@@ -22,9 +22,9 @@ using namespace Eigen;
 class Material
 {
 public:
-  Material(Vector4f ambient,
-           Vector4f diffuse,
-           Vector4f specular,
+  Material(Vector3f ambient,
+           Vector3f diffuse,
+           Vector3f specular,
            float specular_power = 0.0f,
            float reflection = 0.0f) :
     ambient_(ambient),
@@ -35,31 +35,31 @@ public:
   { }
 
   // Ambient getter and setter
-  Vector4f ambient() const { return ambient_; }
-  void set_ambient(Vector4f ambient)   { ambient_ = ambient; }
+  Vector3f ambient() const { return ambient_; }
+  void ambient(const Vector4f& ambient)   { ambient_ = ambient; }
 
   // Diffuse getter and setter
-  Vector4f diffuse() const { return diffuse_; }
-  void set_diffuse(Vector4f diffuse) { diffuse_ = diffuse; }
+  Vector3f diffuse() const { return diffuse_; }
+  void diffuse(const Vector4f& diffuse) { diffuse_ = diffuse; }
 
   // Specular getter and setter
-  Vector4f specular() const { return specular_; }
-  void set_specular(Vector4f specular) { specular_ = specular; }
+  Vector3f specular() const { return specular_; }
+  void specular(const Vector3f& specular) { specular_ = specular; }
 
   // Specular power getter and setters
-  float specular_power() const { return specular_power_; }
-  void  set_specular_power(float specular_power) { specular_power_ = specular_power; }
+  float specularPower() const { return specular_power_; }
+  void  specularPower(float specular_power) { specular_power_ = specular_power; }
 
   // Reflection getter and setters
   float reflectivity() const { return reflectivity_; }
-  void  set_reflectivity(float reflectivity) { reflectivity_ = reflectivity; }
+  void  reflectivity(float reflectivity) { reflectivity_ = reflectivity; }
 
   std::string name() { return name_; }
   void set_name(std::string name) { name_ = name; }
 private:
-  Vector4f ambient_;
-  Vector4f diffuse_;
-  Vector4f specular_;
+  Vector3f ambient_;
+  Vector3f diffuse_;
+  Vector3f specular_;
   float specular_power_, reflectivity_;
 };
 

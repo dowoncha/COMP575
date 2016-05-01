@@ -21,16 +21,12 @@ using namespace Eigen;
 class Ray
 {
 public:
-  Ray() { }
-
-  Ray(Vector3f position,
-      Vector3f direction) :
+  Ray(const Vector3f& position,
+      const Vector3f& direction) :
   position_(position),
   direction_(direction.normalized())
   { }
-
-  ~Ray() {}
-
+  
   Vector3f evaluate(float t) const { return position_ + direction_ * t; }
 
   Vector3f position() const { return position_; }
@@ -38,7 +34,7 @@ public:
 
   friend std::ostream& operator << (std::ostream& s, const Ray& ray)
   {
-	  return s << "";
+	  return s << "Ray position: " << ray.position_ << ", direction: " << ray.direction_;
   }
 
 private:

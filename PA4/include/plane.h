@@ -23,27 +23,28 @@ public:
   // @param position of the plane
   // @param normal of the plane
   // @param material to apply to plane
-  Plane(Vector3f position, Vector3f normal, material_t material) :
+  Plane(const Vector3f& position, const Vector3f& normal, std::string material) :
     Surface(position, material),
     normal_(normal.normalized())
   {}
 
-  ~Plane()
-  { }
-
-  bool Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const
+  bool intersect(const Ray& ray, HitData& hit) const
   {
     // cos a between the normal and ray
     float denom = normal_.dot(ray.direction());
 
-    if (std::fabs(denom) > .0001f)
+    if (std::fabs(denom) > 1e-4)
     {
       // Time of intersection with the plane
       float t = (position_ - ray.position()).dot(normal_) / denom;
-      if (t > 0.0001f)
+      if (t > 1e-4)
       {
-        hit_point = ray.evaluate(t);
-        hit_normal = normal();
+        if (t < hit.t)
+        {
+          hit.t = t;
+          hit.point = ray.evaluate(t);
+          hit.normal = normal();
+        }
         return true;
       }
     }
@@ -51,15 +52,15 @@ public:
     return false;
   }
 
-  bool Intersect(const Ray& ray) const
+  bool intersect(const Ray& ray) const
   {
     float denom = normal_.dot(ray.direction());
 
-    if (std::fabs(denom) > 1e-6)
+    if (std::fabs(denom) > 1e-4)
     {
       // Time of intersection with the plane
       float plane_hit_time = normal_.dot(position_ - ray.position()) / denom;
-      if (plane_hit_time > 0.0f)
+      if (plane_hit_time > 1e-4)
       {
         return true;
       }

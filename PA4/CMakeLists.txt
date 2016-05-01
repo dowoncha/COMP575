@@ -20,12 +20,12 @@ add_subdirectory(lib/freeglut)
 include_directories(lib/glew/include)
 include_directories(lib/eigen)
 
-include_directories(src)
+include_directories(include)
 
 set(SRCS src/ray_tracer.cpp
          src/scene.cpp
          src/primitives/camera.cpp
-       src/primitives/surface_kd_mesh.cpp)
+         src/primitives/kd_mesh.cpp)
 
 add_executable(sibenikshadow apps/sibenik_shadow.cpp ${SRCS})
 target_link_libraries(sibenikshadow ${OPENGL_LIBRARIES}

@@ -14,27 +14,19 @@ KdMesh::~KdMesh()
 {}
 
 // Return the closest hit point from ray
-bool KdMesh::Intersect(const Ray& ray, Vector3f& hit_point, Vector3f& hit_normal) const
+bool KdMesh::intersect(const Ray& ray, HitData& hit) const
 {
-	HitData hit;
-	hit.distance = 100000.0f;
-	if (Intersect(kd_tree_.front(), ray, hit))
-	{
-		hit_point = hit.point;
-		hit_normal = hit.normal;
-		return true;
-	}
-
-	return false;
+	return intersect(kd_tree_.front(), ray, hit);
 }
 
-bool KdMesh::Intersect(const Ray& ray) const
+bool KdMesh::intersect(const Ray& ray) const
 {
 	HitData data;
-	return Intersect(kd_tree_.front(), ray, data);
+	return intersect(kd_tree_.front(), ray, data);
 }
 
-bool KdMesh::Intersect(
+// Recursively go through kd nodes
+bool KdMesh::intersect(
 	const KdNode& node,
 	const Ray& ray,
 	HitData& hit) const
@@ -44,119 +36,60 @@ bool KdMesh::Intersect(
 	// Intersect ray with bounding box
 	// If root's children has no triangle's then it is an inner node and traverse children
 	// Ray must intersect current node
-	if (node.boundingBox.Intersect(ray))
+	if (node.boundingBox.intersect(ray)) return false;
+	//node.print();
+	// Recurse through any children nodes if they have triangles
+	//if (left.leftChildId != -1 || right.rightChildId != -1)
+	if (!node.isLeaf)
 	{
-		//node.print();
-		// Recurse through any children nodes if they have triangles
-		//if (left.leftChildId != -1 || right.rightChildId != -1)
-		if (!node.isLeaf)
-		{
-			const KdNode& left = kd_tree_.at(node.leftChildId);
-			const KdNode& right = kd_tree_.at(node.rightChildId);
+		const KdNode& left = kd_tree_.at(node.leftChildId);
+		const KdNode& right = kd_tree_.at(node.rightChildId);
 
-		  return Intersect(left, ray, hit) || Intersect(right, ray, hit);
-		}
-		else // Leaf node reached
-		{
-			bool bTriHit = false;
-			Vector3f hit_point;
-			// Intersect ray with each triangle in leaf node and find the closest one
-		  for (int tri_index : node.triIndex)
-		  {
-				// If ray intersects with triangle, check the distance between ray origin
-				// and triangle hit point, if closer than the current distance,
-				// set hit surface, point, distance, and normal
-		    if (intersect_tri(ray, triangles_.at(tri_index), hit_point))
-		    {
-					float distance = (hit_point - ray.position()).norm();
-		      if (distance < hit.distance)
-		      {
-						bTriHit = true;
-						hit.surface = dynamic_cast<Surface*>(const_cast<KdMesh*>(this));
-		        hit.point = hit_point;
-						hit.distance = distance;
-		        hit.normal = normal_tri(triangles_.at(tri_index));
-		      }
-		    }
-			}
-
-			// Triangle was hit in leaf node
-		  if (bTriHit)
-				return true;
-
-			// No triangles hit in leaf node
-			return false;
-		}
+	  return Intersect(left, ray, hit) || Intersect(right, ray, hit);
 	}
-	// Ray did not intersect bounding box
-	return false;
-}
-
-bool KdMesh::intersect_tri(const Ray& ray, const triangle_t& triangle, Vector3f& hit_point) const
-{
-	const float EPSILON = 1e-6;
-
-	// Get vertices of the trianlge
-	const Vector3f& v0 = vertices_.at(triangle(0));
-	const Vector3f& v1 = vertices_.at(triangle(1));
-	const Vector3f& v2 = vertices_.at(triangle(2));
-
-	//Find vectors for two edges sharing V1
-	Vector3f edge1 = v1 - v0;
-	Vector3f edge2 = v2 - v0;
-
-	// Calcluate cross product between ray direction and edge2
-	// The find determinant
-	Vector3f ray_cross_edge = ray.direction().cross(edge2);
-	float det = edge1.dot(ray_cross_edge);
-
-	// ray and triangle are parallel if det is close to 0, no backface culling
- 	if(det < EPSILON) return false;
-
- 	float inv_det = 1.0f / det;
-
-	Vector3f v0toray = ray.position() - v0;
-
-	float u = v0toray.dot(ray_cross_edge) * inv_det;
-
-	//The intersection lies outside of the triangle
-	if(u < 0.0f || u > 1.0f) return false;
-
- 	//Prepare to test v parameter
- 	Vector3f qvec = v0toray.cross(edge1);
-
-	float v = ray.direction().dot(qvec) * inv_det;
-
- 	//The intersection lies outside of the triangle
- 	if(v < 0.0f || u + v  > 1.0f) return false;
-
- 	float t = edge2.dot(qvec) * inv_det;
-
-	// If the triangle hit time is greater than the epsilon
- 	if(t > EPSILON)
+	else // Leaf node reached
 	{
-		hit_point = ray.evaluate(t);
-	 	return true;
- }
+		bool bTriHit = false;
+		// Intersect ray with each triangle in leaf node and find the closest one
+	  for (int tri_index : node.triIndex)
+	  {
+			const Triangle& tri = triangles_.at(tri_index);
+			// If ray intersects with triangle, check the distance between ray origin
+			// and triangle hit point, if closer than the current distance,
+			// set hit surface, point, distance, and normal
+			float tri_time;
+	    if (tri.intersect(ray, tri_time))
+	    {
+				bTriHit = true;
+				//float distance = (hit_point - ray.position()).norm();
+	      if (tri_time < hit.t)
+	      {
+					hit.t = tri_time;
+					hit.point = ray.evaluate(t);
+					hit.normal = tri.normal();
+	      }
+	    }
+		}
 
- // No hit, no win
- return false;
+		// Triangle was hit in leaf node
+	  if (bTriHit)
+			return true;
+
+		// No triangles hit in leaf node
+		return false;
+	}
 }
 
-Vector3f KdMesh::normal_tri(const triangle_t& tri) const
+void KdMesh::postOrder(const KdNode& node, int indent=0)
 {
-	// Get vertices of the trianlge
-	const Vector3f& v0 = vertices_.at(tri(0));
-	const Vector3f& v1 = vertices_.at(tri(1));
-	const Vector3f& v2 = vertices_.at(tri(2));
-
-	//Find vectors for two edges sharing V1
-	Vector3f edge1 = v1 - v0;
-	Vector3f edge2 = v2 - v0;
-
-	// Calcluate cross product between ray direction and edge2
-	// The find determinant
-	return edge1.cross(edge2).normalized();
+	if(!node.isLeaf) {
+			postorder(kd_tree_.at(node.leftChildId), indent + 2);
+			postorder(kd_tree_.at(node.rightChildId), indent + 2);
+			if (indent) {
+					std::cout << std::setw(indent) << ' ';
+			}
+			std::cout<< node.nodeId << "\n ";
+	}
 }
 
 // Load the mesh from the filename
@@ -218,8 +151,8 @@ void KdMesh::load_mesh(const std::string& filename)
 			unsigned int a = face_index(tokens[1].c_str());
 			unsigned int b = face_index(tokens[2].c_str());
 			unsigned int c = face_index(tokens[3].c_str());
-			triangle_t triangle(a-1,b-1,c-1);
-			triangles_.push_back(triangle);
+
+			triangles_.emplace_back(a - 1,b - 1,c - 1);
 		}
 	}
 

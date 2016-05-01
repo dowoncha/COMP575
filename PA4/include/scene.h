@@ -15,10 +15,10 @@
 #include <string>
 #include <memory>
 
-#include "primitives/ray.h"
-#include "primitives/surface.h"
-#include "primitives/light.h"
-#include "primitives/material.h"
+#include "ray.h"
+#include "surface.h"
+#include "light.h"
+#include "material.h"
 
 namespace raytracer
 {
@@ -36,7 +36,7 @@ public:
   ~Scene();
 
   // Add a new surface in the scene
-  void addSurfsce(const surface_t& surface);
+  void addSurface(const surface_t& surface);
 
   // Add a new light into the scene
   void addLight(const light_t& light);
@@ -50,10 +50,10 @@ public:
    *  @param  hit data that returns info on the hit
    *  @return     Whether or not a surface was hit
    */
-  bool intersect_surfaces(const Ray& ray, HitData& hit) const;
+  bool intersectSurfaces(const Ray& ray, HitData& hit) const;
 
   // Read above. Just checks if a surface was hit, while taking a pointer to a surface to ignore checks.
-  bool intersect_surfaces(const Ray& ray) const;
+  bool intersectSurfaces(const Ray& ray) const;
 private:
   surfaces_list_t surfaces_;
   lights_list_t lights_;

@@ -3,20 +3,12 @@
 using namespace Eigen;
 using namespace raytracer;
 
-RayTracer::RayTracer() :
-  camera_(new Camera()),
-  size_(camera_->screen_width() * camera_->screen_height()),
-  max_trace_depth_(2),
-  bShadows_(true)
-{
-}
-
 RayTracer::RayTracer(int width, int height) :
-  camera_(new Camera(width, height)),
-  size_(width * height),
-  max_trace_depth_(2),
-  bShadows_(true),
-  frame_buffer_(size_)
+  camera_(width, height),     // Camera viewport size
+  max_trace_depth_(2),        // Max recursion depth of trace function
+  bShadows_(true),            // Shadows are enabled
+  size_(width * height),      // size of the frame buffer
+  frame_buffer_(size_)        // Initially allocate width * height in vector
 {
 }
 
@@ -58,10 +50,6 @@ void RayTracer::bwrender(Scene* scene)
   }
 }
 
-/**
- *  Ray trace the input scene and fill the frame buffer with traced result
- *  @param scene weak pointer to the scene to render
- */
 void RayTracer::render(Scene* scene)
 {
   int index = 0;
@@ -71,20 +59,15 @@ void RayTracer::render(Scene* scene)
     {
       printf("Pixel (%d, %d)\r", x, y);
 
-      Ray ray = camera_->getRay(x, y);
-      frame_buffer_.at(index) = gammaEncode(trace(scene, ray, 0));
+      Ray ray = camera_.getRay(x, y);
+      frame_buffer_.at(index) = gammaEncode(trace(scene, ray));
     }
   }
 }
 
-Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
+Vector3f RayTracer::trace(Scene* scene, const Ray& ray, int depth)
 {
   assert(scene != nullptr);
-
-  // Trace recursion base case
-  // depth should stop if equal than the max trace depth
-  if (depth == max_trace_depth_)
-    return Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
 
   // Intersect ray against all surfaces and return hit data of closest hit
   // If nothing was hit return black, base case
@@ -98,40 +81,47 @@ Vector4f RayTracer::trace(Scene* scene, const Ray& ray, int depth = 0)
   // Calculate ambient, diffuse, and specular, and shadows
   Vector4f local = local_shading(scene, ray, hit);
 
+  // Trace recursion base case.
+  // it the maximum trace depth has been reached, don't do reflection calculation and
+  // return the local shade
+  // NOTE: Must come before the reflection calculation
+  if (depth == max_trace_depth_) {
+    return local;
+  }
+
   // If the surface material has a reflection value
   // Recurisve ray trace for reflection surface
   float reflectionCoef = hit.surface->material()->reflectivity();
   if (reflectionCoef > 0.0f && depth < max_trace_depth_)
   {
       // Calculate the reflection ray
+      // recursively trace against the scene
+      // lerp the local shading and the reflection shading by the reflection coefficient.
       Vector3f incident = ray.direction();
       Vector3f dir = incident + hit.normal * (-2.0f * hit.normal.dot(incident));
       Ray reflectionRay(hit.point, dir);
 
-      Vector4f reflect = trace(scene, reflectionRay, depth + 1);
+      // Reflected ray traced color
+      Vector3f reflect = trace(scene, reflectionRay, depth + 1);
 
-      // Lerp
-      local = Utility::lerp(local, reflect, reflectionCoef);
+      return Utility::lerp(local, reflect, reflectionCoef);
   }
-
-  //printf("Finished tracing\n");
 
   return local;
 }
 
-Vector4f RayTracer::localShading(Scene* scene, const Ray& ray, const HitData& hit) const
+Vector3f RayTracer::localShading(Scene* scene, const Ray& ray, const HitData& hit) const
 {
-  assert(scene != nullptr);
-  assert(hit.surface != nullptr);
-    //printf("Local shading\n");
-
   using namespace std;
 
-  Material* material = hit.surface->material();
+  assert(scene != nullptr);
+  assert(hit.surface != nullptr);
 
-  assert(material != nullptr);
+  // Get raw pointer to material by its name.
+  Material* material = materials_[hit.surface->material()].get();
 
-  Vector4f out = material->ambient();
+  // Every color has an ambient.
+  Vector3f out = material->ambient();
 
   /**
    *  For each light in the scene
@@ -142,24 +132,29 @@ Vector4f RayTracer::localShading(Scene* scene, const Ray& ray, const HitData& hi
     // Trace for shadows here
     Vector3f hit_to_light = light->position() - hit.point;
     Vector3f shadow_dir = hit_to_light.normalized();
-    Ray shadowray(hit.point + hit.normal * 1e-2, shadow_dir);
 
-    // Local lighting calculation
-    if (!scene->intersect_surfaces(shadowray))
+    // If shadows are on then check intersections using shadowray.
+    // If it hits an object move onto next light.
+    if (bShadows_)
     {
-      // Calculate the diffuse lighting color
-      float ndotl = hit.normal.dot(shadow_dir);
-      Vector4f Ldiff = material->diffuse() * light->intensity() * max(0.0f, ndotl);
-
-      // Specular Light calculations
-      // Subtract the ray direction instead of add to reverse direction
-      Vector3f hit_to_eye = (ray.position() - hit.point).normalized();
-      Vector3f half = (shadow_dir + hit_to_eye).normalized();
-      float ndoth = hit.normal.dot(half);
-      Vector4f Lspec = material->specular() * light->intensity() * pow(max(0.0f, ndoth), material->specular_power());
-
-      out += Ldiff + Lspec;
+      Ray shadowray(hit.point + hit.normal * 1e-3, shadow_dir);
+      if (scene->intersectSurfaces(shadowRay)) continue;
     }
+
+    // If shadows are off skip intersecting
+    // Local lighting calculation
+    // Calculate the diffuse lighting color
+    float ndotl = hit.normal.dot(shadow_dir);
+    Vector3f Ldiff = material->diffuse() * light->intensity() * max(0.0f, ndotl);
+
+    // Specular Light calculations
+    // Subtract the ray direction instead of add to reverse direction
+    Vector3f hit_to_eye = (ray.position() - hit.point).normalized();
+    Vector3f half = (shadow_dir + hit_to_eye).normalized();
+    float ndoth = hit.normal.dot(half);
+    Vector3f Lspec = material->specular() * light->intensity() * pow(max(0.0f, ndoth), material->specular_power());
+
+    out += Ldiff + Lspec;
   }
 
   //printf("Local shading end\n");
@@ -167,11 +162,11 @@ Vector4f RayTracer::localShading(Scene* scene, const Ray& ray, const HitData& hi
   return out;
 }
 
-Vector4f RayTracer::gammaEncode(const Vector4f& color)
+Vector3f RayTracer::gammaEncode(const Vector3f& color)
 {
   float gamma = 1.0f / 2.2f;
 
-  Vector4f out;
+  Vector3f out;
 
   out(0) = std::pow(color(0), gamma);
   out(1) = std::pow(color(1), gamma);
@@ -180,8 +175,6 @@ Vector4f RayTracer::gammaEncode(const Vector4f& color)
   out(0) = Utility::PinToUnit(out(0));
   out(1) = Utility::PinToUnit(out(1));
   out(2) = Utility::PinToUnit(out(2));
-
-  out(3) = 1.0f;
 
   return out;
 }
